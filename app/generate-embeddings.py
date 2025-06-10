@@ -1,55 +1,34 @@
 import os
 import json
-import psycopg2
+import dao
 from sentence_transformers import SentenceTransformer
 
-# Configurações do banco
-DB_CONFIG = {
-    'dbname': 'openapi_db',
-    'user': 'postgres',
-    'password': 'postgres',
-    'host': 'localhost',
-    'port': 5432
-}
 
-# Caminho para os arquivos OpenAPI
 OPENAPI_DIR = 'openapis'
 
-# Modelo para gerar embeddings
 model = SentenceTransformer('all-MiniLM-L6-v2')
 
-def connect_db():
-    return psycopg2.connect(**DB_CONFIG)
 
-def salvar_openapis():
-    conn = connect_db()
-    cur = conn.cursor()
+def save_open_apis():
 
-    for nome_arquivo in os.listdir(OPENAPI_DIR):
-        if nome_arquivo.endswith('.json'):
-            caminho = os.path.join(OPENAPI_DIR, nome_arquivo)
+    for file_name in os.listdir(OPENAPI_DIR):
+        if file_name.endswith('.json'):
+            path = os.path.join(OPENAPI_DIR, file_name)
 
-            with open(caminho, 'r', encoding='utf-8') as f:
-                conteudo_raw = f.read()
+            with open(path, 'r', encoding='utf-8') as f:
+                raw_open_api = f.read()
                 try:
-                    json.loads(conteudo_raw)
+                    json.loads(raw_open_api)
                 except json.JSONDecodeError as e:
-                    print(f"Erro ao parsear {nome_arquivo}: {e}")
+                    print(f"Error parsing {file_name}: {e}")
                     continue
 
-                # Gerar embedding
-                embedding = model.encode(conteudo_raw, convert_to_tensor=True)
+                # generating embedding
+                embedding = model.encode(raw_open_api, convert_to_tensor=True)
 
-                # Salvar no banco com nome do arquivo
-                cur.execute(
-                    "INSERT INTO openapi (file_name, conteudo, embedding) VALUES (%s, %s, %s)",
-                    (nome_arquivo, conteudo_raw, embedding.tolist())
-                )
-                print(f"Arquivo {nome_arquivo} salvo com sucesso.")
+                dao.save_open_api(file_name, raw_open_api, embedding.tolist())
+                print(f"File {file_name} successfully saved.")
 
-    conn.commit()
-    cur.close()
-    conn.close()
 
 if __name__ == '__main__':
-    salvar_openapis()
+    save_open_apis()

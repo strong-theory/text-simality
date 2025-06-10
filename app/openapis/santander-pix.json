@@ -1,0 +1,4470 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API Pix",
+    "version": "2.0"
+  },
+  "servers": [
+    {
+      "url": "https://trust-pix.santander.com.br/",
+      "description": "Produção"
+    },
+    {
+      "url": "https://pix.santander.com.br/api/v1/sandbox/",
+      "description": "Sandbox"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Cob",
+      "x-displayName": "Gerenciamento de cobranças para pagamento imediato",
+      "description": "Reúne endpoints destinados a lidar com gerenciamento de cobranças imediatas."
+    },
+    {
+      "name": "CobV",
+      "x-displayName": "Gerenciamento de cobranças com vencimento",
+      "description": "Reúne endpoints destinados a lidar com gerenciamento de cobranças com vencimento."
+    },
+    {
+      "name": "Pix",
+      "x-displayName": "Gerenciamento de Pix recebidos",
+      "description": "reúne endpoints destinados a lidar com  gerenciamento de Pix recebidos."
+    },
+    {
+      "name": "Webhook",
+      "x-displayName": "Gerenciamento de notificações",
+      "description": "Reúne endpoints para gerenciamento de notificações por parte do PSP recebedor ao usuário recebedor."
+    }
+  ],
+  "paths": {
+    "/cob/{txid}": {
+      "parameters": [
+        {
+          "name": "txid",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/TxId"
+          }
+        }
+      ],
+      "put": {
+        "tags": [
+          "Cob"
+        ],
+        "summary": "Criar cobrança imediata.",
+        "security": [
+          {
+            "OAuth2": [
+              "cob.write"
+            ]
+          }
+        ],
+        "description": "Endpoint para criar uma cobrança imediata.",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/CobBody"
+        },
+        "responses": {
+          "201": {
+            "description": "Cobrança imediata criada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CobGerada"
+                },
+                "examples": {
+                  "retorno1": {
+                    "$ref": "#/components/examples/cobResponse1"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Requisição com formato inválido.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problema"
+                },
+                "examples": {
+                  "exemplo1": {
+                    "$ref": "#/components/examples/RequisicaoInvalidaCobExample1"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/AcessoNegado"
+          },
+          "404": {
+            "$ref": "#/components/responses/NaoEncontrado"
+          },
+          "503": {
+            "$ref": "#/components/responses/ServicoIndisponivel"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Cob"
+        ],
+        "summary": "Revisar cobrança imediata.",
+        "security": [
+          {
+            "OAuth2": [
+              "cob.write"
+            ]
+          }
+        ],
+        "description": "Endpoint para Alterar ou Cancelar uma cobrança imediata através de um determinado txid.",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/CobBodyRevisada"
+        },
+        "responses": {
+          "200": {
+            "description": "Cobrança imediata revisada (alterada ou cancelada). A revisão pode ser incrementada em 1 quando a solicitação é para alteração. Cancelamento não provoca incremento na revisão da cobrança imediata.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CobGerada"
+                },
+                "examples": {
+                  "retorno1": {
+                    "$ref": "#/components/examples/cobResponse3"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Requisição com formato inválido.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problema"
+                },
+                "examples": {
+                  "exemplo1": {
+                    "$ref": "#/components/examples/OperacaoInvalidaCobExample1"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/AcessoNegado"
+          },
+          "404": {
+            "$ref": "#/components/responses/NaoEncontrado"
+          },
+          "503": {
+            "$ref": "#/components/responses/ServicoIndisponivel"
+          }
+        }
+      },
+      "get": {
+        "parameters": [
+          {
+            "name": "revisao",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/Revisao"
+            }
+          }
+        ],
+        "tags": [
+          "Cob"
+        ],
+        "summary": "Consultar cobrança imediata.",
+        "security": [
+          {
+            "OAuth2": [
+              "cob.read"
+            ]
+          }
+        ],
+        "description": "Endpoint para consultar uma cobrança imediata através de um determinado txid. \n\n\nCobranças com vencimento não devem ser consultadas por este Endpoint. \n\n\nPor se tratar de uma consulta não deve ser enviado \"body\" nesta requisição.",
+        "responses": {
+          "200": {
+            "description": "Dados da cobrança imediata.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CobCompleta"
+                },
+                "examples": {
+                  "retorno1": {
+                    "$ref": "#/components/examples/cobResponseAtiva"
+                  },
+                  "retorno2": {
+                    "$ref": "#/components/examples/cobResponsePaga"
+                  },
+                  "retorno3": {
+                    "$ref": "#/components/examples/cobResponsePagaComDevolucao"
+                  },
+                  "retorno4": {
+                    "$ref": "#/components/examples/cobResponseExpirada"
+                  },
+                  "retorno5": {
+                    "$ref": "#/components/examples/cobResponseCancelada"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/AcessoNegado"
+          },
+          "404": {
+            "$ref": "#/components/responses/NaoEncontrado"
+          },
+          "503": {
+            "$ref": "#/components/responses/ServicoIndisponivel"
+          }
+        }
+      }
+    },
+    "/cobv/{txid}": {
+      "parameters": [
+        {
+          "name": "txid",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/TxId"
+          }
+        }
+      ],
+      "put": {
+        "tags": [
+          "CobV"
+        ],
+        "summary": "Criar cobrança com vencimento.",
+        "security": [
+          {
+            "OAuth2": [
+              "cobv.write"
+            ]
+          }
+        ],
+        "description": "Endpoint para criar uma cobrança com vencimento.",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/CobVBody"
+        },
+        "responses": {
+          "201": {
+            "description": "Cobrança com vencimento criada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CobVGerada"
+                },
+                "examples": {
+                  "retorno1": {
+                    "$ref": "#/components/examples/cobResponse4"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Requisição com formato inválido.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problema"
+                },
+                "examples": {
+                  "exemplo1": {
+                    "$ref": "#/components/examples/RequisicaoInvalidaCobVExample1"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/AcessoNegado"
+          },
+          "404": {
+            "$ref": "#/components/responses/NaoEncontrado"
+          },
+          "503": {
+            "$ref": "#/components/responses/ServicoIndisponivel"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "CobV"
+        ],
+        "summary": "Revisar cobrança com vencimento.",
+        "security": [
+          {
+            "OAuth2": [
+              "cobv.write"
+            ]
+          }
+        ],
+        "description": "Endpoint para Alterar ou Cancelar uma cobrança com vencimento através de um determinado txid.",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/CobVBodyRevisada"
+        },
+        "responses": {
+          "200": {
+            "description": "Cobrança com vencimento revisada (alterada ou cancelada). A revisão pode ser incrementada em 1 quando a solicitação é para alteração. Cancelamento não provoca incremento na revisão da cobrança com vencimento.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CobVGerada"
+                },
+                "examples": {
+                  "retorno1": {
+                    "$ref": "#/components/examples/cobVResponseAtiva"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Requisição com formato inválido.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problema"
+                },
+                "examples": {
+                  "exemplo1": {
+                    "$ref": "#/components/examples/OperacaoInvalidaCobVExample1"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/AcessoNegado"
+          },
+          "404": {
+            "$ref": "#/components/responses/NaoEncontrado"
+          },
+          "503": {
+            "$ref": "#/components/responses/ServicoIndisponivel"
+          }
+        }
+      },
+      "get": {
+        "parameters": [
+          {
+            "name": "revisao",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/Revisao"
+            }
+          }
+        ],
+        "tags": [
+          "CobV"
+        ],
+        "summary": "Consultar cobrança com vencimento.",
+        "security": [
+          {
+            "OAuth2": [
+              "cobv.read"
+            ]
+          }
+        ],
+        "description": "Endpoint para consultar uma cobrança com vencimento através de um determinado txid. \n\nCobranças imediatas não devem ser consultadas por este Endpoint. \n\nPor se tratar de uma consulta não deve ser enviado \"body\" nesta requisição",
+        "responses": {
+          "200": {
+            "description": "Dados da cobrança com vencimento.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CobVCompleta"
+                },
+                "examples": {
+                  "retorno1": {
+                    "$ref": "#/components/examples/cobVResponseAtiva"
+                  },
+                  "retorno2": {
+                    "$ref": "#/components/examples/cobVResponsePaga"
+                  },
+                  "retorno3": {
+                    "$ref": "#/components/examples/cobVResponsePagaComDevolucao"
+                  },
+                  "retorno4": {
+                    "$ref": "#/components/examples/cobVResponseExpirada"
+                  },
+                  "retorno5": {
+                    "$ref": "#/components/examples/cobVResponseCancelada"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/AcessoNegado"
+          },
+          "404": {
+            "$ref": "#/components/responses/NaoEncontrado"
+          },
+          "503": {
+            "$ref": "#/components/responses/ServicoIndisponivel"
+          }
+        }
+      }
+    },
+    "/pix": {
+      "get": {
+        "parameters": [
+          {
+            "in": "query",
+            "name": "inicio",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Inicio"
+            },
+            "example": "2022-01-01T05:00:00.000Z",
+            "description": "Nesse parâmetro não é necessário informar os milisegundos 000 (ex: 2022-01-01T05:00:00.000), pois já tratamos a data informada incluindo os milisegundos para abranger o mínimo da data início."
+          },
+          {
+            "in": "query",
+            "name": "fim",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Fim"
+            },
+            "example": "2022-01-01T23:59:59.000Z",
+            "description": "Nesse parâmetro não é necessário informar os milisegundos  999 (ex: 2022-01-01T23:59:59.999), pois já tratamos a data informada incluindo os milisegundos para abranger o máximo da data fim."
+          },
+          {
+            "name": "txid",
+            "in": "query",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/TxId"
+                },
+                {
+                  "pattern": "[a-zA-Z0-9]{1,35}"
+                }
+              ]
+            },
+            "description": "Aqui pode ser informado o txid de uma cobrança (imediata ou com vencimento) ou de um QRCode estático. Como o txid de uma cobrança imediata é único, a lista traria apenas um registro no intervalo informado. Este parâmetro faz sentido qdo o cliente usa QRCode estático e há vários pagamentos com o mesmo txid dentro do intervalo a ser pesquizado"
+          },
+          {
+            "name": "cpf",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "title": "CPF",
+              "pattern": "/^\\d{11}$/"
+            },
+            "description": "Filtro pelo CPF de um pagador. Não pode ser utilizado ao mesmo tempo que o CNPJ."
+          },
+          {
+            "name": "cnpj",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "title": "CNPJ",
+              "pattern": "/^\\d{14}$/"
+            },
+            "description": "Filtro pelo CNPJ do pagador. Não pode ser utilizado ao mesmo tempo que o CPF."
+          },
+          {
+            "$ref": "#/components/parameters/paginaAtual"
+          },
+          {
+            "$ref": "#/components/parameters/itensPorPagina"
+          }
+        ],
+        "tags": [
+          "Pix"
+        ],
+        "summary": "Consultar Pix recebidos.",
+        "security": [
+          {
+            "OAuth2": [
+              "pix.read"
+            ]
+          }
+        ],
+        "description": "Endpoint para Consultar uma lista de Pix Recebidos, contendo liquidação de QRCodes dinâmicos (imediatos/com vencimento), QRCodes Estáticos e/ou transferências (iniciadas por chave pix ou por Banco/Agência/Conta).",
+        "responses": {
+          "200": {
+            "description": "Lista dos Pix recebidos de acordo com o critério de busca.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PixConsultados"
+                },
+                "examples": {
+                  "getCobs1": {
+                    "$ref": "#/components/examples/getPix1"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/AcessoNegado"
+          },
+          "503": {
+            "$ref": "#/components/responses/ServicoIndisponivel"
+          }
+        }
+      }
+    },
+    "/pixrecebidos": {
+      "get": {
+        "tags": [
+          "Pix"
+        ],
+        "summary": "Consultar lista de Pix recebidos.",
+        "description": "Endpoint similar ao serviço padrão do Pix, que permite consultar uma lista de Pix Recebidos, contendo liquidação de QRCodes dinâmicos (imediatos/com vencimento), QRCodes Estáticos e/ou transferências (iniciadas por chave pix ou por Banco/Agência/Conta).\n\nPara cada E2eid, será apresentado o pagador da transação Pix.\n\nPara otimizar a recuperação de grandes volumes de dados na pesquisa, a data inicial e data final devem obrigatoriamente serem iguais.\n",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "inicio",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Inicio"
+            },
+            "example": "2022-01-01T05:00:00.000Z",
+            "description": "Nesse parâmetro não é necessário informar os milisegundos 000 (ex: 2022-01-01T05:00:00.000), pois já tratamos a data informada incluindo os milisegundos para abranger o mínimo da data início."
+          },
+          {
+            "in": "query",
+            "name": "fim",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Fim"
+            },
+            "example": "2022-01-01T23:59:59.000Z",
+            "description": "Nesse parâmetro não é necessário informar os milisegundos  999 (ex: 2022-01-01T23:59:59.999), pois já tratamos a data informada incluindo os milisegundos para abranger o máximo da data fim."
+          },
+          {
+            "name": "txid",
+            "in": "query",
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/TxId"
+                },
+                {
+                  "pattern": "[a-zA-Z0-9]{1,35}"
+                }
+              ]
+            },
+            "description": "Aqui pode ser informado o txid de uma cobrança (imediata ou com vencimento) ou de um QRCode estático. Como o txid de uma cobrança imediata é único, a lista traria apenas um registro no intervalo informado. Este parâmetro faz sentido qdo o cliente usa QRCode estático e há vários pagamentos com o mesmo txid dentro do intervalo a ser pesquizado"
+          },
+          {
+            "name": "cpf",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "title": "CPF",
+              "pattern": "/^\\d{11}$/"
+            },
+            "description": "Filtro pelo CPF do pagador. Não pode ser utilizado ao mesmo tempo que o CNPJ."
+          },
+          {
+            "name": "cnpj",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "title": "CNPJ",
+              "pattern": "/^\\d{14}$/"
+            },
+            "description": "Filtro pelo CNPJ do pagador. Não pode ser utilizado ao mesmo tempo que o CPF."
+          },
+          {
+            "$ref": "#/components/parameters/paginaAtual"
+          },
+          {
+            "$ref": "#/components/parameters/itensPorPagina"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/RequisicaoOk"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/RequisicaoListForbidden"
+          },
+          "406": {
+            "$ref": "#/components/responses/NotAcceptable"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        },
+        "security": [
+          {
+            "OAuth2": [
+              "pix.read"
+            ]
+          }
+        ]
+      }
+    },
+    "/pix/{e2eid}/devolucao/{id}": {
+      "parameters": [
+        {
+          "name": "e2eid",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/EndToEndId"
+          },
+          "description": "O e2eid é o identificador único da transação de liquidação do Pix e pode ser encontrado na consulta de um txid ou na lista dos pix recebidos, ou ser informado pela notificação do Webhook."
+        },
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/DevolucaoId"
+          },
+          "description": "O Id é o identificador  único criado pelo usuário recebedor para nomear e identificar a devolução. Para cada devolução sob um mesmo e2eid, deverá haver um Id único."
+        }
+      ],
+      "put": {
+        "tags": [
+          "Pix"
+        ],
+        "summary": "Solicitar devolução.",
+        "security": [
+          {
+            "OAuth2": [
+              "pix.write"
+            ]
+          }
+        ],
+        "description": "Endpoint para solicitar uma devolução através de um e2eid do Pix e de um ID criado pelo recebedor para nomear unicamente a solicitação da devolução. O motivo que será atribuído à PACS.004 será \"MD06\" ou \"SL02\" de acordo com a aba RTReason da PACS.004 que consta no Catálogo de Mensagens do Pix.\n",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/DevolucaoBody"
+        },
+        "responses": {
+          "201": {
+            "description": "Dados da devolução.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Devolucao"
+                },
+                "examples": {
+                  "retorno1": {
+                    "$ref": "#/components/examples/devolucaoResponse1"
+                  },
+                  "retorno2": {
+                    "$ref": "#/components/examples/devolucaoResponse2"
+                  },
+                  "retorno3": {
+                    "$ref": "#/components/examples/devolucaoResponse3"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Requisição com formato inválido.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problema"
+                },
+                "examples": {
+                  "exemplo1": {
+                    "$ref": "#/components/examples/RequisicaoInvalidaDevolucaoExample1"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/AcessoNegado"
+          },
+          "404": {
+            "$ref": "#/components/responses/NaoEncontrado"
+          },
+          "503": {
+            "$ref": "#/components/responses/ServicoIndisponivel"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Pix"
+        ],
+        "summary": "Consultar devolução.",
+        "security": [
+          {
+            "OAuth2": [
+              "pix.read"
+            ]
+          }
+        ],
+        "description": "Endpoint para consultar uma devolução através de um EndToEndID (e2eid) do Pix e do ID da devolução\n\nPor se tratar de uma consulta não deve ser enviado \"body\" nesta requisição.",
+        "responses": {
+          "200": {
+            "description": "Dados da devolução.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Devolucao"
+                },
+                "examples": {
+                  "retorno1": {
+                    "$ref": "#/components/examples/devolucaoResponse1"
+                  },
+                  "retorno2": {
+                    "$ref": "#/components/examples/devolucaoResponse2"
+                  },
+                  "retorno3": {
+                    "$ref": "#/components/examples/devolucaoResponse3"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/AcessoNegado"
+          },
+          "404": {
+            "$ref": "#/components/responses/NaoEncontrado"
+          },
+          "503": {
+            "$ref": "#/components/responses/ServicoIndisponivel"
+          }
+        }
+      }
+    },
+    "/webhook/{chave}": {
+      "parameters": [
+        {
+          "name": "chave",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "title": "Chave DICT do recebedor",
+            "maxLength": 77
+          },
+          "description": "Chave pix utilizada pelo usuário recebedor para as liquidações do pix."
+        }
+      ],
+      "put": {
+        "tags": [
+          "Webhook"
+        ],
+        "summary": "Configurar o Webhook Pix.",
+        "description": "Endpoint para configuração do serviço de notificações a cerca de Pix recebidos. A idéia é associar uma chave Pix à uma URL que estará apta a tratar a notificação de liquidação de um pix.\n\nSomente Pix associados a um txid serão notificados, por esta regra, transferências não são notificáveis. \n\nComo a relação é uma Chave Pix para uma URL, o mesmo cliente pode usar a mesma URL para chaves diferentes, porém, deve realizar uma chamada para cadastro de  cada chave que deseja associar na URL.\n",
+        "security": [
+          {
+            "OAuth2": [
+              "webhook.write"
+            ]
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/WebhookConfigBody"
+        },
+        "responses": {
+          "200": {
+            "description": "Sucesso na associação de uma chave Pix na URL para notificações Webhook."
+          },
+          "400": {
+            "description": "Requisição com formato inválido.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problema"
+                },
+                "examples": {
+                  "exemplo1": {
+                    "$ref": "#/components/examples/RequisicaoInvalidaWebhookExample1"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/AcessoNegado"
+          },
+          "404": {
+            "$ref": "#/components/responses/NaoEncontrado"
+          },
+          "503": {
+            "$ref": "#/components/responses/ServicoIndisponivel"
+          }
+        },
+        "callbacks": {
+          "Pix": {
+            "{$request.body#/webhookUrl}/pix": {
+              "post": {
+                "description": "O callback deve ser acionado sempre que um ou mais Pix associados a um txid forem recebidos\npelo usuário recebedor e desde que a chave associada ao Pix em questão esteja\nassociada a um webhook cadastrado.\n\nO SLA específico a ser definido no contexto dos acionamento dos callbacks fica a\ncargo de cada PSP recebedor. Orienta-se, no entanto, que o SLA seja definido dentro\nde um limite razoável tendo em vista que a expectativa é que o callback seja um aviso \"on-line\" da\nocorrência do pagamento.\n\nEste serviço está protegido por uma camada de autenticação mTLS. Para maiores detalhes,\nverificar o [Manual de padrões para iniciação do Pix](https://www.bcb.gov.br/estabilidadefinanceira/pix).\n",
+                "security": [],
+                "requestBody": {
+                  "$ref": "#/components/requestBodies/WebhookPixBody"
+                },
+                "responses": {
+                  "200": {
+                    "description": "Notificação recebida com sucesso"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Webhook"
+        ],
+        "summary": "Exibir informações acerca do Webhook Pix.",
+        "description": "Endpoint para recuperação de informações de uma URL Webhook a partir de uma chave Pix.\n\n\nPor se tratar de uma consulta não deve ser enviado \"body\" nesta requisição.\n",
+        "security": [
+          {
+            "OAuth2": [
+              "webhook.read"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sucesso na recuperação dos dados da URL Webhook",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebhookCompleto"
+                },
+                "examples": {
+                  "exemplo1": {
+                    "$ref": "#/components/examples/webhookResponse1"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/AcessoNegado"
+          },
+          "404": {
+            "$ref": "#/components/responses/NaoEncontrado"
+          },
+          "503": {
+            "$ref": "#/components/responses/ServicoIndisponivel"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Webhook"
+        ],
+        "summary": "Cancelar o Webhook Pix.",
+        "description": "Endpoint para cancelamento do webhook, ou seja, por este Endpoint será feita a exclusão da associação da chave Pix com uma URL webhook. \n\nO PSP recebedor está livre para remover unilateralmente um webhook que esteja associado a uma chave que não pertence mais a este usuário recebedor.\n",
+        "security": [
+          {
+            "OAuth2": [
+              "webhook.write"
+            ]
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Associação Chave Pix com URL Webhook para notificações Pix foi cancelado/excluído."
+          },
+          "403": {
+            "$ref": "#/components/responses/AcessoNegado"
+          },
+          "404": {
+            "$ref": "#/components/responses/NaoEncontrado"
+          },
+          "503": {
+            "$ref": "#/components/responses/ServicoIndisponivel"
+          }
+        }
+      }
+    },
+    "/webhook": {
+      "get": {
+        "parameters": [
+          {
+            "in": "query",
+            "name": "inicio",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/Inicio"
+            },
+            "example": "2022-01-01T05:00:00.000Z",
+            "description": "Nesse parâmetro não é necessário informar os milisegundos 000 (ex: 2022-01-01T05:00:00.000), pois já tratamos a data informada incluindo os milisegundos para abranger o mínimo da data início."
+          },
+          {
+            "in": "query",
+            "name": "fim",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/Fim"
+            },
+            "example": "2022-01-01T05:59:59.000Z",
+            "description": "Nesse parâmetro não é necessário informar os milisegundos  999 (ex: 2022-01-01T23:59:59.999), pois já tratamos a data informada incluindo os milisegundos para abranger o máximo da data fim."
+          },
+          {
+            "$ref": "#/components/parameters/paginaAtual"
+          },
+          {
+            "$ref": "#/components/parameters/itensPorPagina"
+          }
+        ],
+        "tags": [
+          "Webhook"
+        ],
+        "summary": "Consultar Webhooks cadastrados.",
+        "security": [
+          {
+            "OAuth2": [
+              "webhook.read"
+            ]
+          }
+        ],
+        "description": "Endpoint para consultar uma lista de URL Webhooks cadastradas. \n\nPor se tratar de uma consulta não deve ser enviado \"body\" nesta requisição.\n",
+        "responses": {
+          "200": {
+            "description": "Lista das associações de chave Pix com sua URL Webhook de acordo com o critério de busca.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebhooksConsultados"
+                },
+                "examples": {
+                  "getCobs1": {
+                    "$ref": "#/components/examples/getWebhook1"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/AcessoNegado"
+          },
+          "503": {
+            "$ref": "#/components/responses/ServicoIndisponivel"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "OAuth2": {
+        "type": "oauth2",
+        "flows": {
+          "clientCredentials": {
+            "tokenUrl": "/api/v1/oauth",
+            "scopes": {
+              "cob.write": "Permissão para alteração de cobranças imediatas",
+              "cob.read": "Permissão para consulta de cobranças imediatas",
+              "cobv.write": "Permissão para alteração de cobranças com vencimento",
+              "cobv.read": "Permissão para consulta de cobranças com vencimento",
+              "lotecobv.write": "Permissão para alteração de lotes de cobranças com vencimento",
+              "lotecobv.read": "Permissão para consulta de lotes de cobranças com vencimento",
+              "pix.write": "Permissão para alteração de Pix",
+              "pix.read": "Permissão para consulta de Pix",
+              "webhook.read": "Permissão para consulta do webhook",
+              "webhook.write": "Permissão para alteração do webhook",
+              "payloadlocation.write": "Permissão para alteração de payloads",
+              "payloadlocation.read": "Permissão para consulta de payloads"
+            }
+          }
+        }
+      }
+    },
+    "examples": {
+      "BadRequestExample1": {
+        "summary": "Exemplo de erro da requisição 1",
+        "value": {
+          "type": "https://pix.bcb.gov.br/api/v2/error/BadRequest",
+          "title": "Bad Request",
+          "status": 400,
+          "detail": "Algum parametro está com o formato inválido."
+        }
+      },
+      "UnauthorizedExample1": {
+        "summary": "Exemplo de erro da requisição 1",
+        "value": {
+          "type": "https://pix.bcb.gov.br/api/v2/error/Unauthorized",
+          "title": "Unauthorized",
+          "status": 401,
+          "detail": "Unauthorized."
+        }
+      },
+      "InternalServerErrorExample1": {
+        "summary": "Exemplo de erro da requisição 1",
+        "value": {
+          "type": "https://pix.bcb.gov.br/api/v2/error/InternalServerErro",
+          "title": "Internal Server Error",
+          "status": 500,
+          "detail": "Internal Server Error."
+        }
+      },
+      "NotAcceptableExample1": {
+        "summary": "Exemplo de erro da requisição 1",
+        "value": {
+          "type": "https://pix.bcb.gov.br/api/v2/error/NotAcceptable",
+          "title": "NotAcceptable",
+          "status": 406,
+          "detail": "NotAcceptable."
+        }
+      },
+      "cobBody1": {
+        "summary": "Exemplo de criação de cobrança com vencimento 1",
+        "value": {
+          "calendario": {
+            "dataDeVencimento": "2020-12-31",
+            "validadeAposVencimento": 30
+          },
+          "devedor": {
+            "logradouro": "Alameda Souza, Numero 80, Bairro Braz",
+            "cidade": "Recife",
+            "uf": "PE",
+            "cep": "70011750",
+            "cpf": "12345678909",
+            "nome": "Francisco da Silva"
+          },
+          "valor": {
+            "original": "123.45",
+            "multa": {
+              "modalidade": "2",
+              "valorPerc": "15.00"
+            },
+            "juros": {
+              "modalidade": "2",
+              "valorPerc": "2.00"
+            },
+            "desconto": {
+              "modalidade": "1",
+              "descontoDataFixa": [
+                {
+                  "data": "2020-11-30",
+                  "valorPerc": "30.00"
+                }
+              ]
+            }
+          },
+          "chave": "5f84a4c5-c5cb-4599-9f13-7eb4d419dacc",
+          "solicitacaoPagador": "Cobrança dos serviços prestados."
+        }
+      },
+      "cobBody2": {
+        "summary": "Solicitação de criação de cobrança imediata",
+        "value": {
+          "calendario": {
+            "expiracao": 3600
+          },
+          "devedor": {
+            "cnpj": "12345678000195",
+            "nome": "Empresa de Serviços SA"
+          },
+          "valor": {
+            "original": "37.00"
+          },
+          "chave": "7d9f0335-8dcc-4054-9bf9-0dbd61d36906",
+          "solicitacaoPagador": "Serviço realizado.",
+          "infoAdicionais": [
+            {
+              "nome": "Campo 1",
+              "valor": "Informação Adicional1 do PSP-Recebedor"
+            },
+            {
+              "nome": "Campo 2",
+              "valor": "Informação Adicional2 do PSP-Recebedor"
+            }
+          ]
+        }
+      },
+      "cobBody3": {
+        "summary": "Exemplo de revisão de cobrança - Alteração: Devedor",
+        "value": {
+          "devedor": {
+            "cpf": "12345678909",
+            "nome": "Francisco da Silva"
+          },
+          "valor": {
+            "original": "123.45"
+          },
+          "solicitacaoPagador": "Cobrança dos serviços prestados."
+        }
+      },
+      "cobBody4": {
+        "summary": "Exemplo de revisão de cobrança - Alteração: Valor",
+        "value": {
+          "valor": {
+            "original": "567.89"
+          },
+          "solicitacaoPagador": "Informar cartão fidelidade"
+        }
+      },
+      "cobBody5": {
+        "summary": "Exemplo de revisão de cobrança - Cancelamento",
+        "value": {
+          "status": "REMOVIDA_PELO_USUARIO_RECEBEDOR"
+        }
+      },
+      "cobResponseAtiva": {
+        "summary": "Exemplo de cobrança imediata - Ativa",
+        "value": {
+          "calendario": {
+            "criacao": "2020-09-09T20:15:00.358Z",
+            "expiracao": 3600
+          },
+          "txid": "7978c0c97ea847e78e8849634473c1f1",
+          "revisao": 0,
+          "location": "pix.example.com/qr/9d36b84fc70b478fb95c12729b90ca25",
+          "status": "ATIVA",
+          "devedor": {
+            "cnpj": "12345678000195",
+            "nome": "Empresa de Serviços SA"
+          },
+          "valor": {
+            "original": "37.00",
+            "modalidadeAlteracao": 1
+          },
+          "chave": "7d9f0335-8dcc-4054-9bf9-0dbd61d36906",
+          "solicitacaoPagador": "Serviço realizado.",
+          "infoAdicionais": [
+            {
+              "nome": "Campo 1",
+              "valor": "Informação Adicional1 do PSP-Recebedor"
+            },
+            {
+              "nome": "Campo 2",
+              "valor": "Informação Adicional2 do PSP-Recebedor"
+            }
+          ]
+        }
+      },
+      "cobResponsePaga": {
+        "summary": "Exemplo de cobrança imediata - Paga",
+        "value": {
+          "calendario": {
+            "criacao": "2020-09-09T20:15:00.358Z",
+            "expiracao": 3600
+          },
+          "txid": "655dfdb1a4514b8fbb58254b958913fb",
+          "revisao": 1,
+          "location": "pix.example.com/qr/1dd7f893a58e417287028dc33e21a403",
+          "status": "CONCLUIDA",
+          "devedor": {
+            "cnpj": "12345678000195",
+            "nome": "Empresa de Serviços SA"
+          },
+          "valor": {
+            "original": "100.00",
+            "modalidadeAlteracao": 0
+          },
+          "chave": "40a0932d-1918-4eee-845d-35a2da1690dc",
+          "solicitacaoPagador": "Informar cartão fidelidade",
+          "pix": [
+            {
+              "endToEndId": "E12345678202009091221kkkkkkkkkkk",
+              "txid": "655dfdb1a4514b8fbb58254b958913fb",
+              "valor": "110.00",
+              "horario": "2020-09-09T20:15:00.358Z",
+              "infoPagador": "0123456789"
+            }
+          ]
+        }
+      },
+      "cobResponsePagaComDevolucao": {
+        "summary": "Exemplo de cobrança imediata - Paga e com devolução em Processamento",
+        "value": {
+          "calendario": {
+            "criacao": "2020-09-09T20:15:00.358Z",
+            "expiracao": 3600
+          },
+          "txid": "655dfdb1a4514b8fbb58254b958913fb",
+          "revisao": 1,
+          "location": "pix.example.com/qr/1dd7f893a58e417287028dc33e21a403",
+          "status": "CONCLUIDA",
+          "devedor": {
+            "cnpj": "12345678000195",
+            "nome": "Empresa de Serviços SA"
+          },
+          "valor": {
+            "original": "100.00",
+            "modalidadeAlteracao": 0
+          },
+          "chave": "40a0932d-1918-4eee-845d-35a2da1690dc",
+          "solicitacaoPagador": "Informar cartão fidelidade",
+          "pix": [
+            {
+              "endToEndId": "E12345678202009091221kkkkkkkkkkk",
+              "txid": "655dfdb1a4514b8fbb58254b958913fb",
+              "valor": "110.00",
+              "horario": "2020-09-09T20:15:00.358Z",
+              "infoPagador": "0123456789",
+              "devolucoes": [
+                {
+                  "id": "123ABC",
+                  "rtrId": "Dxxxxxxxx202009091221kkkkkkkkkkk",
+                  "valor": "10.00",
+                  "horario": {
+                    "solicitacao": "2020-09-09T20:15:00.358Z"
+                  },
+                  "status": "EM_PROCESSAMENTO"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "cobResponseCancelada": {
+        "summary": "Exemplo de cobrança imediata - Cancelada pelo recebedor",
+        "value": {
+          "calendario": {
+            "criacao": "2020-09-09T20:15:00.358Z",
+            "expiracao": 3600
+          },
+          "txid": "7978c0c97ea847e78e8849634473c1f1",
+          "revisao": 0,
+          "location": "pix.example.com/qr/9d36b84fc70b478fb95c12729b90ca25",
+          "status": "REMOVIDA_PELO_USUARIO_RECEBEDOR",
+          "devedor": {
+            "cnpj": "12345678000195",
+            "nome": "Empresa de Serviços SA"
+          },
+          "valor": {
+            "original": "37.00",
+            "modalidadeAlteracao": 1
+          },
+          "chave": "7d9f0335-8dcc-4054-9bf9-0dbd61d36906",
+          "solicitacaoPagador": "Serviço realizado.",
+          "infoAdicionais": [
+            {
+              "nome": "Campo 1",
+              "valor": "Informação Adicional1 do PSP-Recebedor"
+            },
+            {
+              "nome": "Campo 2",
+              "valor": "Informação Adicional2 do PSP-Recebedor"
+            }
+          ]
+        }
+      },
+      "cobResponseExpirada": {
+        "summary": "Exemplo de cobrança imediata - Expirada",
+        "value": {
+          "calendario": {
+            "criacao": "2020-09-09T20:15:00.358Z",
+            "expiracao": 3600
+          },
+          "txid": "7978c0c97ea847e78e8849634473c1f1",
+          "revisao": 0,
+          "location": "pix.example.com/qr/9d36b84fc70b478fb95c12729b90ca25",
+          "status": "CONCLUIDA",
+          "devedor": {
+            "cnpj": "12345678000195",
+            "nome": "Empresa de Serviços SA"
+          },
+          "valor": {
+            "original": "37.00",
+            "modalidadeAlteracao": 1
+          },
+          "chave": "7d9f0335-8dcc-4054-9bf9-0dbd61d36906",
+          "solicitacaoPagador": "Serviço realizado.",
+          "infoAdicionais": [
+            {
+              "nome": "Campo 1",
+              "valor": "Informação Adicional1 do PSP-Recebedor"
+            },
+            {
+              "nome": "Campo 2",
+              "valor": "Informação Adicional2 do PSP-Recebedor"
+            }
+          ]
+        }
+      },
+      "cobVResponseAtiva": {
+        "summary": "Exemplo de cobrança com vencimento - Ativa",
+        "value": {
+          "calendario": {
+            "criacao": "2020-09-09T20:15:00.358Z",
+            "dataDeVencimento": "2020-12-31",
+            "validadeAposVencimento": 30
+          },
+          "txid": "7978c0c97ea847e78e8849634473c1f1",
+          "revisao": 0,
+          "status": "ATIVA",
+          "devedor": {
+            "logradouro": "Alameda Souza, Numero 80, Bairro Braz",
+            "cidade": "Recife",
+            "uf": "PE",
+            "cep": "70011750",
+            "cpf": "12345678909",
+            "nome": "Francisco da Silva"
+          },
+          "recebedor": {
+            "logradouro": "Rua 15 Numero 1200, Bairro São Luiz",
+            "cidade": "São Paulo",
+            "uf": "SP",
+            "cep": "70800100",
+            "cnpj": "56989000019533",
+            "nome": "Empresa de Logística SA"
+          },
+          "valor": {
+            "original": "123.45"
+          },
+          "chave": "5f84a4c5-c5cb-4599-9f13-7eb4d419dacc",
+          "solicitacaoPagador": "Cobrança dos serviços prestados."
+        }
+      },
+      "cobResponseSaque": {
+        "summary": "Exemplo de cobrança imediata com Saque Pix",
+        "value": {
+          "calendario": {
+            "criacao": "2020-09-09T20:15:00.358Z",
+            "expiracao": 3600
+          },
+          "txid": "33beb661beda44a8928fef47dbeb2dc5",
+          "revisao": 0,
+          "location": "pix.example.com/qr/7faa6893c4e64893a503baf0d40af213",
+          "status": "ATIVA",
+          "devedor": {
+            "cnpj": "12345678000195",
+            "nome": "Empresa de Serviços SA"
+          },
+          "valor": {
+            "original": "0.00",
+            "modalidadeAlteracao": 0,
+            "retirada": {
+              "saque": {
+                "valor": "5.00",
+                "modalidadeAlteracao": 0,
+                "modalidadeAgente": "AGPSS",
+                "prestadorDoServicoDeSaque": "12345678"
+              }
+            }
+          },
+          "chave": "7d9f0335-8dcc-4054-9bf9-0dbd61d36906"
+        }
+      },
+      "cobResponse6": {
+        "summary": "Exemplo de cobrança imediata com Saque Pix 2",
+        "value": {
+          "calendario": {
+            "criacao": "2020-09-09T20:15:00.358Z",
+            "expiracao": 3600
+          },
+          "txid": "33beb661beda44a8928fef47dbeb2dc5",
+          "revisao": 0,
+          "location": "pix.example.com/qr/7faa6893c4e64893a503baf0d40af213",
+          "status": "ATIVA",
+          "devedor": {
+            "cnpj": "12345678000195",
+            "nome": "Empresa de Serviços SA"
+          },
+          "valor": {
+            "original": "0.00",
+            "modalidadeAlteracao": 0,
+            "retirada": {
+              "saque": {
+                "valor": "20.00",
+                "modalidadeAlteracao": 1,
+                "modalidadeAgente": "AGPSS",
+                "prestadorDoServicoDeSaque": "12345678"
+              }
+            }
+          },
+          "chave": "7d9f0335-8dcc-4054-9bf9-0dbd61d36906"
+        }
+      },
+      "cobResponseTroco": {
+        "summary": "Exemplo de cobrança imediata com Troco Pix",
+        "value": {
+          "calendario": {
+            "criacao": "2020-09-09T20:15:00.358Z",
+            "expiracao": 3600
+          },
+          "txid": "33beb661beda44a8928fef47dbeb2dc5",
+          "revisao": 0,
+          "location": "pix.example.com/qr/7faa6893c4e64893a503baf0d40af213",
+          "status": "ATIVA",
+          "devedor": {
+            "cnpj": "12345678000195",
+            "nome": "Empresa de Serviços SA"
+          },
+          "valor": {
+            "original": "10.00",
+            "modalidadeAlteracao": 0,
+            "retirada": {
+              "troco": {
+                "valor": "0.00",
+                "modalidadeAlteracao": 1,
+                "modalidadeAgente": "AGTEC",
+                "prestadorDoServicoDeSaque": "12345678"
+              }
+            }
+          },
+          "chave": "7d9f0335-8dcc-4054-9bf9-0dbd61d36906"
+        }
+      },
+      "cobVResponsePagaComDevolucao": {
+        "summary": "Exemplo de cobrança com vencimento - Paga e com devolução em processamento",
+        "value": {
+          "calendario": {
+            "criacao": "2020-09-09T20:15:00.358Z",
+            "dataDeVencimento": "2020-12-31",
+            "validadeAposVencimento": 30
+          },
+          "txid": "7978c0c97ea847e78e8849634473c1f1",
+          "revisao": 0,
+          "status": "CONCLUIDA",
+          "devedor": {
+            "logradouro": "Alameda Souza, Numero 80, Bairro Braz",
+            "cidade": "Recife",
+            "uf": "PE",
+            "cep": "70011750",
+            "cpf": "12345678909",
+            "nome": "Francisco da Silva"
+          },
+          "recebedor": {
+            "logradouro": "Rua 15 Numero 1200, Bairro São Luiz",
+            "cidade": "São Paulo",
+            "uf": "SP",
+            "cep": "70800100",
+            "cnpj": "56989000019533",
+            "nome": "Empresa de Logística SA"
+          },
+          "valor": {
+            "original": "123.45"
+          },
+          "chave": "5f84a4c5-c5cb-4599-9f13-7eb4d419dacc",
+          "solicitacaoPagador": "Cobrança dos serviços prestados.",
+          "pix": [
+            {
+              "endToEndId": "E12345678202009091221kkkkkkkkkkk",
+              "txid": "7978c0c97ea847e78e8849634473c1f1",
+              "valor": "123.45",
+              "horario": "2020-09-09T20:15:00.358Z",
+              "infoPagador": "0123456789",
+              "devolucoes": [
+                {
+                  "id": "123ABC",
+                  "rtrId": "Dxxxxxxxx202009091221kkkkkkkkkkk",
+                  "valor": "10.00",
+                  "horario": {
+                    "solicitacao": "2020-09-09T20:15:00.358Z"
+                  },
+                  "status": "EM_PROCESSAMENTO"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "cobVResponseExpirada": {
+        "summary": "Exemplo de cobrança com vencimento - Expirada",
+        "value": {
+          "calendario": {
+            "criacao": "2020-09-09T20:15:00.358Z",
+            "dataDeVencimento": "2020-12-31",
+            "validadeAposVencimento": 30
+          },
+          "txid": "7978c0c97ea847e78e8849634473c1f1",
+          "revisao": 0,
+          "status": "CONCLUIDA",
+          "devedor": {
+            "logradouro": "Alameda Souza, Numero 80, Bairro Braz",
+            "cidade": "Recife",
+            "uf": "PE",
+            "cep": "70011750",
+            "cpf": "12345678909",
+            "nome": "Francisco da Silva"
+          },
+          "recebedor": {
+            "logradouro": "Rua 15 Numero 1200, Bairro São Luiz",
+            "cidade": "São Paulo",
+            "uf": "SP",
+            "cep": "70800100",
+            "cnpj": "56989000019533",
+            "nome": "Empresa de Logística SA"
+          },
+          "valor": {
+            "original": "123.45"
+          },
+          "chave": "5f84a4c5-c5cb-4599-9f13-7eb4d419dacc",
+          "solicitacaoPagador": "Cobrança dos serviços prestados."
+        }
+      },
+      "cobVResponseCancelada": {
+        "summary": "Exemplo de cobrança com vencimento - Cancelada pelo recebedor",
+        "value": {
+          "calendario": {
+            "criacao": "2020-09-09T20:15:00.358Z",
+            "dataDeVencimento": "2020-12-31",
+            "validadeAposVencimento": 30
+          },
+          "txid": "7978c0c97ea847e78e8849634473c1f1",
+          "revisao": 0,
+          "status": "REMOVIDA_PELO_USUARIO_RECEBEDOR",
+          "devedor": {
+            "logradouro": "Alameda Souza, Numero 80, Bairro Braz",
+            "cidade": "Recife",
+            "uf": "PE",
+            "cep": "70011750",
+            "cpf": "12345678909",
+            "nome": "Francisco da Silva"
+          },
+          "recebedor": {
+            "logradouro": "Rua 15 Numero 1200, Bairro São Luiz",
+            "cidade": "São Paulo",
+            "uf": "SP",
+            "cep": "70800100",
+            "cnpj": "56989000019533",
+            "nome": "Empresa de Logística SA"
+          },
+          "valor": {
+            "original": "123.45"
+          },
+          "chave": "5f84a4c5-c5cb-4599-9f13-7eb4d419dacc",
+          "solicitacaoPagador": "Cobrança dos serviços prestados."
+        }
+      },
+      "cobVResponsePaga": {
+        "summary": "Exemplo de cobrança com vencimento - Paga",
+        "value": {
+          "calendario": {
+            "criacao": "2020-09-09T20:15:00.358Z",
+            "dataDeVencimento": "2020-12-31",
+            "validadeAposVencimento": 30
+          },
+          "txid": "7978c0c97ea847e78e8849634473c1f1",
+          "revisao": 0,
+          "status": "CONCLUIDA",
+          "devedor": {
+            "logradouro": "Alameda Souza, Numero 80, Bairro Braz",
+            "cidade": "Recife",
+            "uf": "PE",
+            "cep": "70011750",
+            "cpf": "12345678909",
+            "nome": "Francisco da Silva"
+          },
+          "recebedor": {
+            "logradouro": "Rua 15 Numero 1200, Bairro São Luiz",
+            "cidade": "São Paulo",
+            "uf": "SP",
+            "cep": "70800100",
+            "cnpj": "56989000019533",
+            "nome": "Empresa de Logística SA"
+          },
+          "valor": {
+            "original": "123.45"
+          },
+          "chave": "5f84a4c5-c5cb-4599-9f13-7eb4d419dacc",
+          "solicitacaoPagador": "Cobrança dos serviços prestados.",
+          "pix": [
+            {
+              "endToEndId": "E12345678202009091221kkkkkkkkkkk",
+              "txid": "7978c0c97ea847e78e8849634473c1f1",
+              "valor": "123.45",
+              "horario": "2020-09-09T20:15:00.358Z",
+              "infoPagador": "0123456789"
+            }
+          ]
+        }
+      },
+      "cobResponse1": {
+        "summary": "Cobrança Imediata Ativa",
+        "value": {
+          "calendario": {
+            "criacao": "2020-09-09T20:15:00.358Z",
+            "expiracao": 3600
+          },
+          "location": "pix.example.com/qr/9d36b84fc70b478fb95c12729b90ca25",
+          "revisao": 0,
+          "devedor": {
+            "cnpj": "12345678000195",
+            "nome": "Empresa de Servicos SA"
+          },
+          "valor": {
+            "original": "567.89"
+          },
+          "chave": "a1f4102e-a446-4a57-bcce-6fa48899c1d1",
+          "txid": "7978c0c97ea847e78e8849634473c1f1",
+          "status": "ATIVA",
+          "solicitacaoPagador": "solicitacao ao pagador",
+          "infoAdicionais": [
+            {
+              "nome": "Campo 1",
+              "valor": "Informação Adicional1 do PSP-Recebedor"
+            },
+            {
+              "nome": "Campo 2",
+              "valor": "Informação Adicional2 do PSP-Recebedor"
+            }
+          ]
+        }
+      },
+      "cobResponse2": {
+        "summary": "Exemplo de cobrança imediata 2",
+        "value": {
+          "calendario": {
+            "criacao": "2020-09-09T20:15:00.358Z",
+            "expiracao": 3600
+          },
+          "txid": "655dfdb1a4514b8fbb58254b958913fb",
+          "revisao": 1,
+          "location": "pix.example.com/qr/1dd7f893a58e417287028dc33e21a403",
+          "status": "CONCLUIDA",
+          "devedor": {
+            "cnpj": "12345678000195",
+            "nome": "Empresa de Serviços SA"
+          },
+          "valor": {
+            "original": "100.00"
+          },
+          "chave": "40a0932d-1918-4eee-845d-35a2da1690dc",
+          "solicitacaoPagador": "Informar cartão fidelidade",
+          "pix": [
+            {
+              "endToEndId": "E12345678202009091221kkkkkkkkkkk",
+              "txid": "655dfdb1a4514b8fbb58254b958913fb",
+              "valor": "110.00",
+              "horario": "2020-09-09T20:15:00.358Z"
+            }
+          ],
+          "infoAdicionais": [
+            {
+              "nome": "Campo 1",
+              "valor": "Informação Adicional1 do PSP-Recebedor"
+            },
+            {
+              "nome": "Campo 2",
+              "valor": "Informação Adicional2 do PSP-Recebedor"
+            }
+          ]
+        }
+      },
+      "cobResponse3": {
+        "summary": "Exemplo de cobrança revisada 1",
+        "value": {
+          "calendario": {
+            "criacao": "2020-09-09T20:15:00.358Z",
+            "expiracao": 3600
+          },
+          "txid": "7978c0c97ea847e78e8849634473c1f1",
+          "revisao": 1,
+          "location": "pix.example.com/qr/v1/9d36b84fc70b478fb95c12729b90ca25",
+          "status": "ATIVA",
+          "devedor": {
+            "cnpj": "12345678000195",
+            "nome": "Empresa de Serviços SA"
+          },
+          "valor": {
+            "original": "567.89",
+            "modalidadeAlteracao": 0
+          },
+          "chave": "a1f4102e-a446-4a57-bcce-6fa48899c1d1",
+          "solicitacaoPagador": "Informar cartão fidelidade"
+        }
+      },
+      "cobResponse4": {
+        "summary": "Exemplo de cobrança com vencimento 1",
+        "value": {
+          "calendario": {
+            "criacao": "2020-09-09T20:15:00.358Z",
+            "dataDeVencimento": "2020-12-31",
+            "validadeAposVencimento": 30
+          },
+          "txid": "7978c0c97ea847e78e8849634473c1f1",
+          "revisao": 0,
+          "status": "ATIVA",
+          "devedor": {
+            "logradouro": "Rua 15, Numero 1, Bairro Luz",
+            "cidade": "Belo Horizonte",
+            "uf": "MG",
+            "cep": "99000750",
+            "cnpj": "12345678000195",
+            "nome": "Empresa de Serviços SA"
+          },
+          "recebedor": {
+            "logradouro": "Rua 15 Numero 1200, Bairro São Luiz",
+            "cidade": "São Paulo",
+            "uf": "SP",
+            "cep": "70800100",
+            "cnpj": "56989000019533",
+            "nome": "Empresa de Logística SA"
+          },
+          "valor": {
+            "original": "567.89"
+          },
+          "chave": "a1f4102e-a446-4a57-bcce-6fa48899c1d1",
+          "solicitacaoPagador": "Informar cartão fidelidade"
+        }
+      },
+      "pixResponse1": {
+        "summary": "Exemplo de Pix 1",
+        "value": {
+          "endToEndId": "E12345678202009091221abcdef12345",
+          "txid": "cd1fe328c875481285a6f233ae41b662",
+          "valor": "100.00",
+          "horario": "2020-09-10T13:03:33.902Z",
+          "infoPagador": "Reforma da casa",
+          "devolucoes": [
+            {
+              "id": "000AAA111",
+              "rtrId": "D12345678202009091000abcde123456",
+              "valor": "11.00",
+              "horario": {
+                "solicitacao": "2020-09-10T13:03:33.902Z"
+              },
+              "status": "EM_PROCESSAMENTO"
+            }
+          ]
+        }
+      },
+      "pixResponse2": {
+        "summary": "Exemplo de Pix 2",
+        "value": {
+          "endToEndId": "E12345678202009091221ghijk78901234",
+          "txid": "5b933948f3224266b1050ac54319e775",
+          "valor": "200.00",
+          "horario": "2020-09-10T13:03:33.902Z",
+          "infoPagador": "Revisão do carro"
+        }
+      },
+      "webhookBody1": {
+        "summary": "Exemplo de configuração de Webhook 1",
+        "value": {
+          "webhookUrl": "https://pix.example.com/api/webhook/"
+        }
+      },
+      "webhookResponse1": {
+        "summary": "Exemplo de consulta de Webhook 1",
+        "value": {
+          "webhookUrl": "https://pix.example.com/api/webhook/",
+          "chave": "40a0932d-1918-4eee-845d-35a2da1690dc",
+          "criacao": "2020-11-11T10:15:00.358Z"
+        }
+      },
+      "pixWebhook1": {
+        "summary": "Exemplo de Webhook Pix 1",
+        "value": null
+      },
+      "pixWebhook2": {
+        "summary": "Exemplo de Webhook Pix 2",
+        "value": {
+          "endToEndId": "E87654321202009091221dfghi123456",
+          "txid": "971122d8f37211eaadc10242ac120002",
+          "valor": "110.00",
+          "horario": "2020-09-09T20:15:00.358Z",
+          "infoPagador": "0123456789"
+        }
+      },
+      "devolucaoResponse1": {
+        "summary": "Exemplo de devolução - Em processamento",
+        "value": {
+          "id": "123456",
+          "rtrId": "D12345678202009091000abcde123456",
+          "valor": "7.89",
+          "horario": {
+            "solicitacao": "2020-09-11T15:25:59.411Z"
+          },
+          "status": "EM_PROCESSAMENTO"
+        }
+      },
+      "devolucaoResponse2": {
+        "summary": "Exemplo de devolução - Não realizado",
+        "value": {
+          "id": "502",
+          "rtrId": "D12345678202011111000fghij789012",
+          "valor": "20.00",
+          "horario": {
+            "solicitacao": "2020-09-11T15:25:59.411Z"
+          },
+          "status": "NAO_REALIZADO",
+          "motivo": "Negado por timeout"
+        }
+      },
+      "devolucaoResponse3": {
+        "summary": "Exemplo de devolução - Devolvido",
+        "value": {
+          "id": "502",
+          "rtrId": "D12345678202011111000fghij789012",
+          "valor": "20.00",
+          "horario": {
+            "solicitacao": "2020-09-11T15:25:59.411Z"
+          },
+          "status": "DEVOLVIDO",
+          "motivo": "Estorno total do pagamento"
+        }
+      },
+      "devolucaoSolicitada1": {
+        "summary": "Exemplo de solicitação de devolução 1",
+        "value": {
+          "valor": "7.89"
+        }
+      },
+      "cobPayload1": {
+        "summary": "Exemplo de payload de cobrança imediata 1",
+        "value": {
+          "calendario": {
+            "criacao": "2020-09-15T19:39:54.013Z",
+            "apresentacao": "2020-04-01T18:00:00Z",
+            "expiracao": 3600
+          },
+          "txid": "fc9a4366ff3d4964b5dbc6c91a8722d3",
+          "revisao": 3,
+          "status": "ATIVA",
+          "valor": {
+            "original": "500.00",
+            "modalidadeAlteracao": 0
+          },
+          "chave": "7407c9c8-f78b-11ea-adc1-0242ac120002",
+          "solicitacaoPagador": "Informar cartao fidelidade",
+          "infoAdicionais": [
+            {
+              "nome": "quantidade",
+              "valor": "2"
+            }
+          ]
+        }
+      },
+      "cobPayload2": {
+        "summary": "Exemplo de payload de cobrança com vencimento 1",
+        "value": {
+          "calendario": {
+            "criacao": "2020-09-15T19:39:54.013Z",
+            "apresentacao": "2020-04-01T18:00:00Z",
+            "dataDeVencimento": "2020-12-31",
+            "validadeAposVencimento": 30
+          },
+          "devedor": {
+            "cnpj": "56989000019533",
+            "nome": "Empresa de Alimentos SA"
+          },
+          "recebedor": {
+            "logradouro": "Rua 20 Numero 70, Bairro Luz",
+            "cidade": "Belo Horizonte",
+            "uf": "MG",
+            "cep": "55120750",
+            "cnpj": "58900633120711",
+            "nome": "Empresa de Abastecimento SA"
+          },
+          "txid": "fc9a4366ff3d4964b5dbc6c91a8722d3",
+          "revisao": 3,
+          "status": "ATIVA",
+          "valor": {
+            "original": "123.45",
+            "multa": "15.00",
+            "juros": "2.00",
+            "final": "140.45"
+          },
+          "chave": "7407c9c8-f78b-11ea-adc1-0242ac120002",
+          "solicitacaoPagador": "Informar cartao fidelidade",
+          "infoAdicionais": [
+            {
+              "nome": "quantidade",
+              "valor": "2"
+            }
+          ]
+        }
+      },
+      "pagadorPayload": {
+        "summary": "Exemplo de payload de pagador pix",
+        "value": {
+          "devedor": {
+            "cnpj": "56989000019533",
+            "nome": "Empresa de Alimentos SA"
+          }
+        }
+      },
+      "getCobs1": {
+        "summary": "Exemplo de retorno da consulta de cobranças 1",
+        "value": {
+          "parametros": {
+            "inicio": "2020-04-01T00:00:00Z",
+            "fim": "2020-04-02T10:00:00Z",
+            "paginacao": {
+              "paginaAtual": 0,
+              "itensPorPagina": 100,
+              "quantidadeDePaginas": 1,
+              "quantidadeTotalDeItens": 2
+            }
+          },
+          "cobs": [
+            {
+              "allOf": [
+                {
+                  "$ref": "#/components/examples/cobResponse1/value"
+                }
+              ]
+            },
+            {
+              "allOf": [
+                {
+                  "$ref": "#/components/examples/cobResponse2/value"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "getCobs2": {
+        "summary": "Exemplo de retorno da consulta de cobranças 2",
+        "value": {
+          "parametros": {
+            "inicio": "2020-04-01T00:00:00Z",
+            "fim": "2020-04-01T23:59:59Z",
+            "paginacao": {
+              "paginaAtual": 0,
+              "itensPorPagina": 100,
+              "quantidadeDePaginas": 1,
+              "quantidadeTotalDeItens": 1
+            }
+          },
+          "cobs": [
+            {
+              "allOf": [
+                {
+                  "$ref": "#/components/examples/cobResponse1/value"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "getCobsV1": {
+        "summary": "Exemplo de retorno da consulta de cobranças com vencimento 1",
+        "value": {
+          "parametros": {
+            "inicio": "2020-04-01T00:00:00Z",
+            "fim": "2020-04-01T23:59:59Z",
+            "paginacao": {
+              "paginaAtual": 0,
+              "itensPorPagina": 100,
+              "quantidadeDePaginas": 1,
+              "quantidadeTotalDeItens": 1
+            }
+          },
+          "cobs": [
+            {
+              "allOf": [
+                {
+                  "$ref": "#/components/examples/cobResponse4/value"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "getPix1": {
+        "summary": "Exemplo de retorno da consulta de Pix 1",
+        "value": {
+          "parametros": {
+            "inicio": "2020-04-01T00:00:00Z",
+            "fim": "2020-04-01T23:59:59Z",
+            "paginacao": {
+              "paginaAtual": 0,
+              "itensPorPagina": 100,
+              "quantidadeDePaginas": 1,
+              "quantidadeTotalDeItens": 2
+            }
+          },
+          "pix": [
+            {
+              "endToEndId": "E9040088820210310181400008883206",
+              "txid": "100090400888000020210310000091302",
+              "valor": 1.11,
+              "horario": "2021-03-10T15:14:34Z",
+              "infoPagador": "API Teste A"
+            },
+            {
+              "endToEndId": "E9040088820210310181700008883216",
+              "txid": "X01160061051149001000300000002792",
+              "valor": 375.55,
+              "horario": "2021-03-10T15:17:29Z",
+              "infoPagador": "Pagamento Online da Parcela 01"
+            }
+          ]
+        }
+      },
+      "getWebhook1": {
+        "summary": "Exemplo de retorno da consulta de Webhooks 1",
+        "value": {
+          "parametros": {
+            "inicio": "2020-04-01T00:00:00Z",
+            "fim": "2020-04-01T23:59:59Z",
+            "paginacao": {
+              "paginaAtual": 0,
+              "itensPorPagina": 100,
+              "quantidadeDePaginas": 1,
+              "quantidadeTotalDeItens": 1
+            }
+          },
+          "webhooks": [
+            {
+              "chave": "20201210000155",
+              "webhookUrl": "https://testewebhook.free.beeceptor.com",
+              "criacao": "2021-05-03T11:43:39Z"
+            }
+          ]
+        }
+      },
+      "RequisicaoInvalidaCobExample1": {
+        "summary": "Exemplo de erro da requisição 1",
+        "value": {
+          "type": "https://pix.bcb.gov.br/api/v2/error/CobOperacaoInvalida",
+          "title": "Cobrança inválida.",
+          "status": 400,
+          "detail": "A requisição que busca alterar ou criar uma cobrança para pagamento imediato não respeita o schema ou está semanticamente errada.",
+          "violacoes": [
+            {
+              "razao": "O campo cob.valor.original não respeita o schema.",
+              "propriedade": "cob.valor.original"
+            }
+          ]
+        }
+      },
+      "OperacaoInvalidaCobExample1": {
+        "summary": "Exemplo de erro da requisição 1",
+        "value": {
+          "type": "https://pix.bcb.gov.br/api/v2/error/CobOperacaoInvalida",
+          "title": "Operação inválida.",
+          "status": 400,
+          "detail": "A requisição que busca alterar ou criar uma cobrança para pagamento imediato não respeita o schema ou está semanticamente errada."
+        }
+      },
+      "RequisicaoInvalidaCobVExample1": {
+        "summary": "Exemplo de erro da requisição 1",
+        "value": {
+          "type": "https://pix.bcb.gov.br/api/v2/error/CobVOperacaoInvalida",
+          "title": "Cobrança inválida.",
+          "status": 400,
+          "detail": "A requisição que busca alterar ou criar uma cobrança com vencimento não respeita o schema ou está semanticamente errada.",
+          "violacoes": [
+            {
+              "razao": "O objeto cobv.devedor não respeita o schema.",
+              "propriedade": "cobv.devedor"
+            }
+          ]
+        }
+      },
+      "OperacaoInvalidaCobVExample1": {
+        "summary": "Exemplo de erro da requisição 1",
+        "value": {
+          "type": "https://pix.bcb.gov.br/api/v2/error/CobVOperacaoInvalida",
+          "title": "Operação inválida.",
+          "status": 400,
+          "detail": "Cobrança não encontra-se mais com o status ATIVA, somente cobranças ativas podem ser revisadas."
+        }
+      },
+      "RequisicaoInvalidaCobPayloadExample1": {
+        "summary": "Exemplo de erro da requisição 1",
+        "value": {
+          "type": "https://pix.bcb.gov.br/api/v2/error/CobPayloadNaoEncontrado",
+          "title": "Cobrança não encontrada.",
+          "status": 404,
+          "detail": "A cobrança em questão não foi encontrada para a location requisitada."
+        }
+      },
+      "RequisicaoInvalidaLoteCobVExample1": {
+        "summary": "Exemplo de erro da requisição 1",
+        "value": {
+          "type": "https://pix.bcb.gov.br/api/v2/error/LoteCobVOperacaoInvalida",
+          "title": "Lote de cobranças inválido.",
+          "status": 400,
+          "detail": "A requisição que busca alterar ou criar um lote de cobranças com vencimento não respeita o schema ou está semanticamente errada.",
+          "violacoes": [
+            {
+              "razao": "O objeto loteCobV.cobsV não respeita o schema.",
+              "propriedade": "loteCobV.cobsV"
+            },
+            {
+              "razao": "O campo loteCobV.descricao não respeita o schema.",
+              "propriedade": "loteCobV.descricao"
+            }
+          ]
+        }
+      },
+      "RequisicaoInvalidaDevolucaoExample1": {
+        "summary": "Exemplo de erro da requisição 1",
+        "value": {
+          "type": "https://pix.bcb.gov.br/api/v2/error/PixDevolucaoInvalida",
+          "title": "Devolução inválida.",
+          "status": 400,
+          "detail": "A presente requisição de devolução não respeita o schema ou não faz sentido semanticamente."
+        }
+      },
+      "RequisicaoInvalidaWebhookExample1": {
+        "summary": "Exemplo de erro da requisição 1",
+        "value": {
+          "type": "https://pix.bcb.gov.br/api/v2/error/WebhookOperacaoInvalida",
+          "title": "Webhook inválido.",
+          "status": 400,
+          "detail": "A presente requisição busca criar um webhook sem respeitar o schema ou, ainda, com sentido semanticamente inválido."
+        }
+      },
+      "RequisicaoInvalidaLocationExample1": {
+        "summary": "Exemplo de erro da requisição 1",
+        "value": {
+          "type": "https://pix.bcb.gov.br/api/v2/error/PayloadLocationOperacaoInvalida",
+          "title": "PayloadLocation inválido.",
+          "status": 400,
+          "detail": "A presente requisição busca criar uma location sem respeitar o schema estabelecido."
+        }
+      },
+      "AcessoNegadoExample1": {
+        "summary": "Exemplo de erro da requisição 1",
+        "value": {
+          "type": "https://pix.bcb.gov.br/api/v2/error/AcessoNegado",
+          "title": "Acesso Negado",
+          "status": 403,
+          "detail": "Requisição de participante autenticado que viola alguma regra de autorização."
+        }
+      },
+      "NaoEncontradoExample1": {
+        "summary": "Exemplo de erro da requisição 1",
+        "value": {
+          "type": "https://pix.bcb.gov.br/api/v2/error/NaoEncontrado",
+          "title": "Não Encontrado",
+          "status": 404,
+          "detail": "Entidade não encontrada."
+        }
+      },
+      "ServicoIndisponivelExample1": {
+        "summary": "Exemplo de erro da requisição 1",
+        "value": {
+          "type": "https://pix.bcb.gov.br/api/v2/error/ServicoIndisponivel",
+          "title": "Serviço Indisponível",
+          "status": 503,
+          "detail": "Serviço não está disponível no momento. Serviço solicitado pode estar em manutenção ou fora da janela de funcionamento."
+        }
+      },
+      "cobResponseExtendido": {
+        "summary": "Cobrança Imediata ativa",
+        "value": {
+          "calendario": {
+            "criacao": "2020-09-09T20:15:00.358Z",
+            "expiracao": 3600
+          },
+          "txid": "7978c0c97ea847e78e8849634473c1f1",
+          "devedor": {
+            "cnpj": "12345678000195",
+            "nome": "Empresa de Serviços SA"
+          },
+          "location": "pix.example.com/qr/9d36b84fc70b478fb95c12729b90ca25",
+          "status": "ATIVA",
+          "pixCopiaECola": "00020101021226730014br.gov.bcb.pix2551pix.example.com/qr/9d36b84fc70b478fb95c12729b90ca25520400005303986540537.005802BR5909Teste API6009SAO PAULO62070503***63040FCC",
+          "valor": {
+            "original": "37.00",
+            "modalidadeAlteracao": 0
+          },
+          "chave": "7d9f0335-8dcc-4054-9bf9-0dbd61d36906",
+          "solicitacaoPagador": "Serviço realizado.",
+          "infoAdicionais": [
+            {
+              "nome": "Campo 1",
+              "valor": "Informação Adicional1 do PSP-Recebedor"
+            },
+            {
+              "nome": "Campo 2",
+              "valor": "Informação Adicional2 do PSP-Recebedor"
+            }
+          ]
+        }
+      },
+      "consultaCobResponseAtiva": {
+        "summary": "Exemplo de cobrança imediata - Ativa",
+        "value": {
+          "calendario": {
+            "criacao": "2020-09-09T20:15:00.358Z",
+            "expiracao": 3600
+          },
+          "txid": "7978c0c97ea847e78e8849634473c1f1",
+          "devedor": {
+            "cnpj": "12345678000195",
+            "nome": "Empresa de Serviços SA"
+          },
+          "location": "pix.example.com/qr/9d36b84fc70b478fb95c12729b90ca25",
+          "status": "ATIVA",
+          "pixCopiaECola": "00020101021226730014br.gov.bcb.pix2551pix.example.com/qr/9d36b84fc70b478fb95c12729b90ca25520400005303986540537.005802BR5909Teste API6009SAO PAULO62070503***63040FCC",
+          "valor": {
+            "original": "37.00",
+            "modalidadeAlteracao": 0
+          },
+          "chave": "7d9f0335-8dcc-4054-9bf9-0dbd61d36906",
+          "solicitacaoPagador": "Serviço realizado.",
+          "infoAdicionais": [
+            {
+              "nome": "Campo 1",
+              "valor": "Informação Adicional1 do PSP-Recebedor"
+            },
+            {
+              "nome": "Campo 2",
+              "valor": "Informação Adicional2 do PSP-Recebedor"
+            }
+          ]
+        }
+      },
+      "consultaCobResponseConcluida": {
+        "summary": "Exemplo de cobrança imediata - Concluída (Paga)",
+        "value": {
+          "calendario": {
+            "criacao": "2020-09-09T20:15:00.358Z",
+            "expiracao": 3600
+          },
+          "txid": "655dfdb1a4514b8fbb58254b958913fb",
+          "devedor": {
+            "cnpj": "12345678000195",
+            "nome": "Empresa de Serviços SA"
+          },
+          "location": "pix.example.com/qr/1dd7f893a58e417287028dc33e21a403",
+          "status": "CONCLUIDA",
+          "pixCopiaECola": "00020101021226730014br.gov.bcb.pix2551pix.example.com/qr/9d36b84fc70b478fb95c12729b90ca255204000053039865406100.005802BR5909Teste API6009SAO PAULO62070503***63043378",
+          "valor": {
+            "original": "100.00",
+            "modalidadeAlteracao": 0
+          },
+          "chave": "40a0932d-1918-4eee-845d-35a2da1690dc",
+          "solicitacaoPagador": "Informar cartão fidelidade",
+          "pix": [
+            {
+              "endToEndId": "E12345678202009091221kkkkkkkkkkk",
+              "txid": "655dfdb1a4514b8fbb58254b958913fb",
+              "valor": "100.00",
+              "componentesValor": {
+                "original": "100.00"
+              },
+              "horario": "2020-09-09T20:15:00.358Z",
+              "pagador": {
+                "nome": "XUABIM DEGHUKLIQUAT P.A.",
+                "cnpj": "22453598000123"
+              },
+              "infoPagador": 123456789
+            }
+          ]
+        }
+      },
+      "consultaCobResponseConcluidaExpirada": {
+        "summary": "Exemplo de cobrança imediata - Concluída (Expirada)",
+        "value": {
+          "calendario": {
+            "criacao": "2020-09-09T20:15:00.358Z",
+            "expiracao": 3600
+          },
+          "txid": "7978c0c97ea847e78e8849634473c1f1",
+          "devedor": {
+            "cnpj": "12345678000195",
+            "nome": "Empresa de Serviços SA"
+          },
+          "location": "pix.example.com/qr/9d36b84fc70b478fb95c12729b90ca25",
+          "status": "CONCLUIDA",
+          "pixCopiaECola": "00020101021226730014br.gov.bcb.pix2551pix.example.com/qr/9d36b84fc70b478fb95c12729b90ca25520400005303986540537.005802BR5909Teste API6009SAO PAULO62070503***63040FCC",
+          "valor": {
+            "original": "37.00",
+            "modalidadeAlteracao": 0
+          },
+          "chave": "7d9f0335-8dcc-4054-9bf9-0dbd61d36906",
+          "solicitacaoPagador": "Serviço realizado.",
+          "infoAdicionais": [
+            {
+              "nome": "Campo 1",
+              "valor": "Informação Adicional1 do PSP-Recebedor"
+            },
+            {
+              "nome": "Campo 2",
+              "valor": "Informação Adicional2 do PSP-Recebedor"
+            }
+          ]
+        }
+      },
+      "consultaCobResponseDevolvida": {
+        "summary": "Exemplo de cobrança imediata - Devolvida",
+        "value": {
+          "calendario": {
+            "criacao": "2020-09-09T20:15:00.358Z",
+            "expiracao": 3600
+          },
+          "txid": "655dfdb1a4514b8fbb58254b958913fb",
+          "location": "pix.example.com/qr/1dd7f893a58e417287028dc33e21a403",
+          "status": "CONCLUIDA",
+          "pixCopiaECola": "00020101021226730014br.gov.bcb.pix2551pix.example.com/qr/9d36b84fc70b478fb95c12729b90ca255204000053039865406100.005802BR5909Teste API6009SAO PAULO62070503***63043378",
+          "devedor": {
+            "cnpj": "12345678000195",
+            "nome": "Empresa de Serviços SA"
+          },
+          "valor": {
+            "original": "100.00",
+            "modalidadeAlteracao": 0
+          },
+          "chave": "40a0932d-1918-4eee-845d-35a2da1690dc",
+          "solicitacaoPagador": "Informar cartão fidelidade",
+          "pix": [
+            {
+              "endToEndId": "E12345678202009091221kkkkkkkkkkk",
+              "txid": "655dfdb1a4514b8fbb58254b958913fb",
+              "valor": "100.00",
+              "componentesValor": {
+                "original": "100.00"
+              },
+              "horario": "2020-09-09T20:15:00.358Z",
+              "pagador": {
+                "nome": "XUABIM DEGHUKLIQUAT P.A.",
+                "cnpj": "22453598000123"
+              },
+              "infoPagador": 123456789,
+              "devolucoes": [
+                {
+                  "id": "123ABC",
+                  "rtrId": "Dxxxxxxxx202009091221kkkkkkkkkkk",
+                  "valor": "10.00",
+                  "horario": {
+                    "solicitacao": "2020-09-09T20:15:00.358Z"
+                  },
+                  "status": "EM_PROCESSAMENTO"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "devolucaoResponseExtendido1": {
+        "summary": "Exemplo de devolução - EM_PROCESSAMENTO",
+        "value": {
+          "id": "123456",
+          "rtrId": "D12345678202009091000abcde123456",
+          "valor": "7.89",
+          "horario": {
+            "solicitacao": "2020-09-11T15:25:59.411Z"
+          },
+          "status": "EM_PROCESSAMENTO"
+        }
+      },
+      "devolucaoResponseExtendido2": {
+        "summary": "Exemplo de devolução - NAO_REALIZADO",
+        "value": {
+          "id": "502",
+          "rtrId": "D12345678202011111000fghij789012",
+          "valor": "20.00",
+          "horario": {
+            "solicitacao": "2020-09-11T15:25:59.411Z"
+          },
+          "status": "NAO_REALIZADO",
+          "motivo": "Negado por timeout"
+        }
+      },
+      "devolucaoResponseExtendido3": {
+        "summary": "Exemplo de devolução - DEVOLVIDO",
+        "value": {
+          "id": "123456",
+          "rtrId": "D12345678202009091000abcde123456",
+          "valor": "7.89",
+          "horario": {
+            "solicitacao": "2020-09-11T15:25:59.411Z"
+          }
+        }
+      }
+    },
+    "requestBodies": {
+      "CobBody": {
+        "description": "Dados para geração da cobrança imediata.",
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/CobSolicitada"
+            },
+            "examples": {
+              "exemplo1": {
+                "$ref": "#/components/examples/cobBody2"
+              }
+            }
+          }
+        }
+      },
+      "CobVBody": {
+        "description": "Dados para geração da cobrança com vencimento.",
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/CobVSolicitada"
+            },
+            "examples": {
+              "exemplo1": {
+                "$ref": "#/components/examples/cobBody1"
+              }
+            }
+          }
+        }
+      },
+      "CobBodyRevisada": {
+        "description": "Dados para alteração ou cancelamento de uma cobrança imediata. IMPORTANTE => para usar esta funcionalidade, a cobrança imediata tem que obrigatóriamente estar com status ATIVA\"",
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/CobRevisada"
+            },
+            "examples": {
+              "exemplo1": {
+                "$ref": "#/components/examples/cobBody3"
+              },
+              "exemplo2": {
+                "$ref": "#/components/examples/cobBody4"
+              },
+              "exemplo3": {
+                "$ref": "#/components/examples/cobBody5"
+              }
+            }
+          }
+        }
+      },
+      "CobVBodyRevisada": {
+        "description": "Dados para alteração ou cancelamento de uma cobrança com vencimento. IMPORTANTE => para usar esta funcionalidade, a cobrança com vencimento tem que obrigatóriamente estar com status ATIVA.",
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/CobVRevisada"
+            },
+            "examples": {
+              "exemplo1": {
+                "$ref": "#/components/examples/cobBody3"
+              },
+              "exemplo2": {
+                "$ref": "#/components/examples/cobBody4"
+              },
+              "exemplo3": {
+                "$ref": "#/components/examples/cobBody5"
+              }
+            }
+          }
+        }
+      },
+      "DevolucaoBody": {
+        "description": "Dados para pedido de devolução.",
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/DevolucaoSolicitada"
+            },
+            "examples": {
+              "exemplo1": {
+                "$ref": "#/components/examples/devolucaoSolicitada1"
+              }
+            }
+          }
+        }
+      },
+      "WebhookConfigBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/WebhookSolicitado"
+            },
+            "examples": {
+              "exemplo1": {
+                "$ref": "#/components/examples/webhookBody1"
+              }
+            }
+          }
+        }
+      },
+      "WebhookPixBody": {
+        "description": "Dados para notificação dos Pix.",
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "properties": {
+                "pix": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Pix"
+                  },
+                  "example": [
+                    {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/examples/pixWebhook2/value"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "TxId": {
+        "type": "string",
+        "title": "Id da Transação",
+        "description": "# Identificador da transação\n\nO campo txid determina o identificador da transação.\nO objetivo desse campo é ser um elemento que possibilite ao PSP do recebedor apresentar ao usuário recebedor a funcionalidade de conciliação de pagamentos.\n\nNa pacs.008, é referenciado como `TransactionIdentification <txId>` ou `idConciliacaoRecebedor`.\n\nEm termos de fluxo de funcionamento, o txid é lido pelo aplicativo do PSP do pagador e, \ndepois de confirmado o pagamento, é enviado para o SPI via pacs.008. \nUma pacs.008 também é enviada ao PSP do recebedor, contendo, além de todas as informações usuais \ndo pagamento, o txid.\nAo perceber um recebimento dotado de txid, o PSP do recebedor está apto a se comunicar com o usuário recebedor, \ninformando que um pagamento específico foi liquidado.\n\nO txid é criado exclusivamente pelo usuário recebedor e está sob sua responsabilidade.\nO txid, no contexto de representação de uma cobrança, é único por CPF/CNPJ do usuário recebedor. Cabe ao \nPSP recebedor validar essa regra na API Pix.\n",
+        "pattern": "[a-zA-Z0-9]{26,35}"
+      },
+      "EndToEndId": {
+        "type": "string",
+        "title": "Id fim a fim da transação",
+        "description": "EndToEndIdentification que transita na PACS002, PACS004 e PACS008\n\nÉ o identificador único de uma transação de liquidação do Pix",
+        "pattern": "[a-zA-Z0-9]{32}",
+        "minLength": 32,
+        "maxLength": 32
+      },
+      "DevolucaoId": {
+        "type": "string",
+        "title": "Id da Devolução",
+        "description": "Id gerado pelo cliente para representar unicamente uma devolução.",
+        "pattern": "[a-zA-Z0-9]{1,35}"
+      },
+      "Revisao": {
+        "type": "integer",
+        "format": "int32",
+        "title": "Revisão",
+        "description": "# O campo `revisao`\n\n\nDenota a revisão da cobrança.  Sempre começa em zero. Sempre varia em\nacréscimos de 1.\n\n\nO incremento em uma cobrança deve ocorrer sempre que um objeto da\ncobrança em questão for alterado.\n\n\nSe em uma determinada alteração em uma cobrança, o único campo alterado\nfor o campo `status`,\n\nentão esta operação não incrementa a revisão da cobrança.\n",
+        "readOnly": true
+      },
+      "PessoaFisica": {
+        "type": "object",
+        "required": [
+          "cpf",
+          "nome"
+        ],
+        "title": "Pessoa Física",
+        "properties": {
+          "cpf": {
+            "type": "string",
+            "title": "CPF",
+            "pattern": "/^\\d{11}$/",
+            "description": "CPF válido do usuário."
+          },
+          "nome": {
+            "type": "string",
+            "title": "Nome",
+            "pattern": "^$|^[\\w\\sáéíóúÁÉÍÓÚàèìòùÀÈÌÒÙâêîôÂÊÎÔÛãõÃÕ!?|¿¡çÇñÑ.;:,'&$%#@_+*=ªº°§\\-–—\\/\\(\\)]+",
+            "description": "Nome do usuário.",
+            "maxLength": 80
+          }
+        }
+      },
+      "PessoaJuridica": {
+        "type": "object",
+        "required": [
+          "cnpj",
+          "nome"
+        ],
+        "title": "Pessoa Jurídica",
+        "properties": {
+          "cnpj": {
+            "type": "string",
+            "title": "CNPJ",
+            "pattern": "/^\\d{14}$/",
+            "description": "CNPJ válido do usuário."
+          },
+          "nome": {
+            "type": "string",
+            "title": "Nome",
+            "pattern": "^$|^[\\w\\sáéíóúÁÉÍÓÚàèìòùÀÈÌÒÙâêîôÂÊÎÔÛãõÃÕ!?|¿¡çÇñÑ.;:,'&$%#@_+*=ªº°§\\-–—\\/\\(\\)]+",
+            "description": "Nome do usuário.",
+            "maxLength": 80
+          }
+        }
+      },
+      "DadosComplementaresPessoa": {
+        "type": "object",
+        "properties": {
+          "logradouro": {
+            "type": "string",
+            "title": "Logradouro",
+            "pattern": "^$|^[\\w\\sáéíóúÁÉÍÓÚàèìòùÀÈÌÒÙâêîôÂÊÎÔÛãõÃÕ!?|¿¡çÇñÑ.;:,'&$%#@_+*=ªº°§\\-–—\\/\\(\\)]+",
+            "description": "Logradouro do usuário.",
+            "maxLength": 200
+          },
+          "cidade": {
+            "type": "string",
+            "title": "Cidade",
+            "pattern": "^$|^[\\w\\sáéíóúÁÉÍÓÚàèìòùÀÈÌÒÙâêîôÂÊÎÔÛãõÃÕ!?|¿¡çÇñÑ.;:,'&$%#@_+*=ªº°§\\-–—\\/\\(\\)]+",
+            "description": "Cidade do usuário.",
+            "maxLength": 200
+          },
+          "uf": {
+            "type": "string",
+            "title": "UF",
+            "description": "UF válida do usuário.",
+            "maxLength": 2
+          },
+          "cep": {
+            "type": "string",
+            "title": "CEP",
+            "description": "CEP válido do usuário.",
+            "maxLength": 8
+          }
+        }
+      },
+      "DadosDevedor": {
+        "type": "object",
+        "properties": {
+          "devedor": {
+            "description": "O objeto devedor organiza as informações sobre o devedor da cobrança.",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/PessoaFisica"
+              },
+              {
+                "$ref": "#/components/schemas/PessoaJuridica"
+              }
+            ],
+            "allOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "title": "Email",
+                    "description": "Email válido do usuário."
+                  }
+                }
+              },
+              {
+                "$ref": "#/components/schemas/DadosComplementaresPessoa"
+              }
+            ]
+          }
+        }
+      },
+      "DadosRecebedor": {
+        "type": "object",
+        "required": [
+          "logradouro",
+          "cidade",
+          "uf",
+          "cep"
+        ],
+        "properties": {
+          "recebedor": {
+            "description": "O objeto recebedor organiza as informações sobre o credor da cobrança.",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/PessoaFisica"
+              },
+              {
+                "type": "object",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/PessoaJuridica"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "nomeFantasia": {
+                        "type": "string",
+                        "title": "Nome fantasia",
+                        "description": "Nome fantasia.",
+                        "maxLength": 200
+                      }
+                    }
+                  }
+                ]
+              }
+            ],
+            "allOf": [
+              {
+                "required": [
+                  "logradouro",
+                  "cidade",
+                  "uf",
+                  "cep"
+                ]
+              },
+              {
+                "$ref": "#/components/schemas/DadosComplementaresPessoa"
+              }
+            ]
+          }
+        }
+      },
+      "WebhookSolicitado": {
+        "type": "object",
+        "required": [
+          "webhookUrl"
+        ],
+        "title": "Webhook",
+        "properties": {
+          "webhookUrl": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://pix.example.com/api/webhook/"
+          }
+        }
+      },
+      "WebhookCompleto": {
+        "type": "object",
+        "required": [
+          "webhookUrl",
+          "chave",
+          "criacao"
+        ],
+        "title": "Webhook",
+        "properties": {
+          "webhookUrl": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://pix.example.com/api/webhook/"
+          },
+          "chave": {
+            "type": "string",
+            "title": "Chave DICT do recebedor",
+            "description": "# Formato do campo chave\n\n* O campo chave determina a chave Pix registrada no DICT que será utilizada para a cobrança. Essa chave será lida pelo aplicativo do PSP do pagador para consulta ao DICT, que retornará a informação que identificará o recebedor da cobrança.\n* Os tipos de chave podem ser: telefone, e-mail, cpf/cnpj ou EVP (chave aleatória).\n* O formato das chaves pode ser encontrado na seção \"Formatação das chaves do DICT no BR Code\" do [Manual de Padrões para iniciação do Pix](https://www.bcb.gov.br/estabilidadefinanceira/pagamentosinstantaneos).\n",
+            "maxLength": 77
+          },
+          "criacao": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Data de Criação",
+            "description": "Data e hora em que o webhook foi cadastrado. Respeita RFC 3339.",
+            "readOnly": true
+          }
+        }
+      },
+      "CobExpiracao": {
+        "type": "object",
+        "title": "Expiração",
+        "properties": {
+          "expiracao": {
+            "type": "integer",
+            "format": "int32",
+            "title": "Tempo de vida da cobrança, especificado em segundos.",
+            "description": "Tempo de vida da cobrança, especificado em segundos a partir do momento de criação (Calendario.criacao).\n\nInformar apenas dígitos numéricos. Não serão aceitos valores negativos.\n",
+            "example": "3600 (equivalente a uma hora)",
+            "default": "86400 (equivalente a 24 hs)"
+          }
+        }
+      },
+      "CobDataDeVencimento": {
+        "type": "object",
+        "title": "Data de Vencimento",
+        "required": [
+          "dataDeVencimento"
+        ],
+        "properties": {
+          "dataDeVencimento": {
+            "type": "string",
+            "format": "date",
+            "title": "Data de vencimento da cobrança",
+            "description": "Trata-se de uma data, no formato `YYYY-MM-DD`, segundo ISO 8601. É a data de vencimento da cobrança. A cobrança pode ser honrada até esse dia, inclusive, em qualquer horário do dia.",
+            "example": "2020-04-01"
+          },
+          "validadeAposVencimento": {
+            "type": "integer",
+            "format": "int32",
+            "title": "Validade após vencimento",
+            "description": "Trata-se da quantidade de dias corridos após calendario.dataDeVencimento,\nem que a cobrança poderá ser paga.\n\nSempre que a data de vencimento cair em um fim de semana ou em um\nferiado para o usuário pagador,\n ela deve ser automaticamente prorrogada para o primeiro dia útil subsequente. Todos os campos \n que façam referência a esta data (`validadeAposVencimento`; `desconto`; `juros` e `multa`) devem assumir \n essa prorrogação, quando for o caso.\n\nPara ilustrar o funcionamento, seguem alguns exemplos, onde:\n\n- ``(#)`` representa a data de vencimento;\n\n- ``(*)`` representa a data ajustada em função de dias não úteis;\n\n- os ``(<número>)`` correspondem aos dias adicionais de validade\npara o pagamento.\n\n\nExemplo A:\n\n```txt\ndataDeVencimento: 2020-10-20, terça-feira.\nvalidadeAposVencimento: 4\n\nTenta-se pagar no dia 2020-10-23, sexta: aceito.\nTenta-se pagar no dia 2020-10-24, sábado: aceito.\nTenta-se pagar no dia 2020-10-25, domingo: negado.\n```\n\nExemplo B:\n\n```txt\ndataDeVencimento: 2020-12-25, sexta-feira, feriado.\nvalidadeAposVencimento: 0\n\nTenta-se pagar no dia 2020-12-25, sexta: aceito.\nTenta-se pagar no dia 2020-12-26, sábado: aceito.\nTenta-se pagar no dia 2020-12-27, domingo: aceito.\nTenta-se pagar no dia 2020-12-28, segunda: aceito.\nTenta-se pagar no dia 2020-12-29, terça: negado.\n```\n\nExemplo C:\n\n```txt\ndataDeVencimento: 2020-12-25, sexta-feira, feriado.\nvalidadeAposVencimento: 1\n\nTenta-se pagar no dia 2020-12-25, sexta: aceito.\nTenta-se pagar no dia 2020-12-26, sábado: aceito.\nTenta-se pagar no dia 2020-12-27, domingo: aceito.\nTenta-se pagar no dia 2020-12-28, segunda: aceito.\nTenta-se pagar no dia 2020-12-29, terça: negado.\n```\n\nExemplo D:\n\n```txt\ndataDeVencimento: 2020-12-25, sexta-feira, feriado.\nvalidadeAposVencimento: 3\n\nTenta-se pagar no dia 2020-12-25, sexta: aceito.\nTenta-se pagar no dia 2020-12-26, sábado: aceito.\nTenta-se pagar no dia 2020-12-27, domingo: aceito.\nTenta-se pagar no dia 2020-12-28, segunda: aceito.\nTenta-se pagar no dia 2020-12-29, terça: negado.\n```\n\nExemplo E:\n\n\n```txt\ndataDeVencimento: 2020-12-25, sexta-feira, feriado.\nvalidadeAposVencimento: 4\n\nTenta-se pagar no dia 2020-12-25, sexta: aceito.\nTenta-se pagar no dia 2020-12-26, sábado: aceito.\nTenta-se pagar no dia 2020-12-27, domingo: aceito.\nTenta-se pagar no dia 2020-12-28, segunda: aceito.\nTenta-se pagar no dia 2020-12-29, terça: aceito.\nTenta-se pagar no dia 2020-12-30, quarta: negado.\n```\n",
+            "default": 30
+          }
+        }
+      },
+      "CobCriacao": {
+        "type": "object",
+        "title": "Criação",
+        "required": [
+          "criacao"
+        ],
+        "properties": {
+          "criacao": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Data de Criação",
+            "description": "Timestamp que indica o momento em que foi criada a cobrança. Respeita o formato definido na RFC 3339."
+          }
+        }
+      },
+      "CobVValor": {
+        "type": "object",
+        "title": "Valor da cobrança com vencimento",
+        "description": "Valores monetários.",
+        "properties": {
+          "original": {
+            "type": "string",
+            "title": "Valor",
+            "pattern": "\\d{1,10}\\.\\d{2}",
+            "description": "Valor original da cobrança."
+          },
+          "multa": {
+            "type": "object",
+            "required": [
+              "modalidade",
+              "valorPerc"
+            ],
+            "title": "Multa aplicada",
+            "description": "Multa aplicada à cobrança",
+            "properties": {
+              "modalidade": {
+                "type": "integer",
+                "format": "int32",
+                "title": "Modalidade da multa",
+                "minimum": 1,
+                "maximum": 2,
+                "description": "##### Modalidade da multa, conforme tabela de domínios.\n<table><tr><th>Descrição</th><th>Domínio</th></tr><tr><td>Valor Fixo</td><td>1</td></tr><tr><td>Percentual</td><td>2</td></tr></table>"
+              },
+              "valorPerc": {
+                "type": "string",
+                "title": "Valor da multa absoluta",
+                "description": "Multa do documento em valor absoluto ou percentual, conforme \"valor.multa.modalidade\".",
+                "pattern": "\\d{1,10}\\.\\d{2}"
+              }
+            }
+          },
+          "juros": {
+            "type": "object",
+            "required": [
+              "modalidade",
+              "valorPerc"
+            ],
+            "title": "Juro aplicado",
+            "description": "Juro aplicado à cobrança",
+            "properties": {
+              "modalidade": {
+                "type": "integer",
+                "format": "int32",
+                "minimum": 1,
+                "maximum": 8,
+                "title": "Modalidade de juros",
+                "description": "##### Modalidade de juros, conforme tabela de domínios.\n<table><tr><th>Descrição</th><th>Domínio</th></tr><tr><td>Valor (dias corridos)</td><td>1</td></tr><tr><td>Percentual ao dia (dias corridos)</td><td>2</td></tr><tr><td>Percentual ao mês (dias corridos)</td><td>3</td></tr><tr><td>Percentual ao ano (dias corridos)</td><td>4</td></tr><tr><td>Valor (dias úteis)</td><td>5</td></tr><tr><td>Percentual ao dia (dias úteis)</td><td>6</td></tr><tr><td>Percentual ao mês (dias úteis)</td><td>7</td></tr><tr><td>Percentual ao ano (dias úteis)</td><td>8</td></tr></table>"
+              },
+              "valorPerc": {
+                "type": "string",
+                "title": "Valor",
+                "pattern": "\\d{1,10}\\.\\d{2}"
+              }
+            }
+          },
+          "abatimento": {
+            "title": "Abatimento aplicado",
+            "required": [
+              "modalidade",
+              "valorPerc"
+            ],
+            "description": "Abatimento aplicado à cobrança",
+            "properties": {
+              "modalidade": {
+                "type": "integer",
+                "format": "int32",
+                "minimum": 1,
+                "maximum": 2,
+                "title": "Modalidade de abatimentos",
+                "description": "##### Modalidade de abatimentos, conforme tabela de domínios.\n<table><tr><th>Descrição</th><th>Domínio</th></tr><tr><td>Valor Fixo</td><td>1</td></tr><tr><td>Percentual</td><td>2</td></tr></table>"
+              },
+              "valorPerc": {
+                "type": "string",
+                "title": "Abatimentos",
+                "description": "Abatimentos ou outras deduções aplicadas ao documento, em valor absoluto ou percentual do valor original do documento.",
+                "pattern": "\\d{1,10}\\.\\d{2}"
+              }
+            }
+          },
+          "desconto": {
+            "title": "Descontos aplicados",
+            "required": [
+              "modalidade"
+            ],
+            "description": "Descontos aplicados à cobrança",
+            "allOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "modalidade": {
+                    "type": "integer",
+                    "format": "int32",
+                    "minimum": 1,
+                    "maximum": 6,
+                    "title": "Modalidade de descontos",
+                    "description": "##### Modalidade de desconto, conforme tabela de domínios.\n<table><tr><th>Descrição</th><th>Domínio</th></tr><tr><td>Valor Fixo até a[s] data[s] informada[s]</td><td>1</td></tr><tr><td>Percentual até a data informada</td><td>2</td></tr><tr><td>Valor por antecipação dia corrido</td><td>3</td></tr><tr><td>Valor por antecipação dia útil</td><td>4</td></tr><tr><td>Percentual por antecipação dia corrido</td><td>5</td></tr><tr><td>Percentual por antecipação dia útil</td><td>6</td></tr></table>"
+                  }
+                }
+              }
+            ],
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "descontoDataFixa": {
+                    "title": "Lista de Descontos",
+                    "description": "Descontos absolutos aplicados à cobrança.",
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 3,
+                    "uniqueItems": true,
+                    "items": {
+                      "required": [
+                        "data",
+                        "valorPerc"
+                      ],
+                      "allOf": [
+                        {
+                          "properties": {
+                            "data": {
+                              "title": "Data limite para o desconto absoluto da cobrança",
+                              "description": "Descontos por pagamento antecipado, com data fixa. Matriz com até três elementos, sendo que cada elemento é composto por um par \"data e valorPerc\", para estabelecer descontos percentuais ou absolutos, até aquela data de pagamento. Trata-se de uma data, no formato `YYYY-MM-DD`, segundo ISO 8601. A data de desconto obrigatoriamente deverá ser menor que a data de vencimento da cobrança.",
+                              "type": "string",
+                              "format": "date",
+                              "example": "2020-04-01"
+                            }
+                          }
+                        },
+                        {
+                          "properties": {
+                            "valorPerc": {
+                              "type": "string",
+                              "title": "Valor do desconto absoluto",
+                              "description": "Desconto em valor absoluto ou percentual por dia, útil ou corrido, conforme valor.desconto.modalidade",
+                              "pattern": "\\d{1,10}\\.\\d{2}"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "required": [
+                  "valorPerc"
+                ],
+                "properties": {
+                  "valorPerc": {
+                    "type": "string",
+                    "title": "Abatimentos",
+                    "description": "Abatimentos ou outras deduções aplicadas ao documento, em valor absoluto ou percentual do valor original do documento.",
+                    "pattern": "\\d{1,10}\\.\\d{2}"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      },
+      "CobValor": {
+        "type": "object",
+        "title": "Valor da cobrança imediata",
+        "description": "valores monetários referentes à cobrança.",
+        "properties": {
+          "original": {
+            "type": "string",
+            "title": "Valor",
+            "pattern": "\\d{1,10}\\.\\d{2}",
+            "description": "Valor original da cobrança."
+          }
+        }
+      },
+      "CobBase": {
+        "type": "object",
+        "title": "Cobrança Base",
+        "description": "Atributos comuns a todas entidades de Cobrança",
+        "properties": {
+          "chave": {
+            "type": "string",
+            "title": "Chave DICT do recebedor",
+            "description": "# Formato do campo chave\n\n* O campo chave determina a chave Pix registrada no DICT que será utilizada para a cobrança. Essa chave será lida pelo aplicativo do PSP do pagador para consulta ao DICT, que retornará a informação que identificará o recebedor da cobrança.\n* Os tipos de chave podem ser: telefone, e-mail, cpf/cnpj ou chave aleatória.\n* O formato das chaves pode ser encontrado na seção \"Formatação das chaves do DICT no BR Code\" do [Manual de Padrões para iniciação do Pix](https://www.bcb.gov.br/estabilidadefinanceira/pagamentosinstantaneos).\n",
+            "maxLength": 77
+          },
+          "solicitacaoPagador": {
+            "type": "string",
+            "title": "Solicitação ao pagador",
+            "description": "O campo solicitacaoPagador, opcional, determina um texto a ser apresentado ao pagador para que ele possa digitar uma informação correlata, em formato livre, a ser enviada ao recebedor.",
+            "maxLength": 140
+          },
+          "infoAdicionais": {
+            "type": "array",
+            "title": "Informações adicionais",
+            "description": "Cada respectiva informação adicional contida na lista (nome e valor) deve ser apresentada ao pagador.",
+            "maximum": 9,
+            "items": {
+              "type": "object",
+              "required": [
+                "nome",
+                "valor"
+              ],
+              "properties": {
+                "nome": {
+                  "type": "string",
+                  "title": "Nome",
+                  "description": "Nome do campo.",
+                  "maxLength": 50
+                },
+                "valor": {
+                  "type": "string",
+                  "title": "Valor",
+                  "description": "Dados do campo.",
+                  "maxLength": 150
+                }
+              }
+            }
+          }
+        }
+      },
+      "CobSolicitada": {
+        "type": "object",
+        "title": "Cobrança imediata solicitada",
+        "description": "Dados enviados para criação ou alteração da cobrança imediata via API Pix",
+        "required": [
+          "valor",
+          "chave",
+          "calendario"
+        ],
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "calendario": {
+                "title": "Calendário",
+                "description": "Os campos aninhados sob o identificador calendário organizam informações a respeito de controle de tempo da cobrança.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CobExpiracao"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "devedor": {
+                "description": "Os campos aninhados sob o objeto devedor são opcionais e identificam o devedor, ou seja, a pessoa ou a instituição a quem a cobrança está endereçada. Não identifica, necessariamente, quem irá efetivamente realizar o pagamento. Um CPF pode ser o devedor de uma cobrança, mas pode acontecer de outro CPF realizar, efetivamente, o pagamento do documento. Não é permitido que o campo devedor.cpf e campo devedor.cnpj estejam preenchidos ao mesmo tempo. Se o campo devedor.cnpj está preenchido, então o campo devedor.cpf não pode estar preenchido, e vice-versa. Se o campo devedor.nome está preenchido, então deve existir ou um devedor.cpf ou um campo devedor.cnpj preenchido.",
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/PessoaFisica"
+                  },
+                  {
+                    "$ref": "#/components/schemas/PessoaJuridica"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "valor": {
+                "allOf": [
+                  {
+                    "required": [
+                      "original"
+                    ]
+                  },
+                  {
+                    "$ref": "#/components/schemas/CobValor"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/CobBase"
+          }
+        ]
+      },
+      "CobVSolicitada": {
+        "type": "object",
+        "title": "Cobrança com vencimento solicitada",
+        "description": "Dados enviados para criação ou alteração da cobrança com vencimento via API Pix",
+        "required": [
+          "valor",
+          "chave",
+          "devedor",
+          "calendario"
+        ],
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "calendario": {
+                "title": "Calendário",
+                "description": "Os campos aninhados sob o identificador calendário organizam informações a respeito de controle de tempo da cobrança.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CobDataDeVencimento"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/DadosDevedor"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "valor": {
+                "allOf": [
+                  {
+                    "required": [
+                      "original"
+                    ]
+                  },
+                  {
+                    "$ref": "#/components/schemas/CobVValor"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/CobBase"
+          }
+        ]
+      },
+      "CobRevisada": {
+        "type": "object",
+        "title": "Cobrança imediata revisada",
+        "description": "Dados enviados para revisão da cobrança imediata via API Pix",
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "calendario": {
+                "title": "Calendário",
+                "description": "Os campos aninhados sob o identificador calendário organizam informações a respeito de controle de tempo da cobrança.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CobExpiracao"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "devedor": {
+                "description": "Os campos aninhados sob o objeto devedor são opcionais e identificam o devedor, ou seja, a pessoa ou a instituição a quem a cobrança está endereçada. Não identifica, necessariamente, quem irá efetivamente realizar o pagamento. Um CPF pode ser o devedor de uma cobrança, mas pode acontecer de outro CPF realizar, efetivamente, o pagamento do documento. Não é permitido que o campo devedor.cpf e campo devedor.cnpj estejam preenchidos ao mesmo tempo. Se o campo devedor.cnpj está preenchido, então o campo devedor.cpf não pode estar preenchido, e vice-versa. Se o campo devedor.nome está preenchido, então deve existir ou um devedor.cpf ou um campo devedor.cnpj preenchido.",
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/PessoaFisica"
+                  },
+                  {
+                    "$ref": "#/components/schemas/PessoaJuridica"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "status": {
+                "type": "string",
+                "title": "Status da Cobrança",
+                "enum": [
+                  "REMOVIDA_PELO_USUARIO_RECEBEDOR"
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "valor": {
+                "$ref": "#/components/schemas/CobValor"
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/CobBase"
+          }
+        ]
+      },
+      "CobVRevisada": {
+        "type": "object",
+        "title": "Cobrança com vencimento revisada",
+        "description": "Dados enviados para revisão da cobrança com vencimento via API Pix",
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "calendario": {
+                "title": "Calendário",
+                "description": "Os campos aninhados sob o identificador calendário organizam informações a respeito de controle de tempo da cobrança.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CobDataDeVencimento"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/DadosDevedor"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "status": {
+                "type": "string",
+                "title": "Status da Cobrança",
+                "enum": [
+                  "REMOVIDA_PELO_USUARIO_RECEBEDOR"
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "valor": {
+                "$ref": "#/components/schemas/CobVValor"
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/CobBase"
+          }
+        ]
+      },
+      "CobGerada": {
+        "type": "object",
+        "title": "Cobrança imediata gerada",
+        "description": "Dados criados ou alterados da cobrança imediata via API Pix",
+        "required": [
+          "txid",
+          "calendario",
+          "revisao",
+          "status",
+          "valor",
+          "chave"
+        ],
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "calendario": {
+                "required": [
+                  "expiracao"
+                ],
+                "title": "Calendário",
+                "description": "Os campos aninhados sob o identificador calendário organizam informações a respeito de controle de tempo da cobrança.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CobCriacao"
+                  },
+                  {
+                    "$ref": "#/components/schemas/CobExpiracao"
+                  }
+                ]
+              },
+              "txid": {
+                "$ref": "#/components/schemas/TxId"
+              },
+              "revisao": {
+                "$ref": "#/components/schemas/Revisao"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "devedor": {
+                "description": "Os campos aninhados sob o objeto devedor são opcionais e identificam o devedor, ou seja, a pessoa ou a instituição a quem a cobrança está endereçada. Não identifica, necessariamente, quem irá efetivamente realizar o pagamento. Um CPF pode ser o devedor de uma cobrança, mas pode acontecer de outro CPF realizar, efetivamente, o pagamento do documento. Não é permitido que o campo devedor.cpf e campo devedor.cnpj estejam preenchidos ao mesmo tempo. Se o campo devedor.cnpj está preenchido, então o campo devedor.cpf não pode estar preenchido, e vice-versa. Se o campo devedor.nome está preenchido, então deve existir ou um devedor.cpf ou um campo devedor.cnpj preenchido.",
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/PessoaFisica"
+                  },
+                  {
+                    "$ref": "#/components/schemas/PessoaJuridica"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "location": {
+                "type": "string",
+                "title": "Localização do payload",
+                "description": "Localização do Payload a ser informada na criação da cobrança.",
+                "maxLength": 77,
+                "format": "uri",
+                "example": "pix.example.com/qr/v2/2353c790eefb11eaadc10242ac120002",
+                "readOnly": true
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "status": {
+                "type": "string",
+                "title": "Status da Cobrança",
+                "enum": [
+                  "ATIVA",
+                  "CONCLUIDA",
+                  "REMOVIDA_PELO_USUARIO_RECEBEDOR",
+                  "REMOVIDA_PELO_PSP"
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "valor": {
+                "required": [
+                  "original"
+                ],
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CobValor"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/CobBase"
+          }
+        ]
+      },
+      "CobVGerada": {
+        "type": "object",
+        "title": "Cobrança com vencimento gerada",
+        "description": "Dados criados ou alterados da cobrança com vencimento via API Pix",
+        "required": [
+          "location",
+          "txid",
+          "devedor",
+          "calendario",
+          "revisao",
+          "status",
+          "valor",
+          "chave",
+          "recebedor"
+        ],
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "calendario": {
+                "required": [
+                  "validadeAposVencimento"
+                ],
+                "title": "Calendário",
+                "description": "Os campos aninhados sob o identificador calendário organizam informações a respeito de controle de tempo da cobrança.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CobCriacao"
+                  },
+                  {
+                    "$ref": "#/components/schemas/CobDataDeVencimento"
+                  }
+                ]
+              },
+              "txid": {
+                "$ref": "#/components/schemas/TxId"
+              },
+              "revisao": {
+                "$ref": "#/components/schemas/Revisao"
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/DadosDevedor"
+          },
+          {
+            "$ref": "#/components/schemas/DadosRecebedor"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "status": {
+                "type": "string",
+                "title": "Status da Cobrança",
+                "enum": [
+                  "ATIVA",
+                  "CONCLUIDA",
+                  "REMOVIDA_PELO_USUARIO_RECEBEDOR",
+                  "REMOVIDA_PELO_PSP"
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "valor": {
+                "required": [
+                  "original"
+                ],
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CobVValor"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/CobBase"
+          }
+        ]
+      },
+      "CobVCompleta": {
+        "title": "Cobrança com vencimento completa",
+        "required": [
+          "status"
+        ],
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/CobVSolicitada"
+          },
+          {
+            "$ref": "#/components/schemas/CobVGerada"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "pix": {
+                "type": "array",
+                "title": "Pix recebidos",
+                "items": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Pix"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "txid": {
+                          "allOf": [
+                            {
+                              "$ref": "#/components/schemas/TxId"
+                            },
+                            {
+                              "pattern": "[a-zA-Z0-9]{26,35}"
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "status": {
+                "type": "string",
+                "title": "Status da Cobrança",
+                "enum": [
+                  "ATIVA",
+                  "CONCLUIDA",
+                  "REMOVIDA_PELO_USUARIO_RECEBEDOR",
+                  "REMOVIDA_PELO_PSP"
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "CobCompleta": {
+        "title": "Cobrança imediata completa",
+        "required": [
+          "status"
+        ],
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/CobSolicitada"
+          },
+          {
+            "$ref": "#/components/schemas/CobGerada"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "status": {
+                "type": "string",
+                "title": "Status da Cobrança",
+                "enum": [
+                  "ATIVA",
+                  "CONCLUIDA",
+                  "REMOVIDA_PELO_USUARIO_RECEBEDOR",
+                  "REMOVIDA_PELO_PSP"
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "pix": {
+                "type": "array",
+                "title": "Pix recebidos",
+                "items": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Pix"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "txid": {
+                          "allOf": [
+                            {
+                              "$ref": "#/components/schemas/TxId"
+                            },
+                            {
+                              "pattern": "[a-zA-Z0-9]{26,35}"
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      },
+      "Pix": {
+        "type": "object",
+        "title": "Pix",
+        "required": [
+          "endToEndId",
+          "valor",
+          "horario",
+          "pagador"
+        ],
+        "properties": {
+          "endToEndId": {
+            "$ref": "#/components/schemas/EndToEndId"
+          },
+          "txid": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TxId"
+              },
+              {
+                "pattern": "[a-zA-Z0-9]{1,35}"
+              }
+            ]
+          },
+          "valor": {
+            "type": "string",
+            "title": "Valor do Pix.",
+            "pattern": "\\d{1,10}\\.\\d{2}",
+            "description": "Valor do Pix.",
+            "maxLength": 77
+          },
+          "horario": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Horário",
+            "description": "Horário em que o Pix foi processado no PSP."
+          },
+          "infoPagador": {
+            "type": "string",
+            "title": "Informação livre do pagador",
+            "maxLength": 140
+          }
+        }
+      },
+      "Devolucao": {
+        "type": "object",
+        "title": "Devolução",
+        "required": [
+          "id",
+          "rtrId",
+          "valor",
+          "horario",
+          "status"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/DevolucaoId"
+          },
+          "rtrId": {
+            "type": "string",
+            "title": "RtrId",
+            "description": "ReturnIdentification que transita na PACS004.",
+            "example": "D12345678202009091000abcde123456",
+            "pattern": "[a-zA-Z0-9]{32}",
+            "minLength": 32,
+            "maxLength": 32
+          },
+          "valor": {
+            "type": "string",
+            "title": "Valor a devolver.",
+            "pattern": "\\d{1,10}\\.\\d{2}",
+            "description": "Valor a devolver."
+          },
+          "horario": {
+            "type": "object",
+            "properties": {
+              "solicitacao": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Horário de solicitação",
+                "description": "Horário no qual a devolução foi solicitada no PSP."
+              },
+              "liquidacao": {
+                "type": "string",
+                "format": "date-time",
+                "title": "Horário de liquidacao",
+                "description": "Horário no qual a devolução foi liquidada no PSP."
+              }
+            }
+          },
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "description": "Status da devolução.",
+            "enum": [
+              "EM_PROCESSAMENTO",
+              "DEVOLVIDO",
+              "NAO_REALIZADO"
+            ]
+          },
+          "motivo": {
+            "type": "string",
+            "title": "Descrição do status.",
+            "description": "# Status da Devolução\n\nCampo opcional que pode ser utilizado pelo PSP recebedor para detalhar os motivos\nde a devolução ter atingido o status em questão.\nPode ser utilizado, por exemplo, para detalhar o motivo de a devolução não ter sido realizada.          \n",
+            "maxLength": 140
+          }
+        }
+      },
+      "DevolucaoSolicitada": {
+        "type": "object",
+        "required": [
+          "valor"
+        ],
+        "properties": {
+          "valor": {
+            "type": "string",
+            "title": "Valor",
+            "pattern": "\\d{1,10}\\.\\d{2}",
+            "description": "Valor solicitado para devolução. A soma dos valores de todas as devolucões não podem ultrapassar o valor total do Pix."
+          }
+        }
+      },
+      "ParametrosConsultaPix": {
+        "type": "object",
+        "title": "Parâmetros de Consulta Pix",
+        "description": "Parâmetros utilizados para a realização de uma consulta de Pix.",
+        "required": [
+          "inicio",
+          "fim",
+          "paginacao"
+        ],
+        "properties": {
+          "inicio": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Data de Início",
+            "description": "Data inicial utilizada na consulta. Respeita RFC 3339.",
+            "example": "2020-01-01T00:00:00Z"
+          },
+          "fim": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Data de Fim",
+            "description": "Data de fim utilizada na consulta. Respeita RFC 3339.",
+            "example": "2020-12-01T17:00:00Z"
+          },
+          "txid": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TxId"
+              },
+              {
+                "pattern": "[a-zA-Z0-9]{1,35}"
+              }
+            ]
+          },
+          "cpf": {
+            "type": "string",
+            "pattern": "/^\\d{11}$/",
+            "description": "CPF"
+          },
+          "cnpj": {
+            "type": "string",
+            "pattern": "/^\\d{14}$/",
+            "description": "CNPJ"
+          },
+          "paginacao": {
+            "$ref": "#/components/schemas/Paginacao"
+          }
+        }
+      },
+      "ParametrosConsultaWebhooks": {
+        "type": "object",
+        "title": "Parâmetros de Consulta de Webhooks",
+        "description": "Parâmetros utilizados para a realização de uma consulta de Webhooks.",
+        "properties": {
+          "inicio": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Data de Início",
+            "description": "Data inicial utilizada na consulta. Respeita RFC 3339.",
+            "example": "2020-01-01T00:00:00Z"
+          },
+          "fim": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Data de Fim",
+            "description": "Data de fim utilizada na consulta. Respeita RFC 3339.",
+            "example": "2020-12-01T17:00:00Z"
+          },
+          "paginacao": {
+            "$ref": "#/components/schemas/Paginacao"
+          }
+        }
+      },
+      "PixConsultados": {
+        "type": "object",
+        "title": "Pix Consultados",
+        "required": [
+          "parametros",
+          "cobs"
+        ],
+        "properties": {
+          "parametros": {
+            "$ref": "#/components/schemas/ParametrosConsultaPix"
+          },
+          "pix": {
+            "type": "array",
+            "title": "Lista de Pix recebidos",
+            "items": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/Pix"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "PixPagador": {
+        "type": "object",
+        "title": "Pix",
+        "required": [
+          "endToEndId",
+          "valor",
+          "horario"
+        ],
+        "properties": {
+          "endToEndId": {
+            "$ref": "#/components/schemas/EndToEndId"
+          },
+          "txid": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TxId"
+              },
+              {
+                "pattern": "[a-zA-Z0-9]{1,35}"
+              }
+            ]
+          },
+          "pagador": {
+            "$ref": "#/components/schemas/Pagador"
+          },
+          "valor": {
+            "type": "string",
+            "title": "Valor do Pix.",
+            "pattern": "\\d{1,10}\\.\\d{2}",
+            "description": "Valor do Pix.",
+            "maxLength": 77
+          },
+          "horario": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Horário",
+            "description": "Horário em que o Pix foi processado no PSP."
+          },
+          "infoPagador": {
+            "type": "string",
+            "title": "Informação livre do pagador",
+            "maxLength": 140
+          }
+        }
+      },
+      "Pagador": {
+        "type": "object",
+        "title": "Pagador",
+        "required": [
+          "nome",
+          "cnpj"
+        ],
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/PessoaFisica"
+          },
+          {
+            "$ref": "#/components/schemas/PessoaJuridica"
+          }
+        ]
+      },
+      "PixConsultadosPagador": {
+        "type": "object",
+        "title": "Pix Consultados Pagador",
+        "required": [
+          "parametros",
+          "cobs"
+        ],
+        "properties": {
+          "parametros": {
+            "$ref": "#/components/schemas/ParametrosConsultaPix"
+          },
+          "pix": {
+            "type": "array",
+            "title": "Lista de Pix recebidos",
+            "items": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/PixPagador"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "WebhooksConsultados": {
+        "type": "object",
+        "title": "Webhooks Consultados",
+        "required": [
+          "webhooks"
+        ],
+        "properties": {
+          "parametros": {
+            "$ref": "#/components/schemas/ParametrosConsultaWebhooks"
+          },
+          "webhooks": {
+            "type": "array",
+            "title": "Lista de Webhooks consultados",
+            "items": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/WebhookCompleto"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "Paginacao": {
+        "type": "object",
+        "title": "Paginação",
+        "required": [
+          "paginaAtual",
+          "itensPorPagina",
+          "quantidadeDePaginas",
+          "quantidadeTotalDeItens"
+        ],
+        "properties": {
+          "paginaAtual": {
+            "type": "integer",
+            "title": "Página atual",
+            "description": "Número da página recuperada.",
+            "minimum": 0
+          },
+          "itensPorPagina": {
+            "type": "integer",
+            "title": "Itens por página",
+            "description": "Quantidade de registros retornado na página.",
+            "minimum": 1
+          },
+          "quantidadeDePaginas": {
+            "type": "integer",
+            "title": "Quantidade de páginas",
+            "description": "Quantidade de páginas disponíveis para consulta.",
+            "minimum": 1
+          },
+          "quantidadeTotalDeItens": {
+            "type": "integer",
+            "title": "Quantidade total de itens",
+            "description": "Quantidade total de itens disponíveis de acordo com os parâmetros informados.",
+            "minimum": 0
+          }
+        }
+      },
+      "Violacao": {
+        "type": "object",
+        "title": "Violações",
+        "properties": {
+          "razao": {
+            "type": "string",
+            "title": "Descrição do erro",
+            "description": "Descrição do erro",
+            "example": "Valor da cobrança não pode ser 0.00"
+          },
+          "propriedade": {
+            "type": "string",
+            "title": "Nome da propriedade",
+            "description": "Nome da propriedade",
+            "example": "cob.chave"
+          },
+          "valor": {
+            "type": "string",
+            "title": "Valor da propriedade",
+            "description": "Valor da propriedade",
+            "example": "061996671234"
+          }
+        }
+      },
+      "Problema": {
+        "type": "object",
+        "required": [
+          "type",
+          "title",
+          "status"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "format": "uri",
+            "description": "URI de referência que identifica o tipo de problema. De acordo com a RFC 7807.",
+            "example": "https://pix.bcb.gov.br/api/v2/error/NaoEncontrado"
+          },
+          "title": {
+            "type": "string",
+            "description": "Descrição resumida do problema.",
+            "example": "Not found"
+          },
+          "status": {
+            "type": "integer",
+            "description": "Código HTTP do status retornado.",
+            "example": 404
+          },
+          "detail": {
+            "type": "string",
+            "description": "Descrição completa do problema."
+          },
+          "correlationId": {
+            "type": "string",
+            "description": "Identificador de correlação do problema para fins de suporte"
+          },
+          "violacoes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Violacao"
+            }
+          }
+        }
+      },
+      "Inicio": {
+        "type": "string",
+        "format": "date-time",
+        "title": "Data de início",
+        "description": "Filtra os registros cuja data de criação seja maior ou igual que a data de início. Respeita RFC 3339."
+      },
+      "Fim": {
+        "type": "string",
+        "format": "date-time",
+        "title": "Data de fim",
+        "description": "Filtra os registros cuja data de criação seja menor ou igual que a data de fim. Respeita RFC 3339."
+      },
+      "CobValorV2": {
+        "title": "Valor da cobrança imediata",
+        "type": "object",
+        "properties": {
+          "original": {
+            "title": "Valor",
+            "pattern": "\\d{1,10}\\.\\d{2}",
+            "type": "string",
+            "description": "Valor original da cobrança."
+          },
+          "modalidadeAlteracao": {
+            "title": "Modalidade de alteração",
+            "maximum": 1,
+            "minimum": 0,
+            "type": "integer",
+            "description": "Trata-se de um campo que determina se o valor final do documento pode ser alterado pelo pagador. Na ausência desse campo, assume-se que não se pode alterar o valor do documento de cobrança, ou seja, assume-se o valor 0. Se o campo estiver presente e com valor 1, então está determinado que o valor final da cobrança pode ter seu valor alterado pelo pagador.",
+            "format": "int32"
+          }
+        },
+        "description": "valores monetários referentes à cobrança."
+      },
+      "CobSolicitadaV2": {
+        "title": "Cobrança imediata solicitada",
+        "required": [
+          "calendario",
+          "chave",
+          "valor"
+        ],
+        "type": "object",
+        "description": "Dados enviados para criação ou alteração da cobrança imediata via API Pix",
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "calendario": {
+                "title": "Calendário",
+                "description": "Os campos aninhados sob o identificador calendário organizam informações a respeito de controle de tempo da cobrança.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CobExpiracao"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "devedor": {
+                "description": "Os campos aninhados sob o objeto devedor são opcionais e identificam o devedor, ou seja, a pessoa ou a instituição a quem a cobrança está endereçada. Não identifica, necessariamente, quem irá efetivamente realizar o pagamento. Um CPF pode ser o devedor de uma cobrança, mas pode acontecer de outro CPF realizar, efetivamente, o pagamento do documento. Não é permitido que o campo `devedor.cpf` e campo `devedor.cnpj` estejam preenchidos ao mesmo tempo. Se o campo `devedor.cnpj` está preenchido, então o campo `devedor.cpf` não pode estar preenchido, e vice-versa. Se o campo `devedor.nome` está preenchido, então deve existir ou um `devedor.cpf` ou um campo `devedor.cnpj` preenchido.",
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/PessoaFisica"
+                  },
+                  {
+                    "$ref": "#/components/schemas/PessoaJuridica"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "valor": {
+                "allOf": [
+                  {
+                    "required": [
+                      "original"
+                    ]
+                  },
+                  {
+                    "$ref": "#/components/schemas/CobValorV2"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/CobBase"
+          }
+        ]
+      },
+      "CobGeradaV2": {
+        "title": "Cobrança imediata gerada",
+        "required": [
+          "calendario",
+          "chave",
+          "revisao",
+          "status",
+          "txid",
+          "valor"
+        ],
+        "type": "object",
+        "description": "Dados criados ou alterados da cobrança imediata via API Pix",
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "calendario": {
+                "title": "Calendário",
+                "required": [
+                  "expiracao"
+                ],
+                "description": "Os campos aninhados sob o identificador calendário organizam informações a respeito de controle de tempo da cobrança.",
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CobCriacao"
+                  },
+                  {
+                    "$ref": "#/components/schemas/CobExpiracao"
+                  }
+                ]
+              },
+              "txid": {
+                "$ref": "#/components/schemas/TxId"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "devedor": {
+                "description": "Os campos aninhados sob o objeto devedor são opcionais e identificam o devedor, ou seja, a pessoa ou a instituição a quem a cobrança está endereçada. Não identifica, necessariamente, quem irá efetivamente realizar o pagamento. Um CPF pode ser o devedor de uma cobrança, mas pode acontecer de outro CPF realizar, efetivamente, o pagamento do documento. Não é permitido que o campo `devedor.cpf` e campo `devedor.cnpj` estejam preenchidos ao mesmo tempo. Se o campo `devedor.cnpj` está preenchido, então o campo `devedor.cpf` não pode estar preenchido, e vice-versa. Se o campo `devedor.nome` está preenchido, então deve existir ou um `devedor.cpf` ou um campo `devedor.cnpj` preenchido.",
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/PessoaFisica"
+                  },
+                  {
+                    "$ref": "#/components/schemas/PessoaJuridica"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "location": {
+                "title": "Localização do payload",
+                "maxLength": 77,
+                "type": "string",
+                "description": "Localização do Payload a ser informada na criação da cobrança.",
+                "format": "uri",
+                "readOnly": true,
+                "example": "pix.example.com/qr/v2/2353c790eefb11eaadc10242ac120002"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "status": {
+                "$ref": "#/components/schemas/CobrancaStatusV2"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "valor": {
+                "required": [
+                  "original"
+                ],
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CobValorV2"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/CobBaseCopiaCola"
+          }
+        ]
+      },
+      "CobrancaStatusV2": {
+        "title": "Status do registro da cobrança.",
+        "type": "string",
+        "description": "Estado do registro da cobrança. Não se confunde com o estado da cobrança em si, ou seja, não guarda relação com o fato de a cobrança encontrar-se vencida ou expirada, por exemplo.\n\nOs status são assim definidos:\n- `ATIVA`: indica que o registro se refere a uma cobrança que foi gerada mas ainda não foi paga nem removida;\n- `CONCLUIDA`: indica que o registro se refere a uma cobrança que já foi paga e, por conseguinte, não pode acolher outro pagamento;\n- `REMOVIDO_PELO_USUARIO_RECEBEDOR`: indica que o usuário recebedor solicitou a remoção do registro da cobrança; e\n- `REMOVIDO_PELO_PSP`: indica que o PSP Recebedor solicitou a remoção do registro da cobrança.\n",
+        "enum": [
+          "ATIVA",
+          "CONCLUIDA",
+          "REMOVIDA_PELO_USUARIO_RECEBEDOR",
+          "REMOVIDA_PELO_PSP"
+        ]
+      },
+      "DevolucaoV2": {
+        "title": "Devolução",
+        "required": [
+          "horario",
+          "id",
+          "rtrId",
+          "status",
+          "valor"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/DevolucaoId"
+          },
+          "rtrId": {
+            "title": "RtrId",
+            "maxLength": 32,
+            "minLength": 32,
+            "pattern": "[a-zA-Z0-9]{32}",
+            "type": "string",
+            "description": "ReturnIdentification que transita na PACS004.",
+            "example": "D12345678202009091000abcde123456"
+          },
+          "valor": {
+            "title": "Valor a devolver.",
+            "pattern": "\\d{1,10}\\.\\d{2}",
+            "type": "string",
+            "description": "Valor a devolver."
+          },
+          "descricao": {
+            "title": "Mensagem ao pagador relativa à devolução.",
+            "maxLength": 140,
+            "type": "string",
+            "description": "O campo `descricao`, opcional, determina um texto a ser apresentado ao pagador contendo informações sobre a devolução. Esse texto será preenchido, na pacs.004, pelo PSP do recebedor, no campo RemittanceInformation. O tamanho do campo na pacs.004 está limitado a 140 caracteres."
+          },
+          "horario": {
+            "type": "object",
+            "properties": {
+              "solicitacao": {
+                "title": "Horário de solicitação",
+                "type": "string",
+                "description": "Horário no qual a devolução foi solicitada no PSP.",
+                "format": "date-time"
+              },
+              "liquidacao": {
+                "title": "Horário de liquidacao",
+                "type": "string",
+                "description": "Horário no qual a devolução foi liquidada no PSP.",
+                "format": "date-time"
+              }
+            }
+          },
+          "status": {
+            "title": "Status",
+            "type": "string",
+            "description": "Status da devolução.",
+            "enum": [
+              "EM_PROCESSAMENTO",
+              "DEVOLVIDO",
+              "NAO_REALIZADO"
+            ]
+          },
+          "motivo": {
+            "title": "Descrição do status.",
+            "maxLength": 140,
+            "type": "string",
+            "description": "# Status da Devolução\n\nCampo opcional que pode ser utilizado pelo PSP recebedor para detalhar os motivos\nde a devolução ter atingido o status em questão.\nPode ser utilizado, por exemplo, para detalhar o motivo de a devolução não ter sido realizada.\n"
+          }
+        }
+      },
+      "DevolucaoSolicitadaV2": {
+        "required": [
+          "valor"
+        ],
+        "type": "object",
+        "title": "Devolucao",
+        "properties": {
+          "valor": {
+            "title": "Valor",
+            "pattern": "\\d{1,10}\\.\\d{2}",
+            "type": "string",
+            "description": "Valor solicitado para devolução. A soma dos valores de todas as devolucões não podem ultrapassar o valor total do Pix."
+          },
+          "descricao": {
+            "title": "Mensagem ao pagador relativa à devolução.",
+            "maxLength": 140,
+            "type": "string",
+            "description": "O campo `descricao`, opcional, determina um texto a ser apresentado ao pagador contendo informações sobre a devolução. Esse texto será preenchido, na pacs.004, pelo PSP do recebedor, no campo RemittanceInformation. O tamanho do campo na pacs.004 está limitado a 140 caracteres.    "
+          }
+        }
+      },
+      "CobBaseCopiaCola": {
+        "type": "object",
+        "title": "Cobrança Base com Copia e Cola",
+        "description": "Atributos comuns a todas entidades de Cobrança que possuem informação de Copia e Cola",
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "pixCopiaECola": {
+                "type": "string",
+                "title": "Pix Copia e Cola correspondente à cobrança.",
+                "description": "Este campo retorna o valor do Pix Copia e Cola correspondente à cobrança. Trata-se da sequência de caracteres que representa o BR Code.",
+                "maxLength": 512
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/CobBase"
+          }
+        ]
+      }
+    },
+    "parameters": {
+      "paginaAtual": {
+        "in": "query",
+        "name": "paginacao.paginaAtual",
+        "required": false,
+        "schema": {
+          "type": "integer",
+          "format": "int32",
+          "title": "Página atual",
+          "minimum": 0,
+          "default": 0
+        },
+        "description": "Página a ser retornada pela consulta. Se não for informada, o PSP assumirá o valor 0."
+      },
+      "itensPorPagina": {
+        "in": "query",
+        "name": "paginacao.itensPorPagina",
+        "required": false,
+        "schema": {
+          "type": "integer",
+          "format": "int32",
+          "title": "Itens por Página",
+          "minimum": 1,
+          "maximum": 1000,
+          "default": 100
+        },
+        "description": "Quantidade máxima de registros retornados em cada página. Apenas a última página pode conter uma quantidade menor de registros."
+      }
+    },
+    "responses": {
+      "RequisicaoListForbidden": {
+        "description": "Authenticated participant request that violates any authorization.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Problema"
+            },
+            "examples": {
+              "exemplo1": {
+                "$ref": "#/components/examples/AcessoNegadoExample1"
+              }
+            }
+          }
+        }
+      },
+      "BadRequest": {
+        "description": "Service is not currently available. Requested service may be in maintenance or outside the operating window.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Problema"
+            },
+            "examples": {
+              "exemplo1": {
+                "$ref": "#/components/examples/BadRequestExample1"
+              }
+            }
+          }
+        }
+      },
+      "Unauthorized": {
+        "description": "Service is not currently available. Requested service may be in maintenance or outside the operating window.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Problema"
+            },
+            "examples": {
+              "exemplo1": {
+                "$ref": "#/components/examples/UnauthorizedExample1"
+              }
+            }
+          }
+        }
+      },
+      "InternalServerError": {
+        "description": "Service is not currently available. Requested service may be in maintenance or outside the operating window.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Problema"
+            },
+            "examples": {
+              "exemplo1": {
+                "$ref": "#/components/examples/InternalServerErrorExample1"
+              }
+            }
+          }
+        }
+      },
+      "NotAcceptable": {
+        "description": "Service is not currently available. Requested service may be in maintenance or outside the operating window.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Problema"
+            },
+            "examples": {
+              "exemplo1": {
+                "$ref": "#/components/examples/NotAcceptableExample1"
+              }
+            }
+          }
+        }
+      },
+      "RequisicaoOk": {
+        "description": "Lista dos Pix recebidos de acordo com o critério de busca.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/PixConsultadosPagador"
+            }
+          }
+        }
+      },
+      "RequisicaoInvalida": {
+        "description": "Problemas na requisição.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Problema"
+            }
+          }
+        }
+      },
+      "NaoEncontrado": {
+        "description": "Recurso solicitado não foi encontrado.",
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/Problema"
+            },
+            "examples": {
+              "exemplo1": {
+                "$ref": "#/components/examples/NaoEncontradoExample1"
+              }
+            }
+          }
+        }
+      },
+      "AcessoNegado": {
+        "description": "Requisição de participante autenticado que viola alguma regra de autorização.",
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/Problema"
+            },
+            "examples": {
+              "exemplo1": {
+                "$ref": "#/components/examples/AcessoNegadoExample1"
+              }
+            }
+          }
+        }
+      },
+      "ServicoIndisponivel": {
+        "description": "Serviço não está disponível no momento. Serviço solicitado pode estar em manutenção ou fora da janela de funcionamento.",
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/Problema"
+            },
+            "examples": {
+              "exemplo1": {
+                "$ref": "#/components/examples/ServicoIndisponivelExample1"
+              }
+            }
+          }
+        }
+      },
+      "RequisicaoOkRetornoPagador": {
+        "description": "Lista dos Pix recebidos de acordo com o critério de busca.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/PixConsultadosPagador"
+            }
+          }
+        }
+      }
+    }
+  }
+}

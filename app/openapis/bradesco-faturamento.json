@@ -1,0 +1,2724 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "API responsável pela Cotação/Contratação de Produtos Prestamistas",
+    "version": "1.0"
+  },
+  "servers": [
+    {
+      "url": "http://wsphttp.dsv.bradseg.com.br/SISE-CotacaoPrest"
+    },
+    {
+      "url": "http://wsphttp.hml.bradseg.com.br/SISE-CotacaoPrest"
+    },
+    {
+      "url": "http://wsphttp.bradseg.com.br/SISE-CotacaoPrest"
+    },
+    {
+      "url": "https://api.dsv.bradseg.com.br:8443/interno/SISE-CotacaoPrest"
+    },
+    {
+      "url": "https://apiint.hml.bradseg.com.br:8443/interno/SISE-CotacaoPrest"
+    },
+    {
+      "url": "https://apiint.bradseg.com.br:8443/interno/SISE-CotacaoPrest"
+    }
+  ],
+  "tags": [
+    {
+      "name": "prestamista-produto",
+      "description": "API de serviços Prestamista Massificados (Bradesco Seguros)."
+    },
+    {
+      "name": "prestamista-cotacao",
+      "description": "API de Cotação Prestamista Massificados (Bradesco Seguros)"
+    },
+    {
+      "name": "prestamista-proposta",
+      "description": "API de Proposta Prestamista Massificados (Bradesco Seguros)"
+    }
+  ],
+  "paths": {
+    "/v1/cotacao/incluir-cotacao": {
+      "post": {
+        "tags": [
+          "prestamista-cotacao"
+        ],
+        "summary": "Obtem a Cotacao de Seguro Prestamista",
+        "description": "Obtem a cotacao",
+        "operationId": "calcularCotacaoPrestamistaMass",
+        "parameters": [
+          {
+            "name": "cdOrigemTransmissao",
+            "in": "header",
+            "description": "Canal de Origem de Transmissao ou Canal de Comercialização. Código interno da Bradesco Seguros. Para as empresas parceiras esse código deve ser informado préviamente.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/cdOrigemTransmissao"
+            }
+          },
+          {
+            "name": "nroControleCotacao",
+            "in": "header",
+            "description": "Número de Controle da Cotação. Número sequêncial gerado internamento pelo sistema, toda vez que uma nova cotação é gerada.",
+            "schema": {
+              "$ref": "#/components/schemas/nCtrlCotac"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Este Request Body é utilizado tanto para produtos Individuais quanto para produtos Coletivos. Para produto individual não deve ser passado as informações de Sócio e para produto coletivo essas informações são obrigatórias",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Cotacao"
+              },
+              "examples": {
+                "Produto Coletivo": {
+                  "$ref": "#/components/examples/RequestCotacaoColetivo"
+                },
+                "Produto Individual": {
+                  "$ref": "#/components/examples/RequestCotacaoIndividual"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK\n\nO reponse code 200 é utilizado tanto para uma geração de Cotação OK, Criticada e com Erros de Validação. Abaixo seguem alguns possíveis retornos de validações.\n\ncdErro: 400 - dsOrigem: Exception.toString()\n- dsErro: Mensagem da exceção Exception\n\n cdErro: 400 - dsOrigem: SisePrestamistaIntegrationException\n- dsErro: Cotação Liberada para Emissão. Favor Não Retransmitir!\n- dsErro: Cotação indisponÍvel para esta operação.\n\n cdErro: 400 - dsOrigem: Incluir Cotação Prestamista\n- dsErro: Parâmetros padrão não localizados.\n\n cdErro: 401 - dsOrigem: VALIDAR REGRA CANAL\n- dsErro: Recurso / Serviço não habilitado para o canal de comercialização.\n\n cdErro: 406 - dsOrigem: VALIDAR REGRA CANAL\n- dsErro: Produto não habilitado para o canal de comercialização.\n\n cdErro: 406 - dsOrigem: VALIDAR REGRA PRODUTO SÓCIO\n- dsErro: Sócio não permitido para este produto.\n\n cdErro: 503; dsOrigem: Incluir Cotação Prestamista\n- dsErro: API indisponível! Tente novamente mais tarde.",
+            "content": {
+              "application/json": {
+                "schema": {
+                    "$ref": "#/components/schemas/ResponseCotacao"
+                },
+                "examples": {
+                  "Cotacao Gerada OK": {
+                    "$ref": "#/components/examples/ResponseCotacao200"
+                  },
+                  "Cotacao Criticada": {
+                    "$ref": "#/components/examples/ResponseCotacao200Criticada"
+                  },
+                  "Cotacao nao Gerada": {
+                    "$ref": "#/components/examples/ResponseCotacao200NaoGerada"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseCotacao"
+                },
+                "examples": {
+                  "Cotacao Não Gerada": {
+                    "$ref": "#/components/examples/ResponseCotacao400"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/proposta/gerar-proposta": {
+      "post": {
+        "tags": [
+          "prestamista-proposta"
+        ],
+        "summary": "Envia a proposta de Seguro Prestamista",
+        "description": "Gera a proposta",
+        "operationId": "gerarPropostaPrestamistaMass",
+        "parameters": [
+          {
+            "name": "cdOrigemTransmissao",
+            "in": "header",
+            "description": "Canal de Origem de Transmissao ou Canal de Comercialização. Código interno da Bradesco Seguros. Para a empresas parceiras esse código deve ser informado préviamente.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/cdOrigemTransmissao"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PropostaCotacao"
+              },
+              "examples": {
+                "Produtos Individuais": {
+                  "$ref": "#/components/examples/RequestEmissaoIndividual"
+                },
+                "Produtos Coletivos": {
+                  "$ref": "#/components/examples/RequestEmissaoColetivo"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseProposta"
+                },
+                "examples": {
+                  "Proposta Emitida": {
+                    "$ref": "#/components/examples/ResponseProposta200Emitida"
+                  },
+                  "Proposta Criticada": {
+                    "$ref": "#/components/examples/ResponseProposta200Criticada"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseProposta"
+                },
+                "examples": {
+                  "Cotação com Restrição": {
+                    "$ref": "#/components/examples/ResponseProposta400"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/v1/produto/consulta/cotacao": {
+      "get": {
+        "tags": [
+          "prestamista-produto"
+        ],
+        "summary": "Consultar Cotação",
+        "description": "Consultar Cotação",
+        "operationId": "consultarCotacao",
+        "parameters": [
+          {
+            "name": "cdOrigemTransmissao",
+            "in": "query",
+            "description": "Canal de Origem de Transmissao ou Canal de Comercialização. Código interno da Bradesco Seguros. Para a empresas parceiras esse código deve ser informado préviamente.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/cdOrigemTransmissao"
+            }
+          },
+          {
+            "name": "tpPesquisa",
+            "in": "query",
+            "description": "Tipo de pesquisa\n- 1: P/ Nro. Controle - > Recuperar Vcto e Status\n- 2: P/ Nro. Controle - > Recuperar Objeto Cotação",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 2
+            }
+          },
+          {
+            "name": "nroControleCotacao",
+            "in": "query",
+            "description": "Número de Controle da Cotação a ser consultada. Este número é gerado internamento pelo sistema toda vez que uma nova cotação é gerada.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/nCtrlCotac"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseCotacao"
+                },
+                "examples": {
+                  "Cotacao OK": {
+                    "$ref": "#/components/examples/ResponseConsultaCotacaoOK"
+                  },
+                  "Cotacao Criticada": {
+                    "$ref": "#/components/examples/ResponseConsultaCotacaoCriticada"
+                  },
+                  "Cotacao Nao Encontrada": {
+                    "$ref": "#/components/examples/ResponseConsultaCotacaoNaoEncontrada"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request\n\nPara esse exemplo de retorno, foi passado no header cdOrigemTransmissao igual a 332, um número maior do que esta definido definido no banco de dados.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseCotacao"
+                },
+                "examples": {
+                  "Problema nos dados de Entrada": {
+                    "$ref": "#/components/examples/ResponseConsultaCotacao400"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/v1/proposta/log-emissao": {
+      "get": {
+        "tags": [
+          "prestamista-proposta"
+        ],
+        "summary": "Consulta Log de Processamento da proposta de Seguro Prestamista na Fila de Emissão",
+        "description": "Consultar Log da Proposta",
+        "operationId": "obterLogPropostaPrestamistaMass",
+        "parameters": [
+          {
+            "name": "cdOrigemTransmissao",
+            "in": "query",
+            "description": "Canal de Origem de Transmissao ou Canal de Comercialização. Código interno da Bradesco Seguros. Para a empresas parceiras esse código deve ser informado préviamente.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/cdOrigemTransmissao"
+            }
+          },
+          {
+            "name": "nroControleCotacao",
+            "in": "query",
+            "description": "Número de Controle da Cotação. Número sequêncial gerado internamento pelo sistema, toda vez que uma nova cotação é gerada.",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/nCtrlCotac"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LogEmissaoOut"
+                },
+                "examples": {
+                  "Emissão OK": {
+                    "$ref": "#/components/examples/ResponseLogEmissao200"
+                  },
+                  "Problema na Emissão": {
+                    "$ref": "#/components/examples/ResponseLogEmissao200Erro"
+                  }
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LogEmissaoOut"
+                },
+                "examples": {
+                  "Problema Parametro": {
+                    "$ref": "#/components/examples/ResponseLogEmissao400"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+          }
+        }
+      }
+    },
+    "/v1/proposta/reprocessar-emissao": {
+      "put": {
+        "tags": [
+          "prestamista-proposta"
+        ],
+        "summary": "Reennvia a proposta de Seguro Prestamista para Fila de Emissão",
+        "description": "Reenviar a proposta",
+        "operationId": "reenviarPropostaPrestamistaMass",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AtualizarStatusCotacaoPrestVO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseReprocessarEmissao"
+                },
+                "examples": {
+                  "reprocessado OK": {
+                    "$ref": "#/components/examples/ResponseReprocessarEmissao200"
+                  },
+                  "nao reprocessado": {
+                    "$ref": "#/components/examples/ResponseReprocessarEmissao200NaoReprocessada"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseReprocessarEmissao"
+                },
+                "examples": {
+                  "reprocessado OK": {
+                    "$ref": "#/components/examples/ResponseReprocessarEmissao400"
+                  }
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Not Acceptable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseReprocessarEmissao"
+                },
+                "examples": {
+                  "Não Reprocessado": {
+                    "$ref": "#/components/examples/ResponseReprocessarEmissao406"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/v1/produto/consulta/cotacao/parcelas/pendentes": {
+      "post": {
+        "tags": [
+          "prestamista-produto"
+        ],
+        "summary": "Consultar Parcelas Pendentes",
+        "description": "Consultar Parcelas Pendentes de Pagamento",
+        "operationId": "consultarParcelasPendentes",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ParcelaPendente"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseParcelaPendente"
+                },
+                "examples": {
+                  "Consulta OK": {
+                    "$ref": "#/components/examples/ResponseParcelaPendente200"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request\n\nPossíveis Retornos\n- 201: Origem de transmissão invalida\n- 201: Produto invalido\n- 203: Proposta invalida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseParcelaPendente"
+                },
+                "examples": {
+                  "Consulta Não Encontrada": {
+                    "$ref": "#/components/examples/ResponseParcelaPendente400"
+                  }
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Not Acceptable\n\nPossíveis Retornos\n- 300: Nenhum certificado encontrado para proposta informada\n- 301: Nenhuma parcela pendente encontrada para proposta informada\n- 302: Origem de transmissão invalida para proposta informada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseParcelaPendente"
+                },
+                "examples": {
+                  "Consulta Não Encontrada": {
+                    "$ref": "#/components/examples/ResponseParcelaPendente406"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+          }
+        }
+      }
+    },
+    "/v1/produto/consulta/proposta/pdf/cheque-empresarial": {
+      "post": {
+        "tags": [
+          "prestamista-produto"
+        ],
+        "summary": "Gerar o PDF da proposta",
+        "description": "Gerar a proposta indicada em formato PDF (Base64)",
+        "operationId": "obterPdfPropostaChequeEmpresarial",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PdfChequeEmpresarial"
+              },
+              "examples": {
+                "Sem dados DEF": {
+                  "$ref": "#/components/examples/RequestPdfChequeEmpresarialSemDadosDef"
+                },
+                "Com dados DEF": {
+                  "$ref": "#/components/examples/RequestPdfChequeEmpresarialComDadosDef"
+                }
+              }
+            }
+          },
+          "description": "O campos nroContrBanco e nroProtocolo não são obrigatórios e são informações de domínio da DEF. Caso não sejam passados o PDF será gerado com essas informações em branco.",
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponsePdfChequeEmpresarial"
+                },
+                "examples": {
+                  "Geração OK": {
+                    "$ref": "#/components/examples/ResponsePdfChequeEmpresarial200"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request\n\nPossíveis Retornos\n- 201: Origem de transmissão invalida\n- 202: Produto invalido\n- 205: Situação da proposta inválida para emissão do PDF\n- 206: Número do controle de cotação inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponsePdfChequeEmpresarial"
+                },
+                "examples": {
+                  "Geração Inválida": {
+                    "$ref": "#/components/examples/ResponsePdfChequeEmpresarial400"
+                  }
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Not Acceptable\n\nPossíveis Retornos\n- 303: Cotação não encontrada\n- 305: Proponente não encontrado\n- 306: Produto não encontrado\n- 307: Agencia não encontrado\n- 309: Regras não encontras\n- 310: Opção de oferta não encontra para proposta informada\n- 311: Documento do proponente não encontrado para proposta informada\n- 312: Endereco do proponente não encontrado\n- 313: Meios de comunicação do proponente não encontrado\n- 314: Estrutura comercial não encontrada\n- 315: Beneficiário não encontrado\n- 316: Plano escolhido não encontrado\n- 317: Plano escolhido não encontrado na cotação\n- 318: Proposta não encontrada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponsePdfChequeEmpresarial"
+                },
+                "examples": {
+                  "Geração Não Encontrada": {
+                    "$ref": "#/components/examples/ResponsePdfChequeEmpresarial406"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Cotacao": {
+        "required": [
+          "pagamento",
+          "produto",
+          "proponente"
+        ],
+        "type": "object",
+        "properties": {
+          "cdEmpresa": {
+            "$ref": "#/components/schemas/cdEmpresa"
+          },
+          "cdSucursal": {
+            "$ref": "#/components/schemas/cdSucursal"
+          },
+          "produto": {
+            "$ref": "#/components/schemas/ProdutoCotacao"
+          },
+          "proponente": {
+            "$ref": "#/components/schemas/Proponente"
+          },
+          "pagamento": {
+            "$ref": "#/components/schemas/Pagamento"
+          },
+          "socio": {
+            "$ref": "#/components/schemas/socio"
+          }
+        }
+      },
+      "ProdutoCotacao": {
+        "required": [
+          "cdCanalVenda",
+          "cdProduto",
+          "dtAssinaturaProposta",
+          "nroAgProdutora",
+          "qtMeses",
+          "vlCapital",
+          "vlParcelaFinanc"
+        ],
+        "type": "object",
+        "properties": {
+          "cdCanalVenda": {
+            "$ref": "#/components/schemas/cdCanalVenda"
+          },
+          "cdProduto": {
+            "$ref": "#/components/schemas/cdProduto"
+          },
+          "cdPlano": {
+            "$ref": "#/components/schemas/cdPlano"
+          },
+          "dtAssinaturaProposta": {
+            "$ref": "#/components/schemas/dtAssinaturaProposta"
+          },
+          "nroAgProdutora": {
+            "$ref": "#/components/schemas/nroAgProdutora"
+          },
+          "vlCapital": {
+            "$ref": "#/components/schemas/vlCapital"
+          },
+          "qtMeses": {
+            "$ref": "#/components/schemas/qtMeses"
+          },
+          "vlParcelaFinanc": {
+            "$ref": "#/components/schemas/vlParcelaFinanc"
+          },
+          "qDiaCarenPlano": {
+            "$ref": "#/components/schemas/qDiaCarenPlano"
+          }
+        }
+      },
+      "Proponente": {
+        "required": [
+          "cdEstadocivil",
+          "cdSexo",
+          "dtNasc",
+          "nmNome"
+        ],
+        "type": "object",
+        "properties": {
+          "nmNome": {
+            "$ref": "#/components/schemas/nmPropn"
+          },
+          "dtNasc": {
+            "$ref": "#/components/schemas/dtNascPropn"
+          },
+          "cdSexo": {
+            "$ref": "#/components/schemas/cdSexo"
+          },
+          "cdEstadocivil": {
+            "$ref": "#/components/schemas/cdEstadoCivil"
+          },
+          "cdProfissaoProponente": {
+            "$ref": "#/components/schemas/cdProfissao"
+          },
+          "vrRendaMes": {
+            "$ref": "#/components/schemas/vrRendaMesPropn"
+          },
+          "vPatrmPropn": {
+            "$ref": "#/components/schemas/vPatrmPropn"
+          },
+          "documento": {
+            "$ref": "#/components/schemas/Documento"
+          },
+          "endereco": {
+            "$ref": "#/components/schemas/EnderecoCotacao"
+          }
+        }
+      },
+      "Documento": {
+        "required": [
+          "cdTipoDocto",
+          "nroCpfCnpj"
+        ],
+        "type": "object",
+        "properties": {
+          "cdTipoDocto": {
+            "$ref": "#/components/schemas/tpDocto"
+          },
+          "nroCpfCnpj": {
+            "$ref": "#/components/schemas/nroCpfCnpj"
+          }
+        }
+      },
+      "EnderecoCotacao": {
+        "required": [
+          "nroCep"
+        ],
+        "type": "object",
+        "properties": {
+          "nroCep": {
+            "$ref": "#/components/schemas/nroCep"
+          }
+        }
+      },
+      "Pagamento": {
+        "required": [
+          "cdFormaPagto",
+          "cdFrequenciaPagto"
+        ],
+        "type": "object",
+        "properties": {
+          "cdFormaPagto": {
+            "$ref": "#/components/schemas/cdFormaPagto"
+          },
+          "nroAgenciaProponente": {
+            "$ref": "#/components/schemas/nroAgencia"
+          },
+          "nroContaProponente": {
+            "$ref": "#/components/schemas/nroConta"
+          },
+          "nroDigitoContaProponente": {
+            "$ref": "#/components/schemas/nroDigitoConta"
+          },
+          "cdFrequenciaPagto": {
+            "$ref": "#/components/schemas/cdFrequenciaPagto"
+          }
+        }
+      },
+      "socio": {
+        "required": [
+          "cCPF",
+          "cCtrlCPF",
+          "dtNascimento",
+          "nmSocio"
+        ],
+        "type": "object",
+        "properties": {
+          "nmSocio": {
+            "$ref": "#/components/schemas/nmSocio"
+          },
+          "cCPF": {
+            "$ref": "#/components/schemas/cCPF"
+          },
+          "cCtrlCPF": {
+            "$ref": "#/components/schemas/cCtrlCPF"
+          },
+          "dtNascimento": {
+            "$ref": "#/components/schemas/dtNascimento"
+          },
+          "iAplicOrig": {
+            "$ref": "#/components/schemas/iAplicOrig"
+          },
+          "cUsuario": {
+            "$ref": "#/components/schemas/cUsuario"
+          }
+        },
+        "description": "Informações de Sócio são obrigatórias somente para produtos Coletivos. Para produtos Individuais estas informações não devem ser informadas.\n"
+      },
+      "Endereco": {
+        "required": [
+          "cdUf",
+          "descBairro",
+          "descCidade",
+          "descEndereco"
+        ],
+        "type": "object",
+        "properties": {
+          "descEndereco": {
+            "$ref": "#/components/schemas/descEndereco"
+          },
+          "descComplEndereco": {
+            "$ref": "#/components/schemas/descComplEndereco"
+          },
+          "descBairro": {
+            "$ref": "#/components/schemas/descBairro"
+          },
+          "descCidade": {
+            "$ref": "#/components/schemas/descCidade"
+          },
+          "cdUf": {
+            "$ref": "#/components/schemas/cdUf"
+          }
+        }
+      },
+      "Contato": {
+        "type": "object",
+        "properties": {
+          "descEmail": {
+            "$ref": "#/components/schemas/descEmail"
+          },
+          "nroDDDRes": {
+            "$ref": "#/components/schemas/nroDDDRes"
+          },
+          "nroTelefoneRes": {
+            "$ref": "#/components/schemas/nroTelefoneRes"
+          },
+          "nroDDDCelular": {
+            "$ref": "#/components/schemas/nroDDDCelular"
+          },
+          "nroTelefoneCelular": {
+            "$ref": "#/components/schemas/nroTelefoneCelular"
+          }
+        }
+      },
+      "socios": {
+        "required": [
+          "cCPF",
+          "cCtrlCPF",
+          "dtNascimento",
+          "nmSocio"
+        ],
+        "type": "object",
+        "properties": {
+          "nmSocio": {
+            "$ref": "#/components/schemas/nmSocio"
+          },
+          "cCPF": {
+            "$ref": "#/components/schemas/cCPF"
+          },
+          "cCtrlCPF": {
+            "$ref": "#/components/schemas/cCtrlCPF"
+          },
+          "dtNascimento": {
+            "$ref": "#/components/schemas/dtNascimento"
+          },
+          "cUsuario": {
+            "$ref": "#/components/schemas/cUsuario"
+          }
+        },
+        "description": "Cadastro do sócio para produtos que armazenem as informações do sócio."
+      },
+      "OfertaCotacao": {
+        "required": [
+          "cdPlano"
+        ],
+        "type": "object",
+        "properties": {
+          "cdPlano": {
+            "$ref": "#/components/schemas/cdPlano"
+          },
+          "descPlano": {
+            "$ref": "#/components/schemas/descPlano"
+          },
+          "vigenciaPlano": {
+            "$ref": "#/components/schemas/RegraVigenciaPlano"
+          },
+          "apolice": {
+            "$ref": "#/components/schemas/ApoliceClube"
+          },
+          "nroOferta": {
+            "$ref": "#/components/schemas/nroOferta"
+          },
+          "premio": {
+            "$ref": "#/components/schemas/Premio"
+          },
+          "coberturas": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Cobertura"
+            }
+          }
+        }
+      },
+      "RegraVigenciaPlano": {
+        "type": "object",
+        "properties": {
+          "vigenciaVenda": {
+            "$ref": "#/components/schemas/DetalheRegraVigenciaVenda"
+          }
+        }
+      },
+      "DetalheRegraVigenciaVenda": {
+        "type": "object",
+        "properties": {
+          "vlMesesMinimo": {
+            "$ref": "#/components/schemas/vlMesesMinimo"
+          },
+          "vlMesesMaximo": {
+            "$ref": "#/components/schemas/vlMesesMaximo"
+          }
+        }
+      },
+      "ApoliceClube": {
+        "type": "object",
+        "properties": {
+          "nroApoliceClube": {
+            "$ref": "#/components/schemas/nroApoliceClube"
+          }
+        }
+      },
+      "Premio": {
+        "type": "object",
+        "properties": {
+          "vlPremioLiqCalc": {
+            "$ref": "#/components/schemas/vlPremioLiqCalc"
+          },
+          "vlIofCalc": {
+            "$ref": "#/components/schemas/vlIofCalc"
+          },
+          "vlPremioBrutoCalc": {
+            "$ref": "#/components/schemas/vlPremioBrutoCalc"
+          }
+        }
+      },
+      "Cobertura": {
+        "type": "object",
+        "properties": {
+          "cdCober": {
+            "$ref": "#/components/schemas/cdCober"
+          },
+          "descCobertura": {
+            "$ref": "#/components/schemas/descCobertura"
+          },
+          "vlCapitalCober": {
+            "$ref": "#/components/schemas/vlCapitalCober"
+          },
+          "vlTaxaCober": {
+            "$ref": "#/components/schemas/vlTaxaCober"
+          },
+          "vlPremioCober": {
+            "$ref": "#/components/schemas/vlPremioCober"
+          },
+          "vlIofCober": {
+            "$ref": "#/components/schemas/vlIofCober"
+          },
+          "nroOrdemImpressao": {
+            "$ref": "#/components/schemas/nroOrdemImpressao"
+          }
+        }
+      },
+      "CriticaCotacao": {
+        "type": "object",
+        "properties": {
+          "codCritica": {
+            "type": "integer",
+            "description": "Código da Crítica",
+            "example": 918
+          },
+          "descCritica": {
+            "type": "string",
+            "description": "Descrição da Crítica",
+            "example": "criticarCotacaoVencida"
+          }
+        }
+      },
+      "PropostaCotacao": {
+        "required": [
+          "cIndcdPssoaPoltcExpto",
+          "cdPlano",
+          "nroProposta"
+        ],
+        "type": "object",
+        "properties": {
+          "nroControleCotacao": {
+            "$ref": "#/components/schemas/nCtrlCotac"
+          },
+          "nroPrefixo": {
+            "$ref": "#/components/schemas/nroPrefixo"
+          },
+          "nroProposta": {
+            "$ref": "#/components/schemas/nroProposta"
+          },
+          "cdPlano": {
+            "$ref": "#/components/schemas/cdPlano"
+          },
+          "dtIniVigencia": {
+            "$ref": "#/components/schemas/dtIniVigencia"
+          },
+          "dtFimVigencia": {
+            "$ref": "#/components/schemas/dtFimVigencia"
+          },
+          "dtVencPrimeiraParcFinanc": {
+            "$ref": "#/components/schemas/dtVencPrimeiraParcFinanc"
+          },
+          "nroDiaVencimento": {
+            "$ref": "#/components/schemas/nroDiaVencimento"
+          },
+          "endereco": {
+            "$ref": "#/components/schemas/Endereco"
+          },
+          "contato": {
+            "$ref": "#/components/schemas/Contato"
+          },
+          "socio": {
+            "$ref": "#/components/schemas/socios"
+          },
+          "cdConcessionario": {
+            "$ref": "#/components/schemas/cdConcessionario"
+          },
+          "cdSupervisor": {
+            "$ref": "#/components/schemas/cdSupervisor"
+          },
+          "cdAngariador": {
+            "$ref": "#/components/schemas/cdAngariador"
+          },
+          "cdCodigoComercial": {
+            "$ref": "#/components/schemas/cdCodigoComercial"
+          },
+          "cdSegmento": {
+            "$ref": "#/components/schemas/cdSegmento"
+          },
+          "cIndcdPssoaPoltcExpto": {
+            "$ref": "#/components/schemas/cIndcdPssoaPoltcExpto"
+          }
+        }
+      },
+      "ResponseCotacao": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/CotacaoOut"
+          },
+          "erroOut": {
+            "$ref": "#/components/schemas/ErroOut"
+          },
+          "idcStatus": {
+            "$ref": "#/components/schemas/idcStatus"
+          }
+        }
+      },
+      "CotacaoOut": {
+        "type": "object",
+        "properties": {
+          "nroControleCotacao": {
+            "$ref": "#/components/schemas/nCtrlCotac"
+          },
+          "dtVctoCotacao": {
+            "$ref": "#/components/schemas/dtVctoCotacao"
+          },
+          "idcCritica": {
+            "$ref": "#/components/schemas/idcCritica"
+          },
+          "cdStatus": {
+            "$ref": "#/components/schemas/cdStatusCotac"
+          },
+          "ofertas": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OfertaCotacao"
+            }
+          },
+          "criticas": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CriticaCotacao",
+            },
+            "example": null
+          }
+        }
+      },
+      "ResponseProposta": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/PropostaOut"
+          },
+          "erroOut": {
+            "$ref": "#/components/schemas/ErroOut"
+          },
+          "idcStatus": {
+            "$ref": "#/components/schemas/idcStatus"
+          }
+        }
+      },
+      "PropostaOut": {
+        "type": "object",
+        "properties": {
+          "idcCritica": {
+            "$ref": "#/components/schemas/idcCritica"
+          },
+          "cdStatus": {
+            "$ref": "#/components/schemas/cdStatusPropt"
+          },
+          "listaCriticas": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CriticaCotacao"
+            }
+          }
+        }
+      },
+      "ResponseReprocessarEmissao": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/nroRegistros"
+          },
+          "erroOut": {
+            "$ref": "#/components/schemas/ErroOut"
+          },
+          "idcStatus": {
+            "$ref": "#/components/schemas/idcStatus"
+          }
+        }
+      },
+      "AtualizarStatusCotacaoPrestVO": {
+        "required": [
+          "cdOrigemTransmissao",
+          "cdProduto",
+          "cdStatus",
+          "nroControleCotacao",
+          "nroProposta"
+        ],
+        "type": "object",
+        "properties": {
+          "cdOrigemTransmissao": {
+            "$ref": "#/components/schemas/cdOrigemTransmissao"
+          },
+          "tpPesquisa": {
+            "$ref": "#/components/schemas/tpPesquisa"
+          },
+          "nroControleCotacao": {
+            "$ref": "#/components/schemas/nCtrlCotac"
+          },
+          "cdProduto": {
+            "$ref": "#/components/schemas/cdProduto"
+          },
+          "nroProposta": {
+            "$ref": "#/components/schemas/nroProposta"
+          },
+          "cdStatus": {
+            "$ref": "#/components/schemas/cdStatusPropt"
+          }
+        }
+      },
+      "ParcelaPendente": {
+        "required": [
+          "cdOrigemTransmissao",
+          "cdProduto",
+          "nroProposta"
+        ],
+        "type": "object",
+        "properties": {
+          "cdOrigemTransmissao": {
+            "$ref": "#/components/schemas/cdOrigemTransmissao"
+          },
+          "cdProduto": {
+            "$ref": "#/components/schemas/cdProduto"
+          },
+          "nroProposta": {
+            "$ref": "#/components/schemas/nroProposta"
+          }
+        }
+      },
+      "ResponseParcelaPendente": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/ParcelaPendenteOut"
+          },
+          "erroOut": {
+            "$ref": "#/components/schemas/ErroOut"
+          },
+          "idcStatus": {
+            "$ref": "#/components/schemas/idcStatus"
+          }
+        }
+      },
+      "ErroOut": {
+        "type": "object",
+        "properties": {
+          "cdErro": {
+            "$ref": "#/components/schemas/cdErro"
+          },
+          "dsOrigem": {
+            "$ref": "#/components/schemas/dsOrigem"
+          },
+          "dsErro": {
+            "$ref": "#/components/schemas/dsErro"
+          }
+        }
+      },
+      "Erro": {
+        "type": "object",
+        "properties": {
+          "codigo": {
+            "type": "integer",
+            "description": "Código de erro interno da API"
+          },
+          "origem": {
+            "type": "string",
+            "description": "local interno da API onde ocorreu o erro"
+          },
+          "mensagem": {
+            "type": "string",
+            "description": "Mensagem de erro"
+          }
+        }
+      },
+      "ParcelaPendenteOut": {
+        "type": "object",
+        "properties": {
+          "cdPlano": {
+            "$ref": "#/components/schemas/cdPlano"
+          },
+          "nroProposta": {
+            "$ref": "#/components/schemas/nroProposta"
+          },
+          "nroParcela": {
+            "$ref": "#/components/schemas/nroParcela"
+          },
+          "cdOrigemTransmissao": {
+            "$ref": "#/components/schemas/cdOrigemTransmissao"
+          },
+          "vlPremio": {
+            "$ref": "#/components/schemas/vlPremioLiqCalc"
+          },
+          "vlIof": {
+            "$ref": "#/components/schemas/vlIofCalc"
+          },
+          "vlPremioBrut": {
+            "$ref": "#/components/schemas/vlPremioBrutoCalc"
+          },
+          "dtVcto": {
+            "$ref": "#/components/schemas/dtVctoParc"
+          },
+          "dgNumLeg": {
+            "$ref": "#/components/schemas/dgNumLeg"
+          }
+        }
+      },
+      "PdfChequeEmpresarial": {
+        "required": [
+          "cdOrigemTransmissao",
+          "cdProduto",
+          "nCtrlCotac"
+        ],
+        "type": "object",
+        "properties": {
+          "nCtrlCotac": {
+            "$ref": "#/components/schemas/nCtrlCotac"
+          },
+          "cdProduto": {
+            "$ref": "#/components/schemas/cdProduto"
+          },
+          "cdOrigemTransmissao": {
+            "$ref": "#/components/schemas/cdOrigemTransmissao"
+          },
+          "nroContrBanco": {
+            "$ref": "#/components/schemas/nroContrBanco"
+          },
+          "nroProtocolo": {
+            "$ref": "#/components/schemas/nroProtocolo"
+          }
+        }
+      },
+      "ResponsePdfChequeEmpresarial": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/PdfChequeEmpresarialOut"
+          },
+          "erroOut": {
+            "$ref": "#/components/schemas/ErroOut"
+          },
+          "idcStatus": {
+            "$ref": "#/components/schemas/idcStatus"
+          }
+        }
+      },
+      "PdfChequeEmpresarialOut": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "string",
+            "description": "Base64 do PDF da proposta.",
+            "format": "byte"
+          },
+          "erros": {
+            "type": "array",
+            "description": "Contém o erro em caso de problemas na geração do PDF.",
+            "items": {
+              "$ref": "#/components/schemas/Erro"
+            }
+          },
+          "status": {
+            "type": "integer",
+            "description": "Código do response status da API"
+          }
+        }
+      },
+      "LogEmissaoOut": {
+        "type": "object",
+        "properties":{
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LogEmissao"
+            }
+          },
+          "erroOut": {
+            "$ref": "#/components/schemas/ErroOut"
+          },
+          "idcStatus": {
+            "$ref": "#/components/schemas/idcStatus"
+          }
+        }
+      },
+      "LogEmissao": {
+        "type": "object",
+        "properties": {
+          "cdLog": {
+            "$ref": "#/components/schemas/cdLog"
+          },
+          "dsLog": {
+            "$ref": "#/components/schemas/dsLog"
+          },
+          "dtLog": {
+            "$ref": "#/components/schemas/dtLog"
+          },
+          "cdAcao": {
+            "$ref": "#/components/schemas/cdAcao"
+          },
+          "dsAcao": {
+            "$ref": "#/components/schemas/dsAcao"
+          },
+          "dtAcao": {
+            "$ref": "#/components/schemas/dtAcao"
+          }
+        }
+      },
+      "ObterPremioVO": {
+        "type": "object",
+        "properties": {
+          "cdOrigemTransmissao": {
+            "$ref": "#/components/schemas/cdOrigemTransmissao"
+          },
+          "nroProposta": {
+            "$ref": "#/components/schemas/nroProposta"
+          },
+          "cdProduto": {
+            "$ref": "#/components/schemas/cdProduto"
+          },
+          "chaveVgvidas": {
+            "$ref": "#/components/schemas/idCertificado"
+          },
+          "vlCapital": {
+            "$ref": "#/components/schemas/vlCapital"
+          },
+          "dtInicioVigencia": {
+            "$ref": "#/components/schemas/dtInicVigParc"
+          },
+          "dtTerminoVigencia": {
+            "$ref": "#/components/schemas/dtFimVigParc"
+          }
+        }
+      },
+      "ObterPremioOutVO": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/MatrizCalculoPremio"
+          },
+          "erroOut": {
+            "$ref": "#/components/schemas/ErroOut"
+          },
+          "idcStatus": {
+            "$ref": "#/components/schemas/idcStatus"
+          }
+        }
+      },
+      "MatrizCalculoPremio": {
+        "type": "object",
+        "properties": {
+          "cdProduto": {
+            "$ref": "#/components/schemas/cdProduto"
+          },
+          "cdPlano": {
+            "$ref": "#/components/schemas/cdPlano"
+          },
+          "vlPremioLiqCalc": {
+            "$ref": "#/components/schemas/vlPremioLiqCalc"
+          },
+          "vlIofCalc": {
+            "$ref": "#/components/schemas/vlIofCalc"
+          },
+          "vlPremioBrutoCalc": {
+            "$ref": "#/components/schemas/vlPremioBrutoCalc"
+          },
+          "coberturas": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CoberturaPremio"
+            }
+          }
+        }
+      },
+      "CoberturaPremio": {
+        "type": "object",
+        "properties": {
+          "cdPlano": {
+          	"$ref": "#/components/schemas/cdPlano"
+          },
+          "cdRm": {
+          	"$ref": "#/components/schemas/cdRmCober"
+          },
+          "cdCober": {
+          	"$ref": "#/components/schemas/cdCober"
+          },
+          "descCobertura": {
+          	"$ref": "#/components/schemas/descCobertura"
+          },
+          "tpCapitalCober": {
+        	  "$ref": "#/components/schemas/tpCapitalCober"
+          },
+          "vlPercBasica": {
+          	"$ref": "#/components/schemas/vlPercBasica"
+          },
+          "vlTaxaIof": {
+          	"$ref": "#/components/schemas/vlTaxaIof"
+          },
+          "mesPer": {
+          	#"$ref": "#/components/schemas/mesPer"
+          },
+          "vlFatorPer": {
+          #	"$ref": "#/components/schemas/vlFatorPer"
+          },
+          "fatorVig": {
+          #	"$ref": "#/components/schemas/fatorVig"
+          },
+          "tpValorRateio": {
+          #	"$ref": "#/components/schemas/tpValorRateio"
+          },
+          "vlTaxaTotal": {
+          #	"$ref": "#/components/schemas/vlTaxaTotal"
+          },
+          "vlTaxaCober": {
+          	"$ref": "#/components/schemas/vlTaxaCober"
+          },
+          "vlCapitalCoberBasica": {
+          #	"$ref": "#/components/schemas/vlCapitalCoberBasica"
+          },
+          "vlCapitalCober": {
+        	"$ref": "#/components/schemas/vlCapitalCober"
+          },
+          "vlPremioBrutoCober": {
+          #	"$ref": "#/components/schemas/vlPremioBrutoCober"
+          },
+          "vlPremioCober": {
+        	  "$ref": "#/components/schemas/vlPremioCober"
+          },
+          "vlAgravoDesconto": {
+          #	"$ref": "#/components/schemas/vlAgravoDesconto"
+          },
+          "vlIofCober": {
+        	  "$ref": "#/components/schemas/vlIofCober"
+          },
+          "nroOrdemImpressao": {
+        	  "$ref": "#/components/schemas/nroOrdemImpressao"
+          },
+          "agravoDesconto": {
+            "type": "array",
+            "items": {
+        	  #  "$ref": "#/components/schemas/agravoDesconto"
+            }
+          }
+        }
+      },
+      #
+      # Definição de campos
+      #
+      "vlPercBasica": {
+        "type": "number",
+        "description": "Valor Percentual da Cobertura Básica - numeric(9,4)",
+        "example": 50.0
+      },
+      "tpCapitalCober": {
+        "type": "integer",
+        "description": "Tipo de Capital Aplicado na Cobertura \n- 1: Básica\n- 2: % Sobre Básica\n- 3: Valor Fixo\n- 4: Não se aplica",
+        "example": 1
+      },
+      "cdRmCober": {
+        "type": "integer",
+        "description": "Código do Ramo da Cobertura",
+        "maxLength": 5,
+        "example": "723"
+      },
+      "cdOrigemTransmissao": {
+        "type": "integer",
+        "description": "Canal de Origem de Transmissao ou Canal de Comercialização. Código interno da Bradesco Seguros. Para as empresas parceiras esse código deve ser informado préviamente.",
+        "example": 34,
+        "minimum": 1,
+        "maximum": 255
+      },
+      "cdProduto": {
+        "type": "integer",
+        "maxLength": 6,
+        "description": "Código do Produto do Seguro",
+        "example": 1234
+      },
+      "nroProposta": {
+        "type": "integer",
+        "maxLength": 10,
+        "description": "Número da Proposta",
+        "format": "long",
+        "example": 202207292
+      },
+      "cdPlano": {
+        "type": "integer",
+        "maxLength": 12,
+        "description": "Código do Plano do Produto de Seguro",
+        "example": 1
+      },
+      "descPlano": {
+        "type": "string",
+        "description": "Descrição do Plano do Produto de Seguro",
+        "maxLength": 40,
+        "example": "PLANO 1 - SÓCIO INDICADO"
+      },
+      "nroParcela": {
+        "type": "integer",
+        "maxLength": 10,
+        "description": "Número da parcela",
+        "example": 1,
+        "minimum": 1
+      },
+      "vlPremioLiqCalc": {
+        "type": "number",
+        "description": "Valor do Prêmio Liquido calculado - numeric(14,2)",
+        "format": double,
+        "example": 128261.09
+      },
+      "vlIofCalc": {
+        "type": "number",
+        "description": "Valor do IOF calculado - numeric(14,2)",
+        "format": double,
+        "example": 487.39
+      },
+      "vlPremioBrutoCalc": {
+        "type": "number",
+        "description": "Valor do Prêmio Bruto calculado - numeric(14,2)",
+        "format": double,
+        "example": 128748.48
+      },
+      "nroApoliceClube": {
+        "type": "integer",
+        "description": "Número da Apólice Clube.",
+        "format": "long",
+        "example": 1063190
+      },
+      "vlMesesMinimo": {
+        "type": "integer",
+        "description": "Quantidade mínima de meses determinada na venda.",
+        "example": 1
+      },
+      "vlMesesMaximo": {
+        "type": "integer",
+        "description": "Quantidade máxima de meses determinada na venda.",
+        "example": 70
+      },
+      "cdCober": {
+        "type": "integer",
+        "description": "Código da Cobertura",
+        "example": 10885
+      },
+      "descCobertura": {
+        "type": "string",
+        "description": "Descrição da Cobertura",
+        "maxLength": 40,
+        "example": "MORTE"
+      },
+      "vlCapitalCober": {
+        "type": "number",
+        "description": "Valor do Capital da Cobertura - numeric(14,2)",
+        "format": double,
+        "example": 2000000.0
+      },
+      "vlTaxaCober": {
+        "type": "number",
+        "description": "Valor da Taxa da Cobertura - numeric(14,2)",
+        "format": double,
+        "example": 9.06993425
+      },
+      "vlTaxaIof": {
+        "type": "number",
+        "description": "Valor da Taxa do IOF - numeric(14,4)",
+        "format": double,
+        "example": 0.0038
+      },
+      "vlPremioCober": {
+        "type": "number",
+        "description": "Valor do Prêmio da Cobertura - numeric(14,2)",
+        "format": double,
+        "example": 125920.92
+      },
+      "vlIofCober": {
+        "type": "number",
+        "description": "Valor do IOF da Cobertura - numeric(14,2)",
+        "format": double,
+        "example": 478.5
+      },
+      "nmSocio": {
+        "maxLength": 70,
+        "type": "string",
+        "description": "Nome do sócio\n",
+        "example": "SOCIO PRINCIPAL - EMPRESA 1"
+      },
+      "cCPF": {
+        "maxLength": 9,
+        "type": "string",
+        "description": "CPF do sócio sem dígitos verificadores",
+        "example": "123456789"
+      },
+      "cCtrlCPF": {
+        "maxLength": 2,
+        "type": "string",
+        "description": "Digitos verificadores do CPF do sócio",
+        "example": "09"
+      },
+      "dtNascimento": {
+        "type": "string",
+        "description": "Data de Nascimento do sócio ISO yyyy-MM-dd",
+        "format": "date",
+        "example": "1980-02-01"
+      },
+      "iAplicOrig": {
+        "maxLength": 20,
+        "type": "string",
+        "description": "Código da apolice",
+        "example": "7842"
+      },
+      "cUsuario": {
+        "maxLength": 20,
+        "type": "string",
+        "description": "Código do usuário que cadastrou o sócio",
+        "example": "ADMIN"
+      },
+      "dtVctoParc": {
+        "type": "string",
+        "description": "Data de vencimento da parcela DD/MM/AAAA",
+        "format": "date",
+        "example": "01/10/2022"
+      },
+      "dgNumLeg": {
+        "type": "string",
+        "description": "Chave única da parcela para identificação no SAP\nComposição do campo:\n\nPPPPZZZZZZZCCCCCCCCC\n\ntotalizando um campo com tamanho de 20 caracteres, sendo:\n\n- P: Tam 4; Códido do Produto\n- Z: Tam 7; Fixo 7 Zeros\n- C: Tam 9; id_cobranca",
+        "example": "13520000000550665768"
+      },
+      "nCotacPpstaPrmta": {
+        "type": "integer",
+        "description": "Código da cotação da proposta",
+        "example": 663
+      },
+      "cProdtApolcSegur": {
+        "type": "integer",
+        "description": "Código do Produto da proposta. Código interno da Bradesco Seguros.",
+        "example": 1352
+      },
+      "nroContrBanco": {
+        "type": "string",
+        "description": "Número do contrato do banco",
+        "example": "70535681"
+      },
+      "nroProtocolo": {
+        "type": "string",
+        "description": "Número do protocolo",
+        "example": "asdjfakld-dsda093a-asdazafds-ssaf98fas"
+      },
+      "cdEmpresa": {
+        "description": "Empresa seguradora",
+        "type": "integer",
+        "example": 686
+      },
+      "cdSucursal": {
+        "description": "Sucursal seguradora",
+        "type": "integer",
+        "example": 9220
+      },
+      "cdCanalVenda": {
+        "type": "integer",
+        "description": "Código do Canal de Venda",
+        "example": 3
+      },
+      "dtAssinaturaProposta": {
+        "type": "string",
+        "description": "Data de assinatura da Proposta/Data de celebração ISO yyyy-MM-dd",
+        "format": "date",
+        "example": "2022-08-01"
+      },
+      "nroAgProdutora": {
+        "type": "integer",
+        "description": "Número da Agência de Venda",
+        "example": 1234
+      },
+      "vlCapital": {
+        "type": "number",
+        "description": "Valor do Capital Segurado",
+        "format": "double",
+        "example": 226890.75
+      },
+      "qtMeses": {
+        "type": "integer",
+        "description": "Quantidade de meses do financiamento sem carência",
+        "example": 58
+      },
+      "vlParcelaFinanc": {
+        "type": "number",
+        "description": "Valor da Parcela do Empréstimo",
+        "format": "double",
+        "example": 1
+      },
+      "qDiaCarenPlano": {
+        "type": "integer",
+        "description": "Quantidade em dias da carência",
+        "example": 30
+      },
+      "nmPropn": {
+        "maxLength": 50,
+        "type": "string",
+        "description": "Nome do Proponente.\n- Produto Individual: nome do proponente\n- Produto Coletivo: nome da empresa",
+        "example": "VALDIR DE OLIVEIRA"
+      },
+      "dtNascPropn": {
+        "type": "string",
+        "description": "Data de Nascimento do Proponente ISO yyyy-MM-dd\n- Produto Individual: data de nascimento do proponente\n- Produto Coletivo: data de abertura da empresa",
+        "format": "date",
+        "example": "1954-01-27"
+      },
+      "cdSexo": {
+        "maxLength": 1,
+        "type": "string",
+        "description": "Código do Sexo\n- 1: Masculino\n- 2: Feminino",
+        "example": "1"
+      },
+      "cdEstadoCivil": {
+        "type": "string",
+        "description": "Código do Estado Civil\n- 1: Solteiro\n- 2: Viuvo\n- 3: Casado\n- 4: Desquitado\n- 5: Divorciado",
+        "example": "1"
+      },
+      "cdProfissao": {
+        "type": "integer",
+        "description": "Código da Profissão\n- 1: ADMINISTRADOR\n- 2: ADMINISTRADOR DE REDES E BANCO DE DADOS\n- 3: ADVOGADO\n- 4: AGENCIADOR DE PROPAGANDA\n- 5: AGENTE ADMINISTRATIVO\n- 6: AGENTE DE BOLSA DE VALORES, CAMBIO E OUTROS SERV FINANCEIR\n- 7: AGENTE DE COMPRAS E VENDAS\n- 8: AGENTE DE SERVICOS FUNERARIOS E EMBALSAMADOR\n- 9: AGENTE DE VIAGENS\n- 10: AGRONOMO\n- 11: ALFAIATE\n- 12: AMBULANTE\n- 13: ANALISTA DE PODER JUDICIARIO\n- 14: ANALISTA DE SISTEMAS\n- 15: ANTROPOLOGO\n- 16: APOSENTADO\n- 17: APRESENTADOR\n- 18: ARQUEOLOGO\n- 19: ARQUITETO\n- 20: ARQUIVISTA\n- 21: ARQUIVOLOGO\n- 22: ARRANJADOR\n- 23: ARTESAO\n- 24: ARTISTAS DE ARTES POPULARES\n- 25: ASSISTENTE\n- 26: ASSISTENTE SOCIAL\n- 27: ASSISTENTE -  PODER JUDICIARIO\n- 28: ASTRONOMO\n- 29: ATLETA, DESPORTISTA\n- 30: ATOR\n- 31: ATUARIO\n- 32: AUDITOR\n- 33: AUXILIAR -  PODER JUDICIARIO\n- 34: AUXILIAR ADMINISTRATIVO\n- 35: AUXILIAR DE ESCRITORIO\n- 36: AUXILIAR DE LABORATORIO\n- 37: AVALIADOR\n- 38: BAILARINO\n- 39: BANCARIO E ECONOMIARIO\n- 40: BARBEIRO\n- 41: BIBLIOTECARIO\n- 42: BIOLOGO\n- 43: BIOMEDICO\n- 44: BOLSISTA\n- 45: BOMBEIRO MILITAR\n- 46: CABELEIREIRO\n- 47: CACADOR\n- 48: CAIXA\n- 49: CAIXEIRO VIAJANTE\n- 50: CAMAREIRO\n- 51: CAMELO\n- 52: CANTOR\n- 53: CAPITALISTA RECEBENDO RENDIM. DE CAPITAL EM ATIVOS FINANC.\n- 54: CENOGRAFO\n- 55: CERAMISTA\n- 56: CHEFE INTERMEDIARIO\n- 57: CIENTISTA POLITICO\n- 58: CINEGRAFISTA\n- 59: COMANDANTE DE EMBARCACOES\n- 60: COMENTARISTA\n- 61: COMISSARIO DE BORDO\n- 62: COMPOSITOR\n- 63: COMUNICOLOGO\n- 64: CONDUTOR E OPER. DE ROBOS, VEIC. DE EQUIP.DE MOVIM. DE CARGA\n- 65: CONSELHEIRO DE TRIBUNAL DE CONTAS\n- 66: CONSULTOR JURIDICO -  SETOR PUBLICO\n- 67: CONTADOR\n- 68: CONTRAMESTRE DE EMBARCACOES\n- 69: COREOGRAFO\n- 70: CORRETOR\n- 71: CORRETOR DE IMOVEIS\n- 72: CORRETOR DE SEGUROS\n- 73: CORRETOR DE TITULOS E VALORES\n- 74: COZINHEIRO\n- 75: CRITICO\n- 76: DATILOGRAFO\n- 77: DECORADOR\n- 78: DECORADOR DE INTERIORES\n- 79: DEFENSOR PUBLICO\n- 80: DELEGADO DE POLICIA\n- 81: DEMONSTRADOR\n- 82: DEPUTADO ESTADUAL\n- 83: DEPUTADO FEDERAL\n- 84: DESEMBARGADOR\n- 85: DESENHISTA COMERCIAL\n- 86: DESENHISTA INDUSTRIAL (DESIGNER)\n- 87: DESENHISTA TECNICO\n- 88: DESENVOLVEDOR DE SOFTWARE\n- 89: DESPACHANTE\n- 90: DIPLOMATA\n- 91: DIRETOR DE EMPRESA\n- 92: DIRETOR DE EMPRESA PUBLICA E SOCIEDADE DE ECONOMIA MISTA\n- 93: DIRETOR DE ESPETACULOS\n- 94: DIRETOR DE ESTABELECIMENTO DE ENSINO\n- 95: DIRETOR DE ORGANISMO INTERNACIONAL E DE ORGANIZACAO NAO GOVE\n- 96: DIRIGENTE OU ADMINISTRADOR DE ORGANIZACAO FILANTROPICA\n- 97: DIRIGENTE OU ADMINISTRADOR DE ORGANIZACAO PATRONAL\n- 98: DIRIGENTE OU ADMINISTRADOR DE ORGANIZACAO RELIGIOSA\n- 99: DIRIGENTE OU ADMINISTRADOR DE ORGANIZACAO SINDICAL\n- 100: DIRIGENTE OU ADMINISTRADOR DE PARTIDO POLITICO\n- 101: DIR.SUP.ADM.PUB(OCUP CARG DIR,CHEF,ASSES.E NAT ESPEC)INCL.FU\n- 102: DIRIGENTE, PRESIDENTE E DIRETOR DE EMPRESA COMERCIAL\n- 103: DIRIGENTE, PRESIDENTE E DIRETOR DE EMPRESA INDUSTRIAL\n- 104: DIRIGENTE, PRES E DIRETOR DE EMPRESA PRESTADORA DE SERVICO\n- 105: DO LAR\n- 106: DOCUMENTALISTA\n- 107: ECONOMISTA\n- 108: ECONOMISTA DOMESTICO\n- 109: ELETRICISTA DE MANUTENCAO DE VEICULOS AUTOM.,MAQ,EQUIP.\n- 110: ELETRICISTA E ASSEMELHADOS\n- 111: EMPREGADO DOMESTICO\n- 112: EMPRESARIO\n- 113: ENFERMEIRO DE NIVEL SUPERIOR\n- 114: ENGENHEIRO\n- 115: ESCRITOR\n- 116: ESCRITURARIO\n- 117: ESCULTOR\n- 118: ESPOLIO\n- 119: ESTATISTICO\n- 120: ESTAGIARIO\n- 121: ESTETICISTA\n- 122: ESTENOGRAFO\n- 123: ESTIVADOR, CARREGADOR, EMBALADOR E ASSEMELHADOS\n- 124: EXTRATIVISTA FLORESTAL\n- 125: FARMACEUTICO\n- 126: FEIRANTE\n- 127: FILOLOGO\n- 128: FILOSOFO\n- 129: FISCAL\n- 130: FISICO\n- 131: FISIOTERAPEUTA\n- 132: FONOAUDIOLOGO\n- 133: FOTOGRAFO\n- 134: FUNCIONARIO PUBLICO CIVIL APOSENTADO\n- 135: GARCOM\n- 136: GARIMPEIRO\n- 137: GEOGRAFO\n- 138: GEOLOGO\n- 139: GERENTE DE EMP INDL, COMERCIAL OU PRESTADORA DE SERVICOS\n- 140: GERENTE DE ORGANISMO INTERNACIONAL DE ORG NAO GOVERNAMENTAL\n- 141: GOVERNADOR\n- 142: GOVERNANTA DE HOTEL\n- 143: GUIA DE TURISMO\n- 144: HISTORIADOR\n- 145: INSPETOR\n- 146: INSTRUTOR E PROFESSOR DE ESCOLAS LIVRES\n- 147: INTERPRETE\n- 148: JOALHEIRO\n- 149: JORNALEIRO\n- 150: JORNALISTA\n- 151: JUIZ\n- 152: LANTERNEIRO E PINTOR DE VEICULOS METALICOS\n- 153: LEILOEIRO\n- 154: LOCUTOR\n- 155: MANICURE\n- 156: MAQUILADOR\n- 157: MAQUINISTA E FOGUISTA DE EMBARCACOES LOCOMOTIVAS E ASSEM.\n- 158: MARINHEIRO E ASSEMELHADOS\n- 159: MASSAGISTA\n- 160: MATEMATICO\n- 161: MECANICO DE MANUT., MONTADOR, PREPAR E OP.DE MAQ. E APAR.\n- 162: MECANICO DE MANUTENCAO DE VEICULOS AUTOMOTORES E MAQUINAS\n- 163: MEDICO\n- 164: MEMBROS PUBLICOS\n- 165: MESTRE E CONTRAMESTRE\n- 166: METEREOLOGISTA\n- 167: MILITAR DA AERONAUTICA\n- 168: MILITAR DA MARINHA\n- 169: MILITAR DO EXERCITO\n- 170: MILITAR EM GERAL -  EXCETO OFICIAIS\n- 171: MILITAR REFORMADO\n- 172: MINISTRO DE ESTADO\n- 173: MINISTRO DE TRIBUNAL DE CONTAS\n- 174: MINISTRO DE TRIBUNAL SUPERIOR\n- 175: MINISTRO DO PODER JUDICIARIO\n- 176: MODELISTA\n- 177: MODELO\n- 178: MONTADOR DE APARELHOS E INSTRUMENTOS DE PRECISAO E MUSICAIS\n- 179: MOTORISTA DE VEICULOS DE TRANSPORTE DE CARGA\n- 180: MOTORISTA/COND.TRANSP. DE PASSAG.(TAXI, ONIBUS, PEQ. EMBARC)\n- 181: MUSEOLOGO\n- 182: MUSICO\n- 183: NUTRICIONISTA\n- 184: OCEONOGRAFO\n- 185: OCUPANTE DE CARGO DE DIRECAO E ASSESSORAMENTO INTERMEDIARIO\n- 186: OCUPANTE DE CARGO DE DIRECAO E ASSESSORAMENTO SUPERIOR\n- 187: ODONTOLOGO\n- 188: OFICIAIS DAS FORCAS ARMADAS E FORCAS AUXILIARES\n- 189: OFICIAIS DE MAQUINAS\n- 190: OFICIAL DE JUSTICA\n- 191: OPERADOR DE CAMERAS DE CINEMA E TELEVISAO\n- 192: OPER. DE INSTALACOES DE PRODUCAO E DISTRIBUICAO DE ENERGIA\n- 193: OPERADOR DE MAQUINA AGROPECUARIA E FLORESTAL\n- 194: OUTRAS OCUPACOES NAO ESPECIFICADAS ANTERIORMENTE\n- 195: OUTROS ADVOGADOS, PSICOLOGOS, BIBLIOTECARIOS E ASSEMELHADOS\n- 196: OUTROS ARTISTAS (ARTESAO, FOTOGRAFO)\n- 197: OUTROS DIRETORES E GERENTES\n- 198: OUTROS ECONOMISTAS, ESTATISTICOS, CONTADORES E ASSEMELHADOS\n- 199: OUTROS ENGENHEIROS, FISICOS, QUIMICOS E ASSEMELHADOS\n- 200: OUTROS ESPECIALISTAS EM INFORMATICA\n- 201: OUTROS ESTUDANTES\n- 202: OUTROS JORNALISTAS E ASSEMELHADOS\n- 203: OUTROS MEDICOS, ODONTOLOGOS, ENFERMEIROS E ASSEMELHADOS\n- 204: OUTROS MEMBROS DE ORDENS OU SEITAS REGILIOSAS\n- 205: OUTROS MEMBROS DOS PODERES LEGISLATIVO, EXECUTIVO E JUDIC.\n- 206: OUTROS PROFESSORES E ASSEMELHADOS\n- 207: OUTROS PROFISSIONAIS DO ESPETACULO E DAS ARTES\n- 208: OUTROS PROPRIETARIOS/CAPITALISTAS\n- 209: OUTROS SERV. DE ADM. CONSERVACAO E LIMPEZA DE EDIFICIOS\n- 210: OUTROS SERVICOS DE HOSPEDAGEM, RESTAURANTE E ASSEMELHADOS\n- 211: OUTROS SERVICOS DE MANUTENCAO\n- 212: OUTROS SERVICOS DE TRANSPORTE\n- 213: OUTROS SERVICOS DE TRATAMENTO DE BELEZA\n- 214: OUTROS SERVIDORES CIVIS E MILITARES E AG.DE ADM.PUBLICA\n- 215: OUTROS SERVIDORES CIVIS E MILITARES DE NIVEL SUPERIOR\n- 216: OUTROS SERVIDORES DAS CARREIRAS DE POLICIA\n- 217: OUTROS TECNICOS DE NIVEL MEDIO\n- 218: OUTR TECN.NIV.MED.DAS CIENC.FISIC.,QUIM., ENGENHARIA E AFINS\n- 219: OUTROS TECN. EM OPERACAO DE MAQUINAS DE TRATAMENTO DE DADOS\n- 220: OUTROS TRABALHADORES ADMINISTRATIVOS E ASSEMELHADOS\n- 221: OUTROS TRAB. AGRICOLAS, FLORESTAIS, EXTRACAO E ASSEMELHADOS\n- 222: OUTROS TRABALHADORES APOSENTADOS E PENSIONISTAS\n- 223: OUTROS TRABALHADORES DA PRODUCAO INDUSTRIAL\n- 224: OUTROS TRABALHADORES DE SERVICOS DIVERSOS\n- 225: OUTROS TRABALHADORES DO COMERCIO E ASSEMELHADOS\n- 226: OUTROS TRABALHADORES DO CONSORCIO E ASSEMELHADOS\n- 227: OUTROS TRAB.LIG. A APRESENT.DE ESPETAC. E PRATICA ESPORTIVA\n- 228: OUTROS TRAB.LIGADOS A NAVEGACAO AEREA, MARITIMA E INTERIOR\n- 229: OUTROS VENDEDORES E ASSEMELHADOS\n- 230: PATOLOGISTA (VETERINARIO)\n- 231: PEDAGOGO, ORIENTADOR EDUCACIONAL\n- 232: PEDICURE\n- 233: PENSIONISTA\n- 234: PESCADOR\n- 235: PILOTO DE AERONAVES\n- 236: PINTOR ARTISTICO\n- 237: POLICIAL MILITAR\n- 238: PORTEIRO DE EDIFICIO\n- 239: PREFEITO\n- 240: PRESIDENTE DA REPUBLICA\n- 241: PRESIDENTE DE EMPRESA PUBLICA E SOCIEDADE DE ECONOMIA MISTA\n- 242: PRES.ORGANISMO INTERN. E DE ORGANIZACAO NAO- GOVERNAMENTAL\n- 243: PRESTADOR DE SERVICOS DO COMERCIO\n- 244: PROCURADOR -  MINISTERIO PUBLICO\n- 245: PROCURADOR DA FAZENDA\n- 246: PROCURADOR DE AUTARQUIA\n- 247: PROCURADOR DE FUNDACAO PUBLICA\n- 248: PRODUTOR DE ESPETACULOS\n- 249: PRODUTOR NA EXPLORACAO AGROPECUARIA\n- 250: PROFESSOR DO ENSINO FUNDAMENTAL\n- 251: PROFESSOR DO ENSINO MEDIO\n- 252: PROFESSOR DO ENSINO PROFISSIONAL\n- 253: PROFESSOR DO ENSINO SUPERIOR\n- 254: PROFESSOR NA EDUCACAO INFANTIL\n- 255: PROFISSIONAL DA EDUCACAO FISICA (EXCETO PROFESSOR)\n- 256: PROFISSIONAL DE LETRAS E ARTES\n- 257: PROFIS. DE MARKTG, PUBLICIDADE E DE COMERCIALIZACAO\n- 258: PROMOTOR -  MINISTERIO PUBLICO\n- 259: PROPRIETARIO DE ESTAB. AGRICOLA, DA PECUARIA E FLORESTAL\n- 260: PROPRIETARIO DE ESTABELECIMENTO COMERCIAL\n- 261: PROPRIETARIO DE ESTABELECIMENTO DE PRESTACAO DE SERVICOS\n- 262: PROPRIETARIO DE ESTABELECIMENTO INDUSTRIAL\n- 263: PROPRIETARIO DE IMOVEL, RECEBENDO RENDIMENTO DE ALUGUEL\n- 264: PROPRIETARIO DE MICROEMPRESA\n- 265: PROTETICO\n- 266: PSICANALISTA\n- 267: PSICOLOGO\n- 268: PUBLICITARIO\n- 269: QUIMICO\n- 270: RADIALISTA\n- 271: RECENSEADOR\n- 272: RECEPCIONISTA\n- 273: REDATOR\n- 274: REGENTE DE ORQUESTRA OU CORAL\n- 275: RELACOES PUBLICAS\n- 276: REPORTER\n- 277: REPRESENTANTE COMERCIAL\n- 278: SACERDOTE OU MEMBRO DE ORDENS OU SEITAS RELIGIOSAS\n- 279: SECRETARIO\n- 280: SECRETARIO MUNICIPAL\n- 281: SECURITARIO\n- 282: SENADOR\n- 283: SERVENTUARIO DA JUSTICA (EXCETO TABELIAO)\n- 284: SERVIDOR DA CVM\n- 285: SERVIDOR DA SUSEP\n- 286: SERVIDOR DAS CARREIRAS DE AUDITORIA FISCAL E DE FISCALIZACAO\n- 287: SERVIDOR DAS CARREIRAS DE CIENCIA E TECNOLOGIA\n- 288: SERVID.CARREIRAS GESTAO GOVERN.,ANL,GESTOR E TEC.DE PLANEJ.\n- 289: SERVIDOR DAS CARREIRAS DO MINISTERIO PUBLICO\n- 290: SERVIDOR DAS CARREIRAS DO PODER LEGISLATIVO\n- 291: SERV. DEMAIS CARREIRAS DA ADM.PUB.DIRETA, AUTARQ.E  FUNDAC.\n- 292: SERVIDOR DO BANCO CENTRAL\n- 293: SERVIDOR PUBLICO ESTADUAL\n- 294: SERVIDOR PUBLICO FEDERAL\n- 295: SERVIDOR PUBLICO MUNICIPAL\n- 296: SOCIOLOGO\n- 297: SUPERVISOR\n- 298: SUPERV. EMP. INDUSTRIAL, COMERCIAL OU PRESTADORA DE SERVICOS\n- 299: SUPERV. DE ORGANISMO INTERN. E DE ORG. NAO GOVERNAMENTAL\n- 300: TABELIAO\n- 301: TECNICO DA BIOTECNOLOGIA\n- 302: TECNICO DA CIENCIA DA SAUDE ANIMAL\n- 303: TECNICO DA CIENCIA DA SAUDE HUMANA\n- 304: TECNICO DA PRODUCAO AGROPECUARIA\n- 305: TECNICO DAS CIENCIAS ADMINISTRATIVAS\n- 306: TECNICO DAS CIENCIAS CONTABEIS\n- 307: TECNICO DE AGRONOMIA E AGRIMENSURA\n- 308: TECNICO DE BIOQUIMICA\n- 309: TECNICO DE CONSERVACAO, DISSECACAO E EMPALHAMENTO DE CORPOS\n- 310: TECNICO DE CONTABILIDADE E DE ESTATISTICA\n- 311: TECNICO DE COORDENACAO ADMINISTRATIVA\n- 312: TECNICO DE ELETRECIDADE, ELETRONICA E TELECOMUNICACOES\n- 313: TECNICO DE FISCALIZACAO\n- 314: TECNICO DE INSPECAO\n- 315: TECNICO DE LABORATORIO\n- 316: TECNICO DE MECANICA\n- 317: TECNICO DE OUTROS EQUIPAMENTOS E INSTRUMENTOS DE DIAGNOSTICO\n- 318: TECNICO DE QUIMICA\n- 319: TECNICO DE RAIOS- X\n- 320: TECNICO DE SERVICOS CULTURAIS\n- 321: TECNICO EM BIOLOGIA\n- 322: TECNICO EM CENOGRAFIA\n- 323: TECNICO EM CIENCIAS FISICAS E QUIMICAS\n- 324: TECNICO EM CONTRUCAO CIVIL\n- 325: TECNICO EM EDIFICACOES E OBRAS DE INFRA ESTRUTURA\n- 326: TECNICO EM ELETRO- ELETRONICA\n- 327: TECNICO EM ESTATISTICA\n- 328: TECNICO EM FOTONICA\n- 329: TECNICO EM GEOLOGIA\n- 330: TECNICO EM INFORMATICA\n- 331: TECNICO EM METALMECANICA\n- 332: TECNICO EM MINERALOGIA\n- 333: TEC. EM NAVEG.AEREA, MARITIMA, FLUVIAL E METROFERROVIARIA\n- 334: TECNICO EM OPERACOES DE APARELHOS DE SONORIZACAO\n- 335: TECNICO EM OPERACOES DE ESTACOES DE RADIO E TELEVISAO\n- 336: TECNICO EM PROJECAO\n- 337: TECNICO EM TRANSPORTES (LOGISTICA)\n- 338: TECNOLOGO\n- 339: TELEFONISTA\n- 340: TERAPEUTA OCUPACIONAL\n- 341: TITULAR DE CARTORIO\n- 342: TRABALHADOR AGRICOLA\n- 343: TRABALHADOR DA CONSTRUCAO CIVIL\n- 344: TRABALHADOR DA FABRICACAO DE ALIMENTOS\n- 345: TRABALHADOR DA FABRICACAO DE ARTEFATOS DE MADEIRA\n- 346: TRABALHADOR DA FABRICACAO DE BEBIDAS\n- 347: TRABALHADOR DA FABRICACAO DE CALCADOS E ARTEFATOS DE COURO\n- 348: TRABALHADOR DA FABRICACAO DE FUMO\n- 349: TRABALHADOR DA FABRICACAO DE  PAPEL E PAPELAO\n- 350: TRABALHADOR DA FABRICACAO DE PROD. DE BORRACHA E PLASTICO\n- 351: TRABALHADOR DA FABRICACAO DE PROD. TEXTEIS  -  EXCETO ROUPAS\n- 352: TRABALHADOR DA FABRICACAO DE ROUPAS\n- 353: TRABALHADOR DA FABRICACAO E INSTALACAO ELETRO- ELETRONICA\n- 354: TRABALHADOR DA FABRICACAO E PREPARO DE ALIMENTOS E BEBIDAS\n- 355: TRABALHADOR DA INDUSTRIA EXTRATIVA E DA CONSTRUCAO CIVIL\n- 356: TRABALHADOR DA PECUARIA\n- 357: TRABALHADOR DA PESCA\n- 358: TRABALHADOR DA TRANSFORMACAO DE METAIS E COMPOSITOS\n- 359: TRABALHADOR DA USINAGEM DE METAIS\n- 360: TRABALHADOR DAS ARTES GRAFICAS\n- 361: TRABALHADOR DAS INDUSTRIAS DE BORRACHA\n- 362: TRABALHADOR DAS INDUSTRIAS DE MADEIRA E DO MOBILIARIO\n- 363: TRABALHADOR DAS INDUSTRIAS DE PLASTICO\n- 364: TRABALHADOR DAS INDUSTRIAS PETROQUIMICAS\n- 365: TRABALHADOR DAS INDUSTRIAS QUIMICAS\n- 366: TRABALHADOR DAS INDUSTRIAS TEXTEIS\n- 367: TRABALHADOR DE AGROINDUSTRIAS\n- 368: TRABALHADOR DE ATENDIMENTO AO PUBLICO\n- 369: TRABALHADOR DE INSTALACOES DE PROCESSAMENTO QUIMICO\n- 370: TRABALHADOR DE INSTALACOES DE MATERIAIS DE CONSTRUCAO\n- 371: TRAB. DE INSTALACOES E MAQ. DE FABR. DE CELULOSE E PAPEL\n- 372: TRABALHADOR DE INSTALACOES SIDERURGICAS\n- 373: TRABALHADOR DE OUTRAS INSTALACOES AGROINDUSTRIAIS\n- 374: TRABALHADOR DE REPARACAO E MANUTENCAO\n- 375: TRABALHADOR DO CURTIMENTO\n- 376: TRABALHADOR DO TRAT. DE FUMO E FAB. DE CIGARROS E CHARUTOS\n- 377: TRABALHADOR DO VESTUARIO\n- 378: TRAB.DOS SERV.DE ADM., CONSERVACAO E MANUTENCAO DE EDIFICIOS\n- 379: TRAB. DOS SERVICOS DE CONTABILIDADE, CAIXA E ASSEMELHADOS\n- 380: TRAB. DOS SERVICOS DE EMBELEZAMENTO E CUIDADOS PESSOAIS\n- 381: TRABALHADOR DOS SERVICOS DE HOTELARIA E ALIMENTACAO\n- 382: TRAB. DOS SERVICOS DE PROTECAO E SEGURANCA (EXCETO MILITAR)\n- 383: TRABALHADOR DOS SERVICOS DE SAUDE\n- 384: TRABALHADOR DOS SERVICOS DOMESTICOS EM GERAL\n- 385: TRABALHADOR FLORESTAL\n- 386: TRABALHADOR METALURGICO E SIDERURGICO\n- 387: TRABALHADOR NA EXPLORACAO AGROPECUARIA\n- 388: TRADUTOR\n- 389: VENDEDOR\n- 390: VENDEDOR DE COMERCIO VAREJISTA E ATACADISTA\n- 391: VENDEDOR PRACISTA\n- 392: VEREADOR\n- 393: VETERINARIO\n- 394: VICE- GOVERNADOR\n- 395: VICE- PRESIDENTE DA REPUBLICA\n- 396: VIDREIRO\n- 397: VITRINISTA\n- 398: ZOOTECNISTA\n- 399: OUTROS NAO ESPECIFICADOS\n- 400: OUTROS TRABALHADORES DE NIVEL SUPERIOR LIGADOS A ENSINO\n- 401: MOTOBOYS, LIQUIDANTES, INFORMANTES, COURIER\n- 402: AGRICULTORES DE PEQUENO PORTE (DE 5 A 50 ALQUEIRES)\n- 403: AGRICULTORES DE GRANDE PORTE\n- 404: EMPRESARIOS DE MEDIO PORTE\n- 405: EMPRESARIOS DE GRANDE PORTE\n- 406: ESTUDANTES UNIVERSITARIOS\n- 407: MILITARES DE ALTA PATENTE (GAL, BRIG., CEL MAIOR)\n- 408: OUTROS",
+        "format": "int32",
+        "example": 1
+      },
+      "vrRendaMesPropn": {
+        "type": "number",
+        "description": "Valor da Renda Mensal do Proponente",
+        "format": "double",
+        "example": 15000
+      },
+      "vPatrmPropn": {
+        "type": "number",
+        "description": "Valor do Patrimonio do Proponente",
+        "format": "double",
+        "example": 500000
+      },
+      "tpDocto": {
+        "type": "integer",
+        "description": "Tipo de Documento\n- 2: CPF (Produto Individual)\n- 3: CNPJ (Produto Coletivo)",
+        "example": 2
+      },
+      "nroCpfCnpj": {
+        "maxLength": 15,
+        "type": "string",
+        "description": "Número do Documento\n- Produto Individual: CPF do proponente\n- Produto Coletivo: CNPJ da empresa",
+        "format": "int32",
+        "example": "27441270006"
+      },
+      "nroCep": {
+        "maxLength": 9,
+        "pattern": "([0-9]{5})-([0-9]{3})",
+        "type": "string",
+        "description": "Código do CEP",
+        "example": "78005-670"
+      },
+      "cdFormaPagto": {
+        "type": "integer",
+        "description": "Código da Forma de Pagamento\n- 140: Débito em Conta Corrente\n- 141: Cartão de Crédito\n- 142: Ficha de Compensação\n- 212: Débito em conta poupança\n- 652: Consignado\n- 995: Débito Conta Corrente na Razão\n- 1033: Cartão de Débito",
+        "example": 142
+      },
+      "nroAgencia": {
+        "type": "integer",
+        "description": "Número da Agência Bancária",
+        "example": 5247,
+        "maxLength": 5
+      },
+      "nroConta": {
+        "type": "integer",
+        "description": "Número da Conta",
+        "example": 120075,
+        "maxLength": 12
+      },
+      "nroDigitoConta": {
+        "type": "integer",
+        "description": "Digito da Conta",
+        "example": 5,
+        "maxLength": 1
+      },
+      "cdFrequenciaPagto": {
+        "type": "integer",
+        "description": "Código da Frequência de Pagamento\n- 84: Mensal\n- 256: Único",
+        "example": 84
+      },
+      "descEndereco": {
+        "maxLength": 60,
+        "type": "string",
+        "description": "Endereço – Rua, Av., Número, etc",
+        "example": "Av. Alphaville, 779"
+      },
+      "descComplEndereco": {
+        "maxLength": 30,
+        "type": "string",
+        "description": "Complemento do Endereço",
+        "example": "CJ 201"
+      },
+      "descBairro": {
+        "maxLength": 40,
+        "type": "string",
+        "description": "Bairro",
+        "example": "Alphaville"
+      },
+      "descCidade": {
+        "maxLength": 30,
+        "type": "string",
+        "description": "Cidade",
+        "example": "Barueri"
+      },
+      "cdUf": {
+        "maxLength": 2,
+        "type": "string",
+        "description": "UF",
+        "example": "SP"
+      },
+      "descEmail": {
+        "maxLength": 100,
+        "type": "string",
+        "format": "email",
+        "description": "Email",
+        "example": "meu.email@bradescoseguros.com.br"
+      },
+      "nroDDDRes": {
+        "type": "integer",
+        "description": "DDD Residencial",
+        "format": "int32",
+        "example": 11,
+        "maxLength": 2
+      },
+      "nroTelefoneRes": {
+        "type": "integer",
+        "description": "Telefone Residencial",
+        "format": "int32",
+        "example": 54431234
+      },
+      "nroDDDCelular": {
+        "type": "integer",
+        "description": "DDD Celular",
+        "format": "int32",
+        "example": 11,
+        "maxLength": 2
+      },
+      "nroTelefoneCelular": {
+        "type": "integer",
+        "description": "Telefone Celular",
+        "format": "int32",
+        "example": 994421234
+      },
+      "nroOferta": {
+        "type": "integer",
+        "description": "Numero da oferta",
+        "example": 1
+      },
+      "nCtrlCotac": {
+        "type": "integer",
+        "description": "Número de Controle da Cotação. Número sequêncial gerado internamento pelo sistema, toda vez que uma nova cotação é gerada.",
+        "example": 206,
+        "maxLength": 12
+      },
+      "nroPrefixo": {
+        "type": "integer",
+        "description": "Número do Prefixo - Passar fixo zero",
+        "example": 0
+      },
+      "dtIniVigencia": {
+        "type": "string",
+        "description": "Data de Início de Vigência (AAAA-MM-DD)",
+        "format": "date",
+        "example": "2021-01-01"
+      },
+      "dtFimVigencia": {
+        "type": "string",
+        "description": "Data de Término de Vigência (AAAA-MM-DD)",
+        "format": "date",
+        "example": "2021-12-31"
+      },
+      "dtVencPrimeiraParcFinanc": {
+        "type": "string",
+        "description": "Data de Vencimento 1º Parcela Empréstimo (AAAA-MM-DD)",
+        "format": "date",
+        "example": "2021-02-15"
+      },
+      "nroDiaVencimento": {
+        "type": "integer",
+        "description": "Dia do vencimento da parcela",
+        "example": 15,
+        "minimum": 1,
+        "maximum": 31
+      },
+      "cdConcessionario": {
+        "type": "integer",
+        "description": "Código do Corretor - se omitido assumirá valor padrão",
+        "example": 9076322,
+        "maxLength": 7
+      },
+      "cdSupervisor": {
+        "type": "integer",
+        "description": "Código do Supervisor/Produtor - se omitido assumirá valor padrão",
+        "example": 30260,
+        "maxLength": 7
+      },
+      "cdAngariador": {
+        "type": "integer",
+        "description": "Código do Angariador - se omitido assumirá valor padrão",
+        "example": 200,
+        "maxLength": 7
+      },
+      "cdCodigoComercial": {
+        "type": "integer",
+        "description": "Código Comercial - se omitido assumirá zero",
+        "example": 0,
+        "maxLength": 5
+      },
+      "cdSegmento": {
+        "type": "integer",
+        "description": "Segmento de Venda - se omitido assumirá origem Varejo",
+        "example": 2,
+        "maxLength": 2
+      },
+      "cIndcdPssoaPoltcExpto": {
+        "type": "integer",
+        "description": "Indicador para Pessoa Politicamente Exposta\n- 0: Não\n- 1: Sim",
+        "example": 0
+      },
+      "idcStatus": {
+        "type": "integer",
+        "description": "Identificador do Resultado da Requisição\n- 0: Execução OK\n- 10: Erros de integridade/consistência física nos dados da camada de aplicação\n- 20: Erros de consistência lógica (ex: nenhum dado localizado em um serviço de consulta)\n- 30: Erros gerados dentro da camada de banco de dados (ex: timeout, erro de PK ou FK)\n- 40: Erros de origem externa (ex. erros gerados na chamada ou capturados no retorno de serviços externos)",
+        "example": 0,
+        "maxLength": 2
+      },
+      "dtVctoCotacao": {
+        "type": "string",
+        "description": "Data de Vencimento da Cotação (AAAA-MM-DDTHH:MM:SSZ)",
+        "format": "date",
+        "example": "2022-09-14 13:26:16.58"
+      },
+      "idcCritica": {
+        "type": "boolean",
+        "description": "Indica se cotação possui algum impedimento/crítica",
+        "example": false
+      },
+      "cdStatusCotac": {
+        "type": "string",
+        "description": "Status da proposta\n- C: Criticada\n- A: Apta a Proposta\n- L: Liberada para Emissão\n- E: Emitida\n- R: Reenviar/Reprocessar",
+        "example": "A"
+      },
+      "cdStatusPropt": {
+        "type": "string",
+        "description": "Status da proposta\n- A: Cancelada\n- C: Criticada\n- D: Duplicada\n- G: Emitida\n- H: Recepcionada\n- I: Pend CCB\n- L: Liberada\n- N: DECLINADA\n- P: Pendente\n- R: Recusada\n- X: EXCLUIR",
+        "example": "A"
+      },
+      "tpPesquisa": {
+        "type": "integer",
+        "description": "Tipo de pesquisa\n- 1: P/ Nro. Controle - > Recuperar Vcto e Status\n- 2: P/ Nro. Controle - > Recuperar Objeto Cotação",
+        "example": 2
+      },
+      "cdErro": {
+        "type": "integer",
+        "description": "Código de erro interno da API. Corresponde a um Reponse Code.",
+        "example": 401
+      },
+      "dsOrigem": {
+        "type": "string",
+        "description": "local interno da API onde ocorreu o erro.",
+        "example": "VALIDAR REGRA CANAL"
+      },
+      "dsErro": {
+        "type": "string",
+        "description": "Mensagem de erro",
+        "example": "Recurso / Serviço não habilitado para o canal de comercialização."
+      },
+      "cdLog": {
+        "description": "Código do Retorno do Processamento\n- 0: Sucesso\n- 10: Erro de consistencia Fisica\n- 20: Erro de consistencia Logica\n- 30: Erro na camada de banco de dados\n- 40: erro no serviço",
+        "type": "integer",
+        "example": 0
+      },
+      "dsLog": {
+        "description": "Descrição da Ocorrencia na Cotação.",
+        "type": "string",
+        "maxLength": 200,
+        "example": "<CertificadoVO><idCertificado>12000040555</idCertificado></CertificadoVO>"
+      },
+      "dtLog": {
+        "description": "Data da Ocorrencia na Cotação (AAAA-MM-DDTHH:MM:SSZ)",
+        "type": "string",
+        "format": "date",
+        "example": "2022-12-12 21:48:17.3"
+      },
+      "cdAcao": {
+        "description": "Código Da Ação Tomada na Ocorrencia\n- R: Reenviada\n- C: Cancelada\n- P: Reprocessada",
+        "type": "string",
+        "maxLength": 1,
+        "example": ""
+      },
+      "dsAcao": {
+        "description": "Descrição Da Ação Tomada na Ocorrencia",
+        "type": "string",
+        "maxLength": 15,
+        "example": ""
+
+      },
+      "dtAcao": {
+        "description": "Data de tomada de ação para contornar ocorrencia na Cotação.",
+        "type": "string",
+        "format": "date",
+        "example": ""
+      },
+      "nroOrdemImpressao": {
+        "description": "Ordem de impressão da Cobertura Segurada no Certificado",
+        "type": "integer",
+        "example": 1
+      },
+      "nroRegistros": {
+        "description": "Número de registros reprocessados",
+        "type": "integer",
+        "example": 1
+      },
+      "dtInicVigParc": {
+        "description": "Data de Início de Vigência da Parcela (AAAAMMDD)",
+        "type": "string",
+        "format": "date",
+        "example": "20221201"
+      },
+      "dtFimVigParc": {
+        "description": "Data de Final de Vigência da Parcela (AAAAMMDD)",
+        "type": "string",
+        "format": "date",
+        "example": "20230101"
+      },
+      "idCertificado": {
+        "description": "Identificação do Certificado",
+        "type": "integer",
+        "format": "long",
+        "example": 12000040556
+      }
+    }, #schema
+    "examples": {
+      "RequestCotacaoColetivo": {
+        "summary": "Produtos Coletivos",
+        "value": {
+          "cdEmpresa": 686,
+          "cdSucursal": 9119,
+          "produto": {
+            "cdCanalVenda": 3,
+            "cdProduto": 1355,
+            "dtAssinaturaProposta": "2022-08-01",
+            "nroAgProdutora": 0,
+            "vlCapital": 1999999.99,
+            "qtMeses": 60,
+            "vlParcelaFinanc": 1,
+            "qDiaCarenPlano": 180
+          },
+          "proponente": {
+            "nmNome": "CICERO GOMES DA SILVA HORTIFRUTA ME",
+            "dtNasc": "2005-01-27",
+            "cdSexo": 1,
+            "cdEstadocivil": 3,
+            "cdProfissaoProponente": 21,
+            "vrRendaMes": 0,
+            "vPatrmPropn": 0,
+            "documento": {
+              "cdTipoDocto": 3,
+              "nroCpfCnpj": "18045873000186"
+            },
+            "endereco": {
+              "nroCep": "55280-000"
+            },
+          },
+          "pagamento": {
+            "cdFormaPagto": 142,
+            "nroAgenciaProponente": 0,
+            "nroContaProponente": 0,
+            "nroDigitoContaProponente": 0,
+            "cdFrequenciaPagto": 84
+          },
+          "socio": {
+            "nmSocio": "SOCIO PRINCIPAL - EMPRESA 1",
+            "cCPF": "123456789",
+            "cCtrlCPF": "09",
+            "dtNascimento": "2021-01-27",
+            "iAplicOrig" : "7842",
+            "cUsuario": "i111115"
+          }
+        }
+      },
+      "RequestCotacaoIndividual": {
+        "summary": "Produtos Individuais",
+        "value": {
+          "cdEmpresa": 686,
+          "cdSucursal": 9220,
+          "produto": {
+            "cdCanalVenda": 3,
+            "cdProduto": 1234,
+            "cdPlano": 1,
+            "dtAssinaturaProposta": "2022-08-01",
+            "nroAgProdutora": 1234,
+            "vlCapital": 226890.75,
+            "qtMeses": 58,
+            "vlParcelaFinanc": 1,
+            "qDiaCarenPlano": 30,
+          },
+          "proponente": {
+            "nmNome": "VALDIR DE OLIVEIRA",
+            "dtNasc": "1954-01-27",
+            "cdSexo": "1",
+            "cdEstadocivil": "1",
+            "cdProfissaoProponente": 1,
+            "vrRendaMes": 15000,
+            "vPatrmPropn": 500000,
+            "documento": {
+              "cdTipoDocto": 2,
+              "nroCpfCnpj": "27441270006",
+            },
+            "endereco": {
+              "nroCep": "78005-670",
+            }
+          },
+          "pagamento": {
+            "cdFormaPagto": 140,
+            "nroAgenciaProponente": 5247,
+            "nroContaProponente": 120075,
+            "nroDigitoContaProponente": 5,
+            "cdFrequenciaPagto": 84
+          }
+        }
+      },
+      "ResponseCotacao200": {
+        "summary": "Cotação gerada OK",
+        "value": {
+          "data": {
+            "nroControleCotacao": 754,
+            "dtVctoCotacao": "2022-12-13 16:45:08.343",
+            "idcCritica": false,
+            "cdStatus": "A",
+            "ofertas": [
+              {
+                "cdPlano": 7,
+                "descPlano": "PLANO 7 SÓCIO MAJORITÁRIO - CARÊNCIA 180",
+                "vigenciaPlano": {
+                    "vigenciaVenda": {
+                        "vlMesesMinimo": 1,
+                        "vlMesesMaximo": 108
+                    }
+                },
+                "apolice": {
+                    "nroApoliceClube": 1063189
+                },
+                "premio": {
+                    "vlPremioLiqCalc": 1518.89,
+                    "vlIofCalc": 5.78,
+                    "vlPremioBrutoCalc": 1524.67
+                },
+                "coberturas": [
+                    {
+                        "cdCober": 10898,
+                        "descCobertura": "MORTE",
+                        "vlCapitalCober": 1999999.99,
+                        "vlTaxaCober": 0.00894709,
+                        "vlPremioCober": 1491.18,
+                        "vlIofCober": 5.67,
+                        "nroOrdemImpressao": 1
+                    },
+                    {
+                        "cdCober": 10899,
+                        "descCobertura": "INVALIDEZ PERMANENTE TOTAL POR ACIDENTE",
+                        "vlCapitalCober": 1999999.990,
+                        "vlTaxaCober": 0.00016628,
+                        "vlPremioCober": 27.71,
+                        "vlIofCober": 0.11,
+                        "nroOrdemImpressao": 2
+                    },
+                    {
+                        "cdCober": 10900,
+                        "descCobertura": "ASSISTÊNCIA PALAVRA DE MÉDICO INDIVIDUAL",
+                        "vlCapitalCober": 0.000,
+                        "vlTaxaCober": 0,
+                        "vlPremioCober": 0,
+                        "vlIofCober": 0,
+                        "nroOrdemImpressao": 3
+                    },
+                    {
+                        "cdCober": 10901,
+                        "descCobertura": "ASSISTENCIA FUNERAL INDIVIDUAL",
+                        "vlCapitalCober": 0.000,
+                        "vlTaxaCober": 0,
+                        "vlPremioCober": 0,
+                        "vlIofCober": 0,
+                        "nroOrdemImpressao": 4
+                    }
+                ]
+              }
+            ]
+          },
+          "idcStatus": 0
+        }
+      },
+      "ResponseCotacao200Criticada": {
+        "summary": "Cotação Criticada",
+        "value": {
+          "data": {
+            "idcCritica": true,
+            "cdStatus": "C",
+            "criticas": [
+              {
+                "codCritica": 947,
+                "descCritica": "criticarCpfSocio"
+              },
+              {
+                "codCritica": 950,
+                "descCritica": "criticarCpfInvalidoSocio"
+              }
+            ]
+          },
+          "idcStatus": 0
+        }
+      },
+      "ResponseCotacao200NaoGerada": {
+        "summary": "Cotação Não Gerada",
+        "value": {
+          "data": null,
+          "erroOut": {
+            "cdErro": 401,
+            "dsOrigem": "VALIDAR REGRA CANAL",
+            "dsErro": "Recurso / Serviço não habilitado para o canal de comercialização."
+            },
+          "idcStatus": 0
+        }
+      },
+      "ResponseCotacao400": {
+        "summary": "Cotação Não Gerada",
+        "value": {
+          "erroOut": {
+            "cdErro": 400,
+            "dsOrigem": "br.com.bradseg.vida.prestamista.exception.SisePrestamistaIntegrationException: java.lang.reflect.InvocationTargetException",
+            "dsErro": "java.lang.reflect.InvocationTargetException"
+          },
+          "idcStatus": 10
+        }
+      },
+      "ResponseConsultaCotacaoOK": {
+        "summary": "Consulta Cotação OK",
+        "value": {
+          "data": [
+            {
+              "nroControleCotacao": 760,
+              "dtVctoCotacao": "2022-12-13 19:14:54.65",
+              "cdStatus": "A",
+              "cdProduto": 1355,
+              "idcCritica": false,
+              "ofertas": [
+                {
+                  "cdPlano": 7,
+                  "descPlano": "PLANO 7 SÓCIO MAJORITÁRIO - CARÊNCIA 180",
+                  "vigenciaPlano": {
+                    "vigenciaVenda": {
+                        "vlMesesMinimo": 1,
+                        "vlMesesMaximo": 108
+                    }
+                  },
+                  "apolice": {
+                    "nroApoliceClube": 1063189
+                  },
+                  "nroOferta": 1,
+                  "premio": {
+                    "vlPremioLiqCalc": 1518.89,
+                    "vlIofCalc": 5.78,
+                    "vlPremioBrutoCalc": 1524.67
+                  },
+                  "coberturas": [
+                    {
+                      "cdCober": 10898,
+                      "descCobertura": "MORTE",
+                      "vlCapitalCober": 1999999.99,
+                      "vlTaxaCober": 0.00894709,
+                      "vlPremioCober": 1491.18,
+                      "vlIofCober": 5.67,
+                      "nroOrdemImpressao": 1
+                    },
+                    {
+                      "cdCober": 10899,
+                      "descCobertura": "INVALIDEZ PERMANENTE TOTAL POR ACIDENTE",
+                      "vlCapitalCober": 1999999.99,
+                      "vlTaxaCober": 0.00016628,
+                      "vlPremioCober": 27.71,
+                      "vlIofCober": 0.11,
+                      "nroOrdemImpressao": 2
+                    },
+                    {
+                      "cdCober": 10900,
+                      "descCobertura": "ASSISTÊNCIA PALAVRA DE MÉDICO INDIVIDUAL",
+                      "vlCapitalCober": 0.0,
+                      "vlTaxaCober": 0.0,
+                      "vlPremioCober": 0.0,
+                      "vlIofCober": 0.0,
+                      "nroOrdemImpressao": 3
+                    },
+                    {
+                      "cdCober": 10901,
+                      "descCobertura": "ASSISTENCIA FUNERAL INDIVIDUAL",
+                      "vlCapitalCober": 0.0,
+                      "vlTaxaCober": 0.0,
+                      "vlPremioCober": 0.0,
+                      "vlIofCober": 0.0,
+                      "nroOrdemImpressao": 4
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "idcStatus": 0
+        }
+      },
+      "ResponseConsultaCotacaoCriticada": {
+        "summary": "Consulta Cotação Criticada",
+        "value": {
+          "data": [
+            {
+              "nroControleCotacao": 759,
+              "dtVctoCotacao": "2022-12-13 19:12:07.413",
+              "cdStatus": "C",
+              "cdProduto": 1355,
+              "idcCritica": false,
+              "ofertas": [
+                {
+                  "cdPlano": 7,
+                  "descPlano": "PLANO 7 SÓCIO MAJORITÁRIO - CARÊNCIA 180",
+                  "vigenciaPlano": {
+                    "vigenciaVenda": {
+                        "vlMesesMinimo": 1,
+                        "vlMesesMaximo": 108
+                      }
+                  },
+                  "apolice": {
+                    "nroApoliceClube": 1063189
+                  },
+                  "nroOferta": 1,
+                  "premio": {
+                    "vlPremioLiqCalc": 1518.89,
+                    "vlIofCalc": 5.78,
+                    "vlPremioBrutoCalc": 1524.67
+                  },
+                  "coberturas": [
+                    {
+                      "cdCober": 10898,
+                      "descCobertura": "MORTE",
+                      "vlCapitalCober": 1999999.99,
+                      "vlTaxaCober": 0.00894709,
+                      "vlPremioCober": 1491.18,
+                      "vlIofCober": 5.67,
+                      "nroOrdemImpressao": 1
+                    },
+                    {
+                      "cdCober": 10899,
+                      "descCobertura": "INVALIDEZ PERMANENTE TOTAL POR ACIDENTE",
+                      "vlCapitalCober": 1999999.99,
+                      "vlTaxaCober": 0.00016628,
+                      "vlPremioCober": 27.71,
+                      "vlIofCober": 0.11,
+                      "nroOrdemImpressao": 2
+                    },
+                    {
+                      "cdCober": 10900,
+                      "descCobertura": "ASSISTÊNCIA PALAVRA DE MÉDICO INDIVIDUAL",
+                      "vlCapitalCober": 0.0,
+                      "vlTaxaCober": 0.0,
+                      "vlPremioCober": 0.0,
+                      "vlIofCober": 0.0,
+                      "nroOrdemImpressao": 3
+                    },
+                    {
+                      "cdCober": 10901,
+                      "descCobertura": "ASSISTENCIA FUNERAL INDIVIDUAL",
+                      "vlCapitalCober": 0.0,
+                      "vlTaxaCober": 0.0,
+                      "vlPremioCober": 0.0,
+                      "vlIofCober": 0.0,
+                      "nroOrdemImpressao": 4
+                    }
+                  ]
+                }
+              ],
+              "criticas": [
+                {
+                  "codCritica": 45,
+                  "descCritica": "Idade Fora do Limite de Idade Estabelecido no Produto "
+                }
+              ]
+            }
+          ],
+          "idcStatus": 0
+        }
+      },
+      "ResponseConsultaCotacaoNaoEncontrada": {
+        "summary": "Cotação Não Encontrada",
+        "value": {
+          "data": [],
+          "idcStatus": 0
+        }
+      },
+      "ResponseConsultaCotacao400": {
+        "summary": "Dados de entrada Inconsistentes",
+        "value": {
+          "erroOut": {
+            "cdErro": 400,
+            "dsOrigem": "Exception",
+            "dsErro": "CallableStatementCallback; SQL [{call pSelAPIConsultarCotacao(?, ?, ?)}]; Error converting data type int to tinyint.; nested exception is com.microsoft.sqlserver.jdbc.SQLServerException: Error converting data type int to tinyint."
+          },
+          "idcStatus": 20
+        }
+      },
+      "ResponseParcelaPendente200": {
+        "summary": "Consulta OK",
+        "value": {
+          "data": [
+            {
+              "cdPlano": 1,
+              "nroProposta": 202207292,
+              "nroParcela": 0,
+              "cdOrigemTramissao": 33,
+              "vlPremio": 113871.55,
+              "vlIof": 432.71,
+              "vlPremioBrut": 114304.26,
+              "dtVcto": "30/06/2022",
+              "dgNumLeg": "13520000000550665768"
+            }
+          ],
+          "idcStatus": 0
+        }
+      },
+      "ResponseParcelaPendente406": {
+        "summary": "Consulta não Encontrada",
+        "value": {
+          "erroOut": {
+            "cdErro": 300,
+            "dsOrigem": "pSelAPIParcelasPendentes",
+            "dsErro": "Nenhum certificado encontrado para proposta informada"
+          },
+          "idcStatus": 20
+        }
+      },
+      "ResponseParcelaPendente400": {
+        "summary": "Consulta Inválida",
+        "value": {
+          "erroOut": {
+            "cdErro": 201,
+            "dsOrigem": "consultarParcelasPendentes",
+            "dsErro": "Origem de transmissão invalida"
+          },
+          "idcStatus": 20
+        }
+      },
+      "RequestPdfChequeEmpresarialSemDadosDef": {
+        "summary": "Sem dados DEF",
+        "value": {
+          "nCtrlCotac": 663,
+          "cdProduto": 1351,
+          "cdOrigemTransmissao": 17
+        }
+      },
+      "RequestPdfChequeEmpresarialComDadosDef": {
+        "summary": "Com dados DEF",
+        "value": {
+          "nCtrlCotac": 663,
+          "cdProduto": 1351,
+          "cdOrigemTransmissao": 17,
+          "nroContrBanco": "70535681",
+          "nroProtocolo": "asdjfakld-dsda093a-asdazafds-ssaf98fas"
+        }
+      },
+      "ResponsePdfChequeEmpresarial200": {
+        "summary": "Geração PDF OK",
+        "value": {
+          "data": "JVBERi0xLjQKJeLjz9MKMiAwIG9iago8PC9MZW5ndGggNDkvRmlsdGVyL0ZsYXRlRGVjb2RlPj5zdHJlYW0KeJwr5HIK4TI2U7AwMFMISeFyDeEK5CpUMFQwAEIImZyroB+RZqjgkq8QyAUA6qIJ8gplbmRzdHJlYW0KZW5kb2JqCjQgMCBvYmoKPDwvUGFyZW50IDMgMCBSL0NvbnRlbnRzIDIgMCBSL1R5cGUvUGFnZS9SZXNvdXJjZXM8PC9YT2JqZWN0PDwvWGYxIDEgMCBSPj4vUHJvY1NldCBbL1BERiAvVGV4dCAvSW1hZ2VCIC9JbWFnZUMgL0ltYWdlSV0+Pi9NZWRpYUJveFswIDAgNTk1IDg0Ml0+PgplbmRvYmoKNiAwIG9iago8PC9MZW5ndGggNDkvRmlsdGVyL0ZsYXRlRGVjb2RlPj5zdHJlYW0KeJwr5HIK4TI2U7AwMFMISeFyDeEK5CpUMFQwAEIImZyro",
+          "idcStatus": 0
+        }
+      },
+      "ResponsePdfChequeEmpresarial400": {
+        "summary": "Parâmetros Inválidos",
+        "value": {
+          "erroOut": {
+            "cdErro": 205,
+            "dsOrigem": "pSelAPItPpstaPrmtaPdf",
+            "dsErro": "Situação da proposta inválida para emissão do PDF"
+          },
+          "idcStatus": 20
+        }
+      },
+      "ResponsePdfChequeEmpresarial406": {
+        "summary": "Parâmetros não Encontrados",
+        "value": {
+          "erroOut": {
+            "cdErro": 318,
+            "dsOrigem": "pSelAPItCotacPpstaPrmta",
+            "dsErro": "Proposta não encontrada"
+          },
+          "idcStatus": 20
+        }
+      },
+      "ResponseProposta200Emitida": {
+        "summary": "Proposta Emitida",
+        "value": {
+          "data": {
+            "idcCritica": false,
+            "cdStatus": "L",
+            "listaCriticas": null
+          },
+          "idcStatus": 0
+        }
+      },
+      "ResponseProposta200Criticada": {
+        "summary": "Proposta Criticada",
+        "value": {
+          "data": {
+            "idcCritica": true,
+            "cdStatus": "C",
+            "listaCriticas": [
+              {
+                "codCritica": 918,
+                "descCritica": "criticarCotacaoVencida"
+              },
+              {
+                "codCritica": 13,
+                "descCritica": "criticarPropostaImplantada"
+              }
+            ]
+          },
+          "idcStatus": 0
+        }
+      },
+      "ResponseProposta400": {
+        "summary": "Com Restrição/Crítica",
+        "value": {
+          "erroOut": {
+            "cdErro": 400,
+            "dsOrigem": "Gerar Proposta Prestamista",
+            "dsErro": "Cotação possui restrições ou críticas e não pode gerar proposta."
+          },
+          "idcStatus": 10
+        }
+      },
+      "ResponseLogEmissao200": {
+        "summary": "Emissão OK",
+        "value": {
+          "data": [
+            {
+              "cdLog": 0,
+              "dsLog": "<CertificadoVO><idCertificado>12000040555</idCertificado></CertificadoVO>",
+              "dtLog": "2022-12-12 21:48:17.3",
+              "cdAcao": "",
+              "dsAcao": "",
+              "dtAcao": ""
+            }
+          ],
+          "idcStatus": 0
+        }
+      },
+      "ResponseLogEmissao200Erro": {
+        "summary": "Emissão com Erro",
+        "value": {
+          "data": [
+            {
+              "cdLog": 40,
+              "dsLog": "CallableStatementCallback; bad SQL grammar [{call ##pMltAPIEmitePropostaPrest()}]; nested exception is com.microsoft.sqlserver.jdbc.SQLServerException: Procedure or function '##pMltAPIEmitePropostaPre",
+              "dtLog": "2022-12-13 08:37:41.027",
+              "cdAcao": "",
+              "dsAcao": "",
+              "dtAcao": ""
+            }
+          ],
+          "idcStatus": 0
+        }
+      },
+      "ResponseLogEmissao400": {
+        "summary": "Problema no Parametro de entrada",
+        "value": {
+          "erroOut": {
+            "cdErro": 400,
+            "dsOrigem": "Exception",
+            "dsErro": "CallableStatementCallback; bad SQL grammar [{call pSelAPILogEmisPrmta(?, ?)}]; nested exception is com.microsoft.sqlserver.jdbc.SQLServerException: Erro ao tentar confirmar cotacao - origem: pSelAPILogEmisPrmta, - cdErro: 50000, lnErro: 38, dsOrigem: pInsAPIDadosProposta,  dsErro: Cotacao nao localizada - @pNroControleCotacao = 9771"
+          },
+          "idcStatus": 20
+        }
+      },
+      "RequestEmissaoIndividual": {
+        "summary": "Produtos Individuais",
+        "value": {
+          "nroControleCotacao": 772,
+	        "nroPrefixo": 0,
+	        "nroProposta": 8896989,
+	        "cdPlano": 7,
+	        "dtIniVigencia": "2022-12-12",
+	        "dtFimVigencia": "2023-12-12",
+	        "dtVencPrimeiraParcFinanc": "2023-01-29",
+	        "nroDiaVencimento":29,
+          "cIndcdPssoaPoltcExpto":1,
+          "cdConcessionario":9076521,
+          "cdSupervisor":30260,
+          "cdAngariador":200,
+	        "endereco": {
+	          "descEndereco": "Anhanguera 725",
+	          "descComplEndereco": "",
+	          "descBairro": "Alphaville",
+	          "descCidade": "Barueri",
+	          "cdUf": "SP"
+	        },
+	        "contato": {
+      	    "descEmail": "testeciclo2@sisconsult.com.br",
+      	    "nroDDDRes": 11,
+	          "nroTelefoneRes": 12345678,
+	          "nroDDDCelular": 11,
+	          "nroTelefoneCelular": 977558844
+	        }
+        }
+      },
+      "RequestEmissaoColetivo": {
+        "summary": "Produtos Coletivos",
+        "value": {
+          "nroControleCotacao": 772,
+	        "nroPrefixo": 0,
+	        "nroProposta": 8896989,
+	        "cdPlano": 7,
+	        "dtIniVigencia": "2022-12-12",
+	        "dtFimVigencia": "2023-12-12",
+	        "dtVencPrimeiraParcFinanc": "2023-01-29",
+	        "nroDiaVencimento":29,
+          "cIndcdPssoaPoltcExpto":1,
+          "cdConcessionario":9076521,
+          "cdSupervisor":30260,
+          "cdAngariador":200,
+	        "endereco": {
+	          "descEndereco": "Anhanguera 725",
+	          "descComplEndereco": "",
+	          "descBairro": "Alphaville",
+	          "descCidade": "Barueri",
+	          "cdUf": "SP"
+	        },
+	        "contato": {
+      	    "descEmail": "testeciclo2@sisconsult.com.br",
+      	    "nroDDDRes": 11,
+	          "nroTelefoneRes": 12345678,
+	          "nroDDDCelular": 11,
+	          "nroTelefoneCelular": 977558844
+	        },
+          "socio": {
+            "nmSocio": "SOCIO PRINCIPAL - EMPRESA 1",
+            "cCPF": "123456789",
+            "cCtrlCPF": "09",
+            "dtNascimento": "2021-01-27",
+            "iAplicOrig" : "7842",
+            "cUsuario": "i111115"
+          }
+        }
+      },
+      "ResponseEmissaoPropostaOK": {
+        "summary": "Proposta Gerada",
+        "value": {
+          "data": {
+            "idcCritica": false,
+            "cdStatus": "L",
+            "listaCriticas": null
+          },
+          "idcStatus": 0
+        }
+      },
+      "ResponseReprocessarEmissao200": {
+        "summary": "Reprocessado OK",
+        "value": {
+          "data": 1,
+          "idcStatus": 0
+        }
+      },
+      "ResponseReprocessarEmissao200NaoReprocessada": {
+        "summary": "Não Reprocessado",
+        "value": {
+          "data": 0,
+          "idcStatus": 0
+        }
+      },
+      "ResponseReprocessarEmissao400": {
+        "summary": "Não Reprocessado",
+        "value": {
+          "erroOut": {
+            "cdErro": 400,
+            "dsOrigem": "Exception",
+            "dsErro": "Parâmetro de entrada não informado"
+          },
+          "idcStatus": 20
+        }
+      },
+      "ResponseReprocessarEmissao406": {
+        "summary": "Não Reprocessado",
+        "value": {
+          "erroOut": {
+            "cdErro": 406,
+            "dsOrigem": "RuleException",
+            "dsErro": "Não é permitido o Reenvio de Proposta com situação: L-Liberada para Emissão"
+          },
+          "idcStatus": 20
+        }
+      }#
+    }
+  } #components
+}

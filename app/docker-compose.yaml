@@ -1,0 +1,17 @@
+version: '3.8'
+services:
+  postgres:
+    image: ankane/pgvector:latest
+    container_name: openapi_pg
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: openapi_db
+    volumes:
+      - ./init-script.sql:/docker-entrypoint-initdb.d/init-script.sql
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:

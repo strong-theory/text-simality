@@ -1,0 +1,2575 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "TCAP - Resgate",
+    "description": "TCAP - Capitalização Jornada Resgate",
+    "contact": {},
+    "license": {
+      "name": "Bradesco Seguros",
+      "url": "https://www.bradescoseguros.com.br/clientes"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://parceiros.bradescoseguros.com.br/V2/parceiros"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Resgate",
+      "description": "Endpoints referentes a jornada de Resgate."
+    }
+  ],
+  "paths": {
+    "/tcap-proposta/v1/propostas-club": {
+      "post": {
+        "tags": [
+          "Resgate"
+        ],
+        "summary": "Lista informações de propostas por determinado Club",
+        "description": "Lista informações de propostas por determinado Club",
+        "operationId": "listarPropostasPorClub",
+        "requestBody": {
+          "description": "Lista informações de propostas por determinado Club",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PropostaClubRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Lista todas as propostas pelo club",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListarPropostasClubResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A requisição foi malformada, omitindo atributos obrigatórios, seja no payload ou através de atributos na URL.",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {}
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {}
+          },
+          "500": {
+            "description": "Ocorreu um erro no gateway da API ou no microsserviço",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/tcap-resgate/v1/proposta-passiveis-resgate": {
+      "post": {
+        "tags": [
+          "Resgate"
+        ],
+        "summary": "Esta Funcionalidade tem por objetivo listar propostas que são passiveis de resgate",
+        "description": "Esta Funcionalidade tem por objetivo cancelar a solicitacao de resgate",
+        "operationId": "cancelar-solicitacao-resgate",
+        "requestBody": {
+          "description": "Lista propostas passiveis de resgate",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PropostaPassivelResgateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sucesso em listar as propostas passiveis de resgate",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PropostaPassivelResgateResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A requisição foi malformada, omitindo atributos obrigatórios, seja no payload ou através de atributos na URL.",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {}
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {}
+          },
+          "500": {
+            "description": "Ocorreu um erro no gateway da API ou no microsserviço",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/tcap-titulos/v1/listar-titulos": {
+      "post": {
+        "tags": [
+          "Resgate"
+        ],
+        "summary": "Esta funcionalidade tem por objetivo retornar uma lista de títulos, agrupados por plano e proposta, a partir de uma determinada agência e conta.",
+        "description": "A lista poderá ser filtrada adicionalmente conforme as situações a seguir: Titulos ativos, títulos inativos ou ambos; Todos os tipos de pagamento ou tipo de pagamento PM ou tipo de pagamento PU ou tipo de pagamento PP e Títulos adquiridos no canal informado ou todos os títulos.",
+        "operationId": "listarTitulos",
+        "requestBody": {
+          "description": "Lista titulos baseados em plano e proposta",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ListarTitulosRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Resultado(s) da listagem de título(s) encontrado(s).",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListarTitulosResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A requisição foi malformada, omitindo atributos obrigatórios, seja no payload ou através de atributos na URL.",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {}
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {}
+          },
+          "500": {
+            "description": "Ocorreu um erro no gateway da API ou no microsserviço",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/tcap-resgate/v1/listar-titulos-passiveis-resgate": {
+      "post": {
+        "tags": [
+          "Resgate"
+        ],
+        "summary": "Obtém informações de listar titulos passíveis de resgate",
+        "description": "Esta Funcionalidade tem por objetivo listar todos os títulos que são passíveis de resgate",
+        "operationId": "listarTitulosPassiveisResgate",
+        "requestBody": {
+          "description": "Lista titulos passiveis de resgate",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ListarTitulosPassiveisRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sucesso em listar os titulos passiveis de resgate",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListarTitulosPassiveisResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A requisição foi malformada, omitindo atributos obrigatórios, seja no payload ou através de atributos na URL.",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {}
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {}
+          },
+          "500": {
+            "description": "Ocorreu um erro no gateway da API ou no microsserviço",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/tcap-resgate/v1/tabela-resgate": {
+      "post": {
+        "tags": [
+          "Resgate"
+        ],
+        "summary": "Esta Funcionalidade tem por objetivo consultar tabelas para resgate",
+        "description": "Esta Funcionalidade tem por objetivo consultar demonstrativo resgate",
+        "operationId": "consultar-tabela-resgate",
+        "requestBody": {
+          "description": "Lista as tabelas de resgate disponiveis",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TabelaResgateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sucesso ao consultar demonstrativo resgate",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/TabelaResgateResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A requisição foi malformada, omitindo atributos obrigatórios, seja no payload ou através de atributos na URL.",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {}
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {}
+          },
+          "500": {
+            "description": "Ocorreu um erro no gateway da API ou no microsserviço",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/tcap-resgate/v1/detalhar-resgate": {
+      "post": {
+        "tags": [
+          "Resgate"
+        ],
+        "summary": "Esta Funcionalidade tem por objetivo detalhar a solicitação de determinado resgate",
+        "description": "Esta Funcionalidade tem por objetivo tem por objetivo detalhar a solicitação de determinado resgate",
+        "operationId": "detalhe-resgate",
+        "requestBody": {
+          "description": "Detalha as informacoes de determinado resgate",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DetalharSolicitacaoResgateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sucesso em trazer os detalhes referentes à solicitacao de resgate",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/DetalharSolicitacaoResgateResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A requisição foi malformada, omitindo atributos obrigatórios, seja no payload ou através de atributos na URL.",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {}
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {}
+          },
+          "500": {
+            "description": "Ocorreu um erro no gateway da API ou no microsserviço",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/tcap-resgate/v1/incluir-solicitacao-resgate": {
+      "post": {
+        "tags": [
+          "Resgate"
+        ],
+        "summary": "Esta Funcionalidade tem por objetivo inlcuir solicitação de resgate",
+        "description": "Esta Funcionalidade tem por objetivo tem por objetivo incluir solicitação de resgate",
+        "operationId": "incluir-solicitacao-resgate",
+        "requestBody": {
+          "description": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IncluirsolicitacaoderesgateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Sucesso em incluir a solicitacao de resgate",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/IncluirsolicitacaoderesgateResponse"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Created",
+            "content": {}
+          },
+          "400": {
+            "description": "A requisição foi malformada, omitindo atributos obrigatórios, seja no payload ou através de atributos na URL.",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {}
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {}
+          },
+          "500": {
+            "description": "Ocorreu um erro no gateway da API ou no microsserviço",
+            "content": {}
+          }
+        },
+        "x-codegen-request-body-name": "request"
+      }
+    },
+    "/tcap-resgate/v1/cancelar-solicitacao-resgate": {
+      "post": {
+        "tags": [
+          "Resgate"
+        ],
+        "summary": "Esta Funcionalidade tem por objetivo cancelar a solicitacao de resgate",
+        "description": "Esta Funcionalidade tem por objetivo cancelar a solicitacao de resgate",
+        "operationId": "cancelarSolicitacaoResgate",
+        "requestBody": {
+          "description": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CancelarSolicitacaoResgateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Aceito o cancelamento da solicitacao de resgate",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CancelarSolicitacaoResgateResponse"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Created",
+            "content": {}
+          },
+          "400": {
+            "description": "A requisição foi malformada, omitindo atributos obrigatórios, seja no payload ou através de atributos na URL.",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {}
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {}
+          },
+          "500": {
+            "description": "Ocorreu um erro no gateway da API ou no microsserviço",
+            "content": {}
+          }
+        },
+        "x-codegen-request-body-name": "request"
+      }
+    },
+    "/tcap-resgate/v1/formas-credito-resgate": {
+      "post": {
+        "tags": [
+          "Resgate"
+        ],
+        "summary": "Esta Funcionalidade tem por objetivo listar a forma de credito resgate",
+        "description": "Esta Funcionalidade tem por objetivo listar a forma de credito resgate",
+        "operationId": "forma-credito-resgate",
+        "requestBody": {
+          "description": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FormaCreditoResgateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Sucesso em trazer as formas de credito de resgate",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/FormaCreditoResgateResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A requisição foi malformada, omitindo atributos obrigatórios, seja no payload ou através de atributos na URL.",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {}
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {}
+          },
+          "500": {
+            "description": "Ocorreu um erro no gateway da API ou no microsserviço",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/tcap-planos/v1/probabilidade-contemplacao-resgate": {
+      "post": {
+        "tags": [
+          "Resgate"
+        ],
+        "summary": "Esta funcionalidade tem por objetivo, obter probabilidade de contemplação e tamanho da série.",
+        "description": "Este endpoint tem por objetivo, obter probabilidade de contemplação e tamanho da série, bem como gerar informações de resgate, para atender regulamentação da SUSEP e \npara prover consulta aos certificados, comprovante de aquisição e segunda via de comprovante.",
+        "operationId": "probabilidadeContemplacaoResgate",
+        "requestBody": {
+          "description": "Obtem probabilidade de contemplação do resgate e tamanho da série",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProbabilidadeContemplacaoResgateResponse"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Resultado(s) de probabilidade(s) de contemplação resgate(s) encontrado(s).",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProbabilidadeContemplacaoResgateResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A requisição foi malformada, omitindo atributos obrigatórios, seja no payload ou através de atributos na URL.",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {}
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {}
+          },
+          "500": {
+            "description": "Ocorreu um erro no gateway da API ou no microsserviço",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/tcap-resgate/v1/demonstrativo-resgate": {
+      "post": {
+        "tags": [
+          "Resgate"
+        ],
+        "summary": "Esta Funcionalidade tem por objetivo consultar demonstrativo resgate",
+        "description": "Esta Funcionalidade tem por objetivo consultar demonstrativo resgate",
+        "operationId": "consultar-demonstrativo-resgate",
+        "requestBody": {
+          "description": "Consultar o demonstrativo do resgate",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DemonstrativoResgateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sucesso ao consultar demonstrativo resgate",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/DemonstrativoResgateResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A requisição foi malformada, omitindo atributos obrigatórios, seja no payload ou através de atributos na URL.",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {}
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {}
+          },
+          "500": {
+            "description": "Ocorreu um erro no gateway da API ou no microsserviço",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/tcap-proposta/v1/alteracao-proposta-agendada": {
+      "put": {
+        "tags": [
+          "Resgate"
+        ],
+        "summary": "Efetiva a alteração de uma proposta.",
+        "description": "Esta funcionalidade tem por objetivo permitir ao cliente alterar a data de debito da proposta agendada para uma data futura.Uma proposta agendada é uma proposta ativa que está aguardando o primeiro pagamento, consequentemente sem título (não houve pagamento).",
+        "operationId": "alterarProposta",
+        "requestBody": {
+          "description": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AlterarPropostaRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Alterar Proposta de capitalização",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlterarPropostaResponse"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Created",
+            "content": {}
+          },
+          "202": {
+            "description": "Alterar Proposta de capitalização ",
+            "content": {}
+          },
+          "400": {
+            "description": "A requisição foi malformada, omitindo atributos obrigatórios, seja no payload ou através de atributos na URL.",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {}
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {}
+          },
+          "500": {
+            "description": "Ocorreu um erro no gateway da API ou no microsserviço",
+            "content": {}
+          }
+        },
+        "x-codegen-request-body-name": "request"
+      }
+    },
+    "/tcap-resgate/v1/listar-motivos-resgate": {
+      "post": {
+        "tags": [
+          "Resgate"
+        ],
+        "summary": "Esta Funcionalidade tem por objetivo listar os motivos do resgate",
+        "description": "Esta Funcionalidade tem por objetivo listar os motivos do resgate",
+        "operationId": "listarMotivosResgate",
+        "requestBody": {
+          "description": "Listar motivos resgate",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ListarmotivosResgateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sucesso ao listar motivos de resgate",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/DemonstrativoResgateResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A requisição foi malformada, omitindo atributos obrigatórios, seja no payload ou através de atributos na URL.",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {}
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {}
+          },
+          "500": {
+            "description": "Ocorreu um erro no gateway da API ou no microsserviço",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/tcap-titulos/v1/consultar-total-pago-provisao-matematica-titulos-cliente" :{
+      "post": {
+        "tags": [
+          "Resgate"
+        ],
+        "summary": "Obtém informações de consultar total pago provisao matematica titulos cliente.",
+        "description": "Esta Funcionalidade tem por objetivo, consultar o Total Pago de Provisão\nMatemática de todos os Títulos por Cliente.",
+        "operationId": "consultarTotalPagoProvisaoMatematicaTitulosCliente",
+        "requestBody": {
+          "description": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TotalPagoProvisaoMatematicaTitulosClienteRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Consultar total pago provisao atematica titulos cliente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TotalPagoProvisaoMatematicaTitulosClienteResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A requisição foi malformada, omitindo atributos obrigatórios, seja no payload ou através de atributos na URL."
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Ocorreu um erro no gateway da API ou no microsserviço"
+          }
+        }
+      }
+    },
+    "/tcap-resgate/v1/consultar-resgate-pagos": {
+      "post": {
+        "tags": [
+          "Resgate"
+        ],
+        "summary": "Obtém informações de consultar resgate pagos.",
+        "description": "Obtém informações de consultar resgate pagos",
+        "operationId": "consultarResgatePago",
+        "requestBody": {
+          "description": "Obtém informações de consultar resgate pagos",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConsultarResgatePagosRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sucesso ao consultar demonstrativo resgate",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConsultarResgatePagosResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A requisição foi malformada, omitindo atributos obrigatórios, seja no payload ou através de atributos na URL.",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {}
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {}
+          },
+          "500": {
+            "description": "Ocorreu um erro no gateway da API ou no microsserviço",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/tcap-sorteios/v1/proximo-sorteio" :{
+      "post": {
+        "tags": [
+          "Resgate"
+        ],
+        "summary": "Proximo Sorteio.",
+        "description": "Proximo Sorteio.",
+        "operationId": "proximoSorteio",
+        "requestBody":{
+          "description": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProximoSorteioRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Sucesso em listar o proximo sorteio.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProximoSorteioResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A requisição foi malformada, omitindo atributos obrigatórios, seja no payload ou através de atributos na URL."
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Ocorreu um erro no gateway da API ou no microsserviço"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ProximoSorteioRequest": {
+        "type": "object",
+        "properties": {
+            "midia": {
+                "type": "integer",
+                "format": "int32"
+            },
+            "numPlano": {
+                "type": "integer",
+                "format": "int32"
+            },
+            "numProposta": {
+                "type": "string"
+            }
+        },
+        "title": "ProximoSorteioRequest"
+      },
+      "ProximoSorteioResponse": {
+        "type": "object",
+        "properties": {
+            "dataProximoSorteio": {
+                "type": "string"
+            },
+            "request": {
+                "$ref": "#/components/schemas/ProximoSorteioRequest"
+            },
+            "vlrMaxSorteio": {
+                "type": "string"
+            },
+            "vlrPremioLiquido": {
+                "type": "string"
+            }
+        },
+        "title": "ProximoSorteioResponse"
+      },
+      "TotalPagoProvisaoMatematicaTitulosClienteResponse": {
+        "type": "object",
+        "properties": {
+            "cpfCnpj": {
+                "type": "string",
+                "description": "Número de CPF ou CNPJ  \n Numérico(9)"
+            },
+            "digCpfCnpj": {
+                "type": "string",
+                "description": "Dígito verificador do CPF ou CNPJ \n Numérico(2)"
+            },
+            "filialCnpj": {
+                "type": "string",
+                "description": "Filial do CNPJ \n Numérico(4)"
+            },
+            "midia": {
+                "type": "integer",
+                "format": "int32",
+                "description": "Canal de Contratação \n Inteiro(3)"
+            },
+            "modalidade": {
+                "type": "integer",
+                "format": "int32",
+                "description": "Código da modalidade \n Inteiro(3)"
+            },
+            "request": {
+                "$ref": "#/components/schemas/TotalPagoProvisaoMatematicaTitulosClienteRequest"
+            },
+            "vlrTotalPmc": {
+                "type": "string",
+                "description": "Valor Total PMC \n Numérico(16)"
+            }
+        },
+        "title": "TotalPagoProvisaoMatematicaTitulosClienteResponse"
+      },
+      "TotalPagoProvisaoMatematicaTitulosClienteRequest": {
+        "type": "object",
+        "properties": {
+            "cpfCnpj": {
+                "type": "string"
+            },
+            "digCpfCnpj": {
+                "type": "string"
+            },
+            "filialCnpj": {
+                "type": "string"
+            },
+            "midia": {
+                "type": "string"
+            },
+            "modalidade": {
+                "type": "string"
+            },
+            "tipoBusca": {
+                "type": "string"
+            }
+        },
+        "title": "TotalPagoProvisaoMatematicaTitulosClienteRequest"
+      },
+      "FormaCreditoResgateRequest": {
+        "type": "object",
+        "properties": {
+          "midia": {
+            "description": "Canal de contratação",
+            "type": "string"
+          },
+          "modalidade": {
+            "description": "Número da modalidade",
+            "type": "string"
+          }
+        }
+      },
+      "ListarTitulosRequest": {
+        "type": "object",
+        "properties": {
+          "agencia": {
+            "type": "string"
+          },
+          "conta": {
+            "type": "string"
+          },
+          "fim": {
+            "$ref": "#/components/schemas/Fim"
+          },
+          "inicio": {
+            "$ref": "#/components/schemas/Inicio"
+          },
+          "maxOcorrencias": {
+            "type": "string"
+          },
+          "midia": {
+            "type": "string"
+          },
+          "sentido": {
+            "type": "string"
+          },
+          "tpBusca": {
+            "type": "string"
+          },
+          "tpPgto": {
+            "type": "string"
+          },
+          "tpTitularidade": {
+            "type": "string"
+          },
+          "tpVisualizacao": {
+            "type": "string"
+          }
+        },
+        "title": "ListarTitulosRequest"
+      },
+      "Fim": {
+        "type": "object",
+        "properties": {
+          "inicVig": {
+            "type": "string"
+          },
+          "numAquisicao": {
+            "type": "string"
+          },
+          "numPlano": {
+            "type": "string"
+          }
+        },
+        "title": "Fim"
+      },
+      "Inicio": {
+        "type": "object",
+        "properties": {
+          "inicVig": {
+            "type": "string"
+          },
+          "numAquisicao": {
+            "type": "string"
+          },
+          "numPlano": {
+            "type": "string"
+          }
+        },
+        "title": "Inicio"
+      },
+      "Cota": {
+        "title": "Cota",
+        "type": "object",
+        "properties": {
+          "parcelas": {
+            "type": "string",
+            "description": "Campo referente a parcelas"
+          },
+          "percentualCapitalizacao": {
+            "type": "number",
+            "description": "Percentual de capitalização \n Numérico(3)"
+          },
+          "percentualProvSorteio": {
+            "type": "number",
+            "description": "Percentual de provisão de sorteio \n Numérico(3)"
+          }
+        }
+      },
+      "Resgates": {
+        "title": "Resgates",
+        "type": "object",
+        "properties": {
+          "numMeses": {
+            "type": "integer",
+            "description": "Meses \n Numérico(3) ",
+            "format": "int32"
+          },
+          "vlrPagoParcelo": {
+            "type": "number",
+            "description": "Valor da parcela paga \n Numérico(13)"
+          },
+          "vlrResgate": {
+            "type": "number",
+            "description": "Valor do resgate \n Numérico(13)"
+          }
+        }
+      },
+      "TabelaProbabilidade": {
+        "title": "TabelaProbabilidade",
+        "type": "object",
+        "properties": {
+          "percProbTitulo": {
+            "type": "number",
+            "description": "Percentual de probabilidade de títulos \n Numérico(6) "
+          },
+          "probabilidade": {
+            "type": "string",
+            "description": "Texto de probabilidade de sorteio. \n String(60)"
+          }
+        }
+      },
+      "ProbabilidadeContemplacaoResgateResponse": {
+        "title": "ProbabilidadeContemplacaoResgateResponse",
+        "type": "object",
+        "properties": {
+          "cota": {
+            "type": "array",
+            "description": "Lista de Cotas",
+            "items": {
+              "$ref": "#/components/schemas/Cota"
+            }
+          },
+          "numPlano": {
+            "type": "integer",
+            "description": "Número do plano \n Inteiro(4)",
+            "format": "int32"
+          },
+          "origemInfo": {
+            "type": "string",
+            "description": "Sistema origem da informação de saída \n String(1)"
+          },
+          "qtdNumSerie": {
+            "type": "integer",
+            "description": "Quantidade números de Série \n Numérico(7)",
+            "format": "int32"
+          },
+          "resgates": {
+            "type": "array",
+            "description": "Lista de resgates",
+            "items": {
+              "$ref": "#/components/schemas/Resgates"
+            }
+          },
+          "tabelaProbabilidade": {
+            "type": "array",
+            "description": "Tabelas de probabilidade",
+            "items": {
+              "$ref": "#/components/schemas/TabelaProbabilidade"
+            }
+          },
+          "totOcorrenciasCota": {
+            "type": "integer",
+            "description": "Total de ocorrências da lista - Tabela de Cota de Capitalização \n Numérico(3)",
+            "format": "int32"
+          },
+          "totOcorrenciasProbabilidade": {
+            "type": "integer",
+            "description": "Total de ocorrências da lista – Probabilidade \n Numérico(3)",
+            "format": "int32"
+          },
+          "totOcorrenciasResgate": {
+            "type": "integer",
+            "description": "Total de ocorrências da lista - Tabela de Resgate \n Numérico(3) ",
+            "format": "int32"
+          },
+          "vlrParcela": {
+            "type": "number",
+            "description": "Valor da parcela \n Numérico(13)"
+          }
+        }
+      },
+      "PropostaClubRequest": {
+        "type": "object",
+        "properties": {
+          "cpfCnpj": {
+            "type": "string",
+            "description": "Código do club do Procurador do subscritor do título de capitalização.\n  String(10)\n"
+          },
+          "indPaginacao": {
+            "type": "string",
+            "description": "Indicador de paginacao, Iniciar, primeira pagina, voltar pagina e avancar pagina. \n  A = Voltar; \n  I = Primeira pagina; \n  S = Seguinte. \n  String(1)\n"
+          },
+          "midia": {
+            "type": "integer",
+            "format": "int32",
+            "description": "\"Canal de Contratação.\n  Inteiro(3)\"\n"
+          },
+          "planoPrimeiro": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Numero do plano. Informacao para controle de paginacao. \n  Numerico(4)\n"
+          },
+          "planoUltimo": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Numero do plano. Informacao para controle de paginacao. \n  Numerico(4)\n"
+          },
+          "propostaPrimeiro": {
+            "type": "string",
+            "description": "Valor numero do plano. Informacao para controle de paginacao proposta. \n  Numerico(10)\n"
+          },
+          "propostaUltimo": {
+            "type": "string",
+            "description": "Numero do plano. Informacao para controle de paginacao. \n  Numerico(4)\n"
+          },
+          "tpBusca": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Tipo de busca. \n  1 - Listar titulares da proposta; \n  2 - Listar titulares do titulo.\n  String(1)\n"
+          }
+        },
+        "title": "PropostaClubRequest"
+      },
+      "ListarPropostasClubResponse": {
+        "title": "ListarPropostasClubResponse",
+        "type": "object",
+        "properties": {
+          "indPaginacao": {
+            "type": "string",
+            "description": "Indicador de paginacao, Iniciar, primeira pagina, voltar pagina e avancar pagina. A = Voltar; I = Primeira pagina; S = Seguinte. String(1)"
+          },
+          "listaSaida": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Saida"
+            }
+          },
+          "maxOcorrencia": {
+            "type": "integer",
+            "description": "Numero maximo de registros. Numerico(3)",
+            "format": "int32"
+          },
+          "midia": {
+            "type": "integer",
+            "description": "Canal de Contratação - inteiro(3)",
+            "format": "int32"
+          },
+          "totRegistros": {
+            "type": "integer",
+            "description": "Quantidade de registro/proposta listada. Numerico(3)",
+            "format": "int32"
+          }
+        }
+      },
+      "Saida": {
+        "title": "Saida",
+        "type": "object",
+        "properties": {
+          "dataAquisicaoProposta": {
+            "type": "string",
+            "description": "Data aquisicao da proposta. String(10)"
+          },
+          "descEntidadeBeneficente": {
+            "type": "string",
+            "description": "Descricao da entidade beneficente. String(70)"
+          },
+          "descFormaPagamento": {
+            "type": "string",
+            "description": "Descrição da forma de pagamento. String(30)"
+          },
+          "descPlano": {
+            "type": "string",
+            "description": "Descrição do plano. String(40)"
+          },
+          "formaPagamento": {
+            "type": "integer",
+            "description": "Forma de pagamento. Numerico(2)",
+            "format": "int32"
+          },
+          "indPremioInst": {
+            "type": "string",
+            "description": "Indicador de quem tem premio instantaneo, SIM ou NAO. String(1)"
+          },
+          "listaSorteio": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PropostaClubSorteio"
+            }
+          },
+          "numPlano": {
+            "type": "integer",
+            "description": "Número do plano - inteiro(4)",
+            "format": "int32"
+          },
+          "numProposta": {
+            "type": "integer",
+            "description": "Numero da proposta. Numerico(10)",
+            "format": "int32"
+          },
+          "prazoVigencia": {
+            "type": "integer",
+            "description": "Prazo de vigencia. Numerico(5)",
+            "format": "int32"
+          },
+          "qtdTitulos": {
+            "type": "integer",
+            "description": "Quantidade de titulos da proposta. Numerico(10)",
+            "format": "int32"
+          },
+          "qtdTitulosPend": {
+            "type": "integer",
+            "description": "Quantidade de titulos pendentes de raspagem para a proposta. Numerico(5)",
+            "format": "int32"
+          },
+          "situacaoProposta": {
+            "type": "integer",
+            "description": "Situacao da proposta. 42 - Ativas; 45 - Implantadas; 46 - Canceladas. Numerico(5)",
+            "format": "int32"
+          },
+          "tpPagamento": {
+            "type": "integer",
+            "description": "Numero do tipo de pagamento. Numerico(1)",
+            "format": "int32"
+          },
+          "vlrProposta": {
+            "type": "number",
+            "description": "Valor da proposta. Numerico(15)"
+          }
+        }
+      },
+      "PropostaClubSorteio": {
+        "title": "PropostaClubSorteio",
+        "type": "object",
+        "properties": {
+          "numProbabilidadeSorteio": {
+            "type": "number",
+            "description": "Numero de probabilidade do sorteio. Numerico(7)"
+          },
+          "percentualProbabilidadeSorteio": {
+            "type": "string",
+            "description": "Percentual da probabilidade do sorteio. String(7)"
+          },
+          "tpSorteio": {
+            "type": "string",
+            "description": "Tipo de sorteio. String(30)"
+          }
+        }
+      },
+      "InicioResponse": {
+        "title": "InicioResponse",
+        "type": "object",
+        "properties": {
+          "inicVig": {
+            "type": "string",
+            "description": "Última Data de início de vigência para paginação \n String(10)"
+          },
+          "numAquis": {
+            "type": "string",
+            "description": "Número da proposta de aquisição do título \n Numérico(10)"
+          },
+          "numPlano": {
+            "type": "string",
+            "description": "Número do plano \n Inteiro(4)"
+          }
+        }
+      },
+      "FimResponse": {
+        "title": "FimResponse",
+        "type": "object",
+        "properties": {
+          "inicVig": {
+            "type": "string",
+            "description": "Última Data de início de vigência para paginação \n String(10)"
+          },
+          "numAquis": {
+            "type": "string",
+            "description": "Número da proposta de aquisição do título \n Numérico(10)"
+          },
+          "numPlano": {
+            "type": "string",
+            "description": "Número do plano \n Inteiro(4)"
+          }
+        }
+      },
+      "Titulos": {
+        "title": "Titulos",
+        "type": "object",
+        "properties": {
+          "dataAquisicao": {
+            "type": "string",
+            "description": "Data de aquisição do título \n Numérico(13)"
+          },
+          "digProposta": {
+            "type": "integer",
+            "description": "Dígito da proposta \n Numérico(1)",
+            "format": "int32"
+          },
+          "nomeFantasiaPlano": {
+            "type": "string",
+            "description": "Nome de fantasia do plano \n String(50)"
+          },
+          "numAquisicao": {
+            "type": "integer",
+            "description": "Número da proposta de aquisição do título \n Numérico(10)",
+            "format": "int32"
+          },
+          "numPlano": {
+            "type": "integer",
+            "description": "Número do plano \n Inteiro(4)",
+            "format": "int32"
+          },
+          "prazoVigencia": {
+            "type": "integer",
+            "description": "Data de fim de vigência do título \n String(10)",
+            "format": "int32"
+          },
+          "qtdTitulo": {
+            "type": "integer",
+            "description": "Quantidade de títulos da proposta \n Numérico(5)",
+            "format": "int32"
+          },
+          "tpPgto": {
+            "type": "integer",
+            "description": "Periodicidade de pagamento \n 1 - PM - Pagamento Mensal \n 2 - PU - Pagamento único \n 3 - PP – Pagamento Periódico \n Numérico(3)",
+            "format": "int32"
+          },
+          "vlrTotProposta": {
+            "type": "number",
+            "description": "Valor total da proposta \n Numérico(9)"
+          }
+        }
+      },
+      "ListarTitulosResponse": {
+        "title": "ListarTitulosResponse",
+        "type": "object",
+        "properties": {
+          "codRetorno": {
+            "type": "integer",
+            "description": "Código do retorno: \n 00 - Operação efetuada com sucesso. Em caso de consulta, não há mais dados a demonstrar. \n 01 - Consulta efetuada com sucesso. Há mais dados a demonstrar. \n Numérico(3)",
+            "format": "int32"
+          },
+          "fim": {
+            "$ref": "#/components/schemas/FimResponse"
+          },
+          "inicio": {
+            "$ref": "#/components/schemas/InicioResponse"
+          },
+          "midia": {
+            "type": "integer",
+            "description": "Canal de Contratação \n Inteiro(3)",
+            "format": "int32"
+          },
+          "qtdRegistros": {
+            "type": "integer",
+            "description": "Total de ocorrências da lista de saída \n Numérico(3)",
+            "format": "int32"
+          },
+          "titulos": {
+            "type": "array",
+            "description": "Última Data de início de vigência para paginação \n String(10)",
+            "items": {
+              "$ref": "#/components/schemas/Titulos"
+            }
+          }
+        }
+      },
+      "AlterarPropostaRequest": {
+        "title": "AlterarPropostaRequest",
+        "type": "object",
+        "properties": {
+          "dataDemaisParcelas": {
+            "type": "string",
+            "description": "Dia de debito das demais parcelas do titulo. String(2)"
+          },
+          "dataPrimeiraParcela": {
+            "type": "string",
+            "description": "Data de pagamento da primeira parcela. String(10)"
+          },
+          "midia": {
+            "type": "string",
+            "description": "Canal de Contratação - inteiro(3)"
+          },
+          "numAquisicao": {
+            "type": "string",
+            "description": "Numero da proposta de aquisicao de titulo. String(10)"
+          },
+          "numPlano": {
+            "type": "string",
+            "description": "Número do plano - inteiro(4)"
+          }
+        }
+      },
+      "AlterarPropostaResponse": {
+        "title": "AlterarPropostaResponse",
+        "type": "object",
+        "properties": {
+          "dataPrimeiraParcela": {
+            "type": "string",
+            "description": "Data de pagamento da primeira parcela. String(10)"
+          },
+          "midia": {
+            "type": "integer",
+            "description": "Canal de Contratação - inteiro(3)",
+            "format": "int32"
+          },
+          "request": {
+            "$ref": "#/components/schemas/AlterarPropostaRequest"
+          },
+          "success": {
+            "$ref": "#/components/schemas/AlterarPropostaSuccess"
+          }
+        }
+      },
+      "AlterarPropostaSuccess": {
+        "title": "AlterarPropostaSuccess",
+        "type": "object",
+        "properties": {
+          "detalhe": {
+            "type": "string",
+            "description": "Detalhes da mensagem. String(10)"
+          },
+          "mensagem": {
+            "type": "string",
+            "description": "Código da mensagem. String(10)"
+          }
+        }
+      },
+      "Banco": {
+        "title": "Banco",
+        "type": "object",
+        "properties": {
+          "agenciaExterno": {
+            "type": "string"
+          },
+          "codBancoExterno": {
+            "type": "string"
+          },
+          "contaExterno": {
+            "type": "string"
+          },
+          "cpfExterno": {
+            "type": "string"
+          },
+          "numAgenciaExterno": {
+            "type": "string"
+          },
+          "numContaExterno": {
+            "type": "string"
+          }
+        }
+      },
+      "BancoExterno": {
+        "title": "BancoExterno",
+        "type": "object",
+        "properties": {
+          "agencia": {
+            "type": "string"
+          },
+          "codBanco": {
+            "type": "string"
+          },
+          "conta": {
+            "type": "string"
+          },
+          "cpfCnpj": {
+            "type": "string"
+          },
+          "descBanco": {
+            "type": "string"
+          },
+          "descTpContaDestino": {
+            "type": "string"
+          },
+          "descTpContaExterna": {
+            "type": "string"
+          },
+          "filialCpfCnpj": {
+            "type": "string"
+          },
+          "tpContaDestino": {
+            "type": "string"
+          }
+        }
+      },
+      "CancelarSolicitacaoResgateRequest": {
+        "title": "CancelarSolicitacaoResgateRequest",
+        "type": "object",
+        "properties": {
+          "codModalidade": {
+            "type": "string"
+          },
+          "midia": {
+            "type": "string"
+          },
+          "numResgate": {
+            "type": "string"
+          },
+          "sistema": {
+            "type": "string"
+          },
+          "tpBusca": {
+            "type": "string"
+          }
+        }
+      },
+      "CancelarSolicitacaoResgateResponse": {
+        "title": "CancelarSolicitacaoResgateResponse",
+        "type": "object",
+        "properties": {
+          "codModalidade": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "codigo": {
+            "type": "string"
+          },
+          "detalhe": {
+            "type": "string"
+          },
+          "messagem": {
+            "type": "string"
+          },
+          "midia": {
+            "type": "string"
+          },
+          "request": {
+            "$ref": "#/components/schemas/CancelarSolicitacaoResgateRequest"
+          },
+          "retorno": {
+            "type": "string"
+          }
+        }
+      },
+      "ConsultarResgatePagosRequest": {
+        "title": "ConsultarResgatePagosRequest",
+        "type": "object",
+        "properties": {
+          "anoPesquisa": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "indPaginacao": {
+            "type": "string"
+          },
+          "mesPesquisa": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "midia": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "modalidade": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "numOcorrencias": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "numPlanoPrimeiraChave": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "numPlanoUltimaChave": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "numSequenciaPrimeiraChave": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "numSequenciaUltimaChave": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "ConsultarResgatePagosResponse": {
+        "title": "ConsultarResgatePagosResponse",
+        "type": "object",
+        "properties": {
+          "codRetorno": {
+            "type": "string"
+          },
+          "indPaginacao": {
+            "type": "string"
+          },
+          "listaResgates": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ListaResgates"
+            }
+          },
+          "midia": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "modalidade": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "numPlanoPrimeiraChave": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "numPlanoUltimaChave": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "numSequenciaPrimeiraChave": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "numSequenciaUltimaChave": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "qtdRegistros": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "request": {
+            "$ref": "#/components/schemas/ConsultarResgatePagosRequest"
+          },
+          "valorTotalResgatePago": {
+            "type": "number"
+          }
+        }
+      },
+      "ContasDemonstrativoResgate": {
+        "title": "ContasDemonstrativoResgate",
+        "type": "object",
+        "properties": {
+          "correcaoSaldoProvisionado": {
+            "type": "number"
+          },
+          "dataProvisao": {
+            "type": "string"
+          },
+          "jurosSaldoProvisionado": {
+            "type": "number"
+          },
+          "saldoPrincipalProvisionado": {
+            "type": "number"
+          },
+          "vlrSaldoProvisionado": {
+            "type": "number"
+          },
+          "vlrTotResgate": {
+            "type": "number"
+          }
+        }
+      },
+      "CreditoBanco": {
+        "title": "CreditoBanco",
+        "type": "object",
+        "properties": {
+          "codBanco": {
+            "type": "string"
+          },
+          "codComercialAgencia": {
+            "type": "string"
+          },
+          "conta": {
+            "type": "string"
+          },
+          "contaCredito": {
+            "type": "string"
+          },
+          "descConta": {
+            "type": "string"
+          },
+          "digContaCredito": {
+            "type": "string"
+          }
+        }
+      },
+      "Dados": {
+        "title": "Dados",
+        "type": "object",
+        "properties": {
+          "mesVigencia": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "numColuna": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "vlrPagoTitulo": {
+            "type": "number"
+          },
+          "vlrResgateDisponivel": {
+            "type": "number"
+          }
+        }
+      },
+      "DemonstrativoResgateRequest": {
+        "title": "DemonstrativoResgateRequest",
+        "type": "object",
+        "properties": {
+          "midia": {
+            "type": "string"
+          },
+          "numTitulo": {
+            "type": "string"
+          },
+          "seriePlano": {
+            "type": "string"
+          }
+        }
+      },
+      "DemonstrativoResgateResponse": {
+        "title": "DemonstrativoResgateResponse",
+        "type": "object",
+        "properties": {
+          "contas": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ContasDemonstrativoResgate"
+            }
+          },
+          "correcaoSaldoProvisionado": {
+            "type": "number"
+          },
+          "jurosProvisionado": {
+            "type": "number"
+          },
+          "midia": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "request": {
+            "$ref": "#/components/schemas/DemonstrativoResgateRequest"
+          },
+          "saldoPrincProvisionado": {
+            "type": "number"
+          },
+          "saldoProvisionado": {
+            "type": "number"
+          },
+          "totRegistros": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "vlrTotResgate": {
+            "type": "number"
+          }
+        }
+      },
+      "DetalharSolicitacaoResgateRequest": {
+        "title": "DetalharSolicitacaoResgateRequest",
+        "type": "object",
+        "properties": {
+          "midia": {
+            "type": "string"
+          },
+          "modalidade": {
+            "type": "string"
+          },
+          "numSolicitacao": {
+            "type": "string"
+          }
+        }
+      },
+      "DetalharSolicitacaoResgateResponse": {
+        "title": "DetalharSolicitacaoResgateResponse",
+        "type": "object",
+        "properties": {
+          "bancoExterno": {
+            "$ref": "#/components/schemas/BancoExterno"
+          },
+          "club": {
+            "type": "string"
+          },
+          "cpfCnpj": {
+            "type": "string"
+          },
+          "creditoBanco": {
+            "$ref": "#/components/schemas/CreditoBanco"
+          },
+          "dvCpfCnpj": {
+            "type": "string"
+          },
+          "midia": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "modalidade": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "request": {
+            "$ref": "#/components/schemas/DetalharSolicitacaoResgateRequest"
+          },
+          "solicitacao": {
+            "$ref": "#/components/schemas/Solicitacao"
+          },
+          "solicitante": {
+            "$ref": "#/components/schemas/Solicitante"
+          },
+          "titulosRegistros": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TitulosRegistros"
+            }
+          },
+          "totRegistros": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "Final": {
+        "title": "Final",
+        "type": "object",
+        "properties": {
+          "digNumTitulo": {
+            "type": "string"
+          },
+          "digSerieCaptz": {
+            "type": "string"
+          },
+          "numSerie": {
+            "type": "string"
+          },
+          "numTitulo": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "FormaCredito": {
+        "title": "FormaCredito",
+        "type": "object",
+        "properties": {
+          "codFormaCredito": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "descFormaCredito": {
+            "type": "string"
+          }
+        }
+      },
+      "FormaCreditoResgateResponse": {
+        "title": "FormaCreditoResgateResponse",
+        "type": "object",
+        "properties": {
+          "codModalidade": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "formasCredito": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FormaCredito"
+            }
+          },
+          "midia": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totRegistros": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "IncluirsolicitacaoderesgateRequest": {
+        "title": "IncluirsolicitacaoderesgateRequest",
+        "type": "object",
+        "properties": {
+          "banco": {
+            "$ref": "#/components/schemas/Banco"
+          },
+          "midia": {
+            "type": "string"
+          },
+          "representante": {
+            "$ref": "#/components/schemas/Representante"
+          },
+          "solicitacao": {
+            "$ref": "#/components/schemas/Solicitacao1"
+          },
+          "titular": {
+            "$ref": "#/components/schemas/Titular"
+          },
+          "tpBusca": {
+            "type": "string"
+          }
+        }
+      },
+      "IncluirsolicitacaoderesgateResponse": {
+        "title": "IncluirsolicitacaoderesgateResponse",
+        "type": "object",
+        "properties": {
+          "agencia": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "conta": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "dataCreditoResgate": {
+            "type": "string"
+          },
+          "dataSolicitacaoResgate": {
+            "type": "string"
+          },
+          "descNumPlano": {
+            "type": "string"
+          },
+          "digConta": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "midia": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nomeTitular": {
+            "type": "string"
+          },
+          "numAquisicao": {
+            "type": "number"
+          },
+          "numPlano": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "numSolicitacaoResgate": {
+            "type": "number"
+          },
+          "qtdTitulos": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "request": {
+            "$ref": "#/components/schemas/IncluirsolicitacaoderesgateRequest"
+          },
+          "vlrResgate": {
+            "type": "string"
+          }
+        }
+      },
+      "Inicial": {
+        "title": "Inicial",
+        "type": "object",
+        "properties": {
+          "digNumTitulo": {
+            "type": "string"
+          },
+          "digSerieCaptz": {
+            "type": "string"
+          },
+          "numSerie": {
+            "type": "string"
+          },
+          "numTitulo": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "ListaResgates": {
+        "title": "ListaResgates",
+        "type": "object",
+        "properties": {
+          "anoPesquisa": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "controleCpfCnpj": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "cpfCnpj": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "descNomeRazaoSocial": {
+            "type": "string"
+          },
+          "filialCnpj": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "mesPesquisa": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "numPlano": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "ufEntBeneficente": {
+            "type": "string"
+          },
+          "valorResgatePago": {
+            "type": "number"
+          }
+        }
+      },
+      "ListaSaida": {
+        "title": "ListaSaida",
+        "type": "object",
+        "properties": {
+          "centroCusto": {
+            "type": "string"
+          },
+          "codTitulo": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "dataFimVigencia": {
+            "type": "string"
+          },
+          "dataInicVigencia": {
+            "type": "string"
+          },
+          "descNumPlano": {
+            "type": "string"
+          },
+          "numPlano": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "numProposta": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "numSerie": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "vlr": {
+            "type": "number"
+          }
+        }
+      },
+      "ListarTitulosPassiveisRequest": {
+        "title": "ListarTitulosPassiveisRequest",
+        "type": "object",
+        "properties": {
+          "agencia": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "conta": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "cpfCnpj": {
+            "type": "string"
+          },
+          "midia": {
+            "type": "string"
+          },
+          "numPagina": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "numPlano": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "numProposta": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "qtdLinhas": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "tpBusca": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "ListarTitulosPassiveisResponse": {
+        "title": "ListarTitulosPassiveisResponse",
+        "type": "object",
+        "properties": {
+          "listaSaida": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ListaSaida"
+            }
+          },
+          "midia": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "request": {
+            "$ref": "#/components/schemas/ListarTitulosPassiveisRequest"
+          },
+          "totRegistros": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "ListarmotivosResgateRequest": {
+        "title": "ListarmotivosresgateRequest",
+        "type": "object",
+        "properties": {
+          "midia": {
+            "type": "string"
+          },
+          "modalidade": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "numPlano": {
+            "type": "string"
+          }
+        }
+      },
+      "ListarmotivosResgateResponse": {
+        "title": "ListarmotivosresgateResponse",
+        "type": "object",
+        "properties": {
+          "midia": {
+            "type": "string"
+          },
+          "modalidade": {
+            "type": "string"
+          },
+          "motivos": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Motivos"
+            }
+          },
+          "request": {
+            "$ref": "#/components/schemas/ListarmotivosResgateRequest"
+          }
+        }
+      },
+      "Motivos": {
+        "title": "Motivos",
+        "type": "object",
+        "properties": {
+          "codMotivoRsgt": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "descMotivoRsgt": {
+            "type": "string"
+          }
+        }
+      },
+      "PropostaPassivelResgateDados": {
+        "title": "PropostaPassivelResgateDados",
+        "type": "object",
+        "properties": {
+          "centroCusto": {
+            "type": "string"
+          },
+          "descPlano": {
+            "type": "string"
+          },
+          "fimVig": {
+            "type": "string"
+          },
+          "inicVig": {
+            "type": "string"
+          },
+          "numAquisicao": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "numPlano": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "qtdTitulo": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "vlrResgate": {
+            "type": "number"
+          }
+        }
+      },
+      "PropostaPassivelResgateRequest": {
+        "title": "PropostaPassivelResgateRequest",
+        "type": "object",
+        "properties": {
+          "agencia": {
+            "type": "string"
+          },
+          "conta": {
+            "type": "string"
+          },
+          "cpf": {
+            "type": "string"
+          },
+          "digConta": {
+            "type": "string"
+          },
+          "midia": {
+            "type": "string"
+          },
+          "numPag": {
+            "type": "string"
+          },
+          "qtdLinhas": {
+            "type": "string"
+          }
+        }
+      },
+      "PropostaPassivelResgateResponse": {
+        "title": "PropostaPassivelResgateResponse",
+        "type": "object",
+        "properties": {
+          "dados": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PropostaPassivelResgateDados"
+            }
+          },
+          "midia": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "request": {
+            "$ref": "#/components/schemas/PropostaPassivelResgateRequest"
+          },
+          "totRegistros": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "Representante": {
+        "title": "Representante",
+        "type": "object",
+        "properties": {
+          "clubRepresentante": {
+            "type": "string"
+          },
+          "numSeqRepresentante": {
+            "type": "string"
+          },
+          "representanteTitular": {
+            "type": "string"
+          }
+        }
+      },
+      "Solicitacao": {
+        "title": "Solicitacao",
+        "type": "object",
+        "properties": {
+          "agencia": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "dataCreditoSolicitacao": {
+            "type": "string"
+          },
+          "dataSolicitacao": {
+            "type": "string"
+          },
+          "descAgencia": {
+            "type": "string"
+          },
+          "descFormaCredito": {
+            "type": "string"
+          },
+          "descTp": {
+            "type": "string"
+          },
+          "descTpSolicitacao": {
+            "type": "string"
+          },
+          "formaCredito": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "inicVigencia": {
+            "type": "string"
+          },
+          "numSolicitacao": {
+            "type": "string"
+          },
+          "qtdParcelasPagas": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "qtdTitulos": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "tp": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "tpSolicitacao": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "vlrTotBruto": {
+            "type": "number"
+          },
+          "vlrTotIr": {
+            "type": "number"
+          },
+          "vlrTotLiquido": {
+            "type": "number"
+          }
+        }
+      },
+      "Solicitacao0": {
+        "title": "Solicitacao0",
+        "type": "object",
+        "properties": {
+          "agenciaOperadora": {
+            "type": "string"
+          },
+          "centroCusto": {
+            "type": "string"
+          },
+          "codAutenticacaoResgate": {
+            "type": "string"
+          },
+          "codCreditoResgate": {
+            "type": "string"
+          },
+          "idAssinatura": {
+            "type": "string"
+          },
+          "numAquisicao": {
+            "type": "string"
+          },
+          "numPlano": {
+            "type": "string"
+          },
+          "tpResgate": {
+            "type": "string"
+          },
+          "vlrSolicitacaoResgate": {
+            "type": "string"
+          }
+        }
+      },
+      "Solicitacao1": {
+        "title": "Solicitacao1",
+        "type": "object",
+        "properties": {
+          "agenciaOperadora": {
+            "type": "string"
+          },
+          "centroCusto": {
+            "type": "string"
+          },
+          "codAutenticacaoResgate": {
+            "type": "string"
+          },
+          "codCreditoResgate": {
+            "type": "string"
+          },
+          "idAssinatura": {
+            "type": "string"
+          },
+          "numAquisicao": {
+            "type": "string"
+          },
+          "numPlano": {
+            "type": "string"
+          },
+          "tpResgate": {
+            "type": "string"
+          },
+          "vlrSolicitacaoResgate": {
+            "type": "string"
+          }
+        }
+      },
+      "Solicitante": {
+        "title": "Solicitante",
+        "type": "object",
+        "properties": {
+          "club": {
+            "type": "string"
+          },
+          "cpfCnpj": {
+            "type": "string"
+          },
+          "dvCpfCnpj": {
+            "type": "string"
+          },
+          "filialCpfCnpj": {
+            "type": "string"
+          },
+          "nomeRazaoSocial": {
+            "type": "string"
+          }
+        }
+      },
+      "TabelaResgateRequest": {
+        "title": "TabelaResgateRequest",
+        "type": "object",
+        "properties": {
+          "midia": {
+            "type": "string"
+          },
+          "numPlano": {
+            "type": "string"
+          },
+          "vlrParcelaTitulo": {
+            "type": "string"
+          }
+        }
+      },
+      "TabelaResgateResponse": {
+        "title": "TabelaResgateResponse",
+        "type": "object",
+        "properties": {
+          "codModalidade": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "dados": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Dados"
+            }
+          },
+          "descNumPlano": {
+            "type": "string"
+          },
+          "midia": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "numPlano": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "request": {
+            "$ref": "#/components/schemas/TabelaResgateRequest"
+          },
+          "totRegistros": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "Titular": {
+        "title": "Titular",
+        "type": "object",
+        "properties": {
+          "agenciaTitular": {
+            "type": "string"
+          },
+          "codPessoaJuridica": {
+            "type": "string"
+          },
+          "contaTitular": {
+            "type": "string"
+          },
+          "cpf": {
+            "type": "string"
+          },
+          "digitoTitular": {
+            "type": "string"
+          },
+          "numSequencialNegocio": {
+            "type": "string"
+          },
+          "tpNegocio": {
+            "type": "string"
+          }
+        }
+      },
+      "TitulosRegistros": {
+        "title": "TitulosRegistros",
+        "type": "object",
+        "properties": {
+          "inicial": {
+            "$ref": "#/components/schemas/Inicial"
+          },
+          "varFinal": {
+            "$ref": "#/components/schemas/Final"
+          }
+        }
+      }
+    }
+  }
+}

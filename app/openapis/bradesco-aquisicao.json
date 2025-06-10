@@ -1,0 +1,4327 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "TCAP - Aquisição",
+    "description": "TCAP - Jornada de Aquisição",
+    "license": {
+      "name": "Bradesco Seguros",
+      "url": "https://www.bradescoseguros.com.br/clientes"
+    },
+    "version": "1.0.11"
+  },
+  "servers": [
+    {
+      "url": "https://parceiros.bradescoseguros.com.br/V2/parceiros"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Aquisição",
+      "description": "Endpoints referentes a jornada de Aquisição."
+    }
+  ],
+  "paths": {
+    "/tcap-planos/v1/produtos-canal": {
+      "post": {
+        "tags": [
+          "Aquisição"
+        ],
+        "summary": "Produtos de um canal.",
+        "description": "Para a consulta de produtos em determinado canal, é necessário informar apenas a mídia referente no endpoint de produtos-canal, podendo também, serem filtrados pela modalidade",
+        "operationId": "produtosCanal",
+        "requestBody": {
+          "description": "Retorna produtos de um determinado canal.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProdutosCanalRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Resultado(s) da listagem de produto(s) encontrado(s).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProdutosCanalResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A requisição foi malformada, omitindo atributos obrigatórios, seja no payload ou através de atributos na URL."
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Ocorreu um erro no gateway da API ou no microsserviço"
+          }
+        }
+      }
+    },
+    "/tcap-aquisicao/v1/validar-documento": {
+      "post": {
+        "tags": [
+          "Aquisição"
+        ],
+        "summary": "Validação de documento.",
+        "description": "Valida documentação CPF ou CNPJ do cliente.",
+        "operationId": "validarDocumento",
+        "requestBody": {
+          "description": "Valida documento inserido.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ValidarDocumentoRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Resultado(s) de sorteio(s) encontrado(s).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidarDocumentoResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A requisição foi malformada, omitindo atributos obrigatórios, seja no payload ou através de atributos na URL."
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Ocorreu um erro no gateway da API ou no microsserviço"
+          }
+        }
+      }
+    },
+    "/tcap-cliente/v1/buscar-dados-cliente": {
+      "post": {
+        "tags": [
+          "Aquisição"
+        ],
+        "summary": "Busca dados de cliente",
+        "description": "Busca dados do cliente especificado.",
+        "operationId": "buscarDadosCliente'",
+        "requestBody": {
+          "description": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BuscarDadosClienteRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Sucesso em pegar os dados do cliente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BuscarDadosClienteResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A requisição foi malformada, omitindo atributos obrigatórios, seja no payload ou através de atributos na URL."
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Ocorreu um erro no gateway da API ou no microsserviço"
+          }
+        }
+      }
+    },
+    "/tcap-cliente/v1/consultar-cliente": {
+      "post": {
+        "tags": [
+          "Aquisição"
+        ],
+        "summary": "Consulta cliente",
+        "description": "Consulta cliente com base no documento.",
+        "operationId": "consultarCliente",
+        "requestBody": {
+          "description": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConsultarClienteRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Sucesso em pegar as listas de combinações de  sorteios ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConsultarClienteResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A requisição foi malformada, omitindo atributos obrigatórios, seja no payload ou através de atributos na URL."
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Ocorreu um erro no gateway da API ou no microsserviço"
+          }
+        }
+      }
+    },
+    "/tcap-cliente/v1/incluir-cliente": {
+      "post": {
+        "tags": [
+          "Aquisição"
+        ],
+        "summary": "Inclusão de cliente.",
+        "description": "Esta funcionalidade tem por objetivo inclusao dos dados cadastrais de cliente através de canal externo (Mar aberto).",
+        "operationId": "incluirCliente",
+        "requestBody": {
+          "description": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IncluirClienteRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Sucesso em pegar as listas de sorteios ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IncluirClienteResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A requisição foi malformada, omitindo atributos obrigatórios, seja no payload ou através de atributos na URL."
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Ocorreu um erro no gateway da API ou no microsserviço"
+          }
+        }
+      }
+    },
+    "/tcap-planos/v1/plano": {
+      "post": {
+        "tags": [
+          "Aquisição"
+        ],
+        "summary": "Consulta determinado plano de capitalização",
+        "description": "Traz informações sobre determinado plano de capitalização",
+        "operationId": "consultarPlano",
+        "requestBody": {
+          "description": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlanoRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Plano Encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlanoResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A requisição foi malformada, omitindo atributos obrigatórios, seja no payload ou através de atributos na URL."
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Ocorreu um erro no gateway da API ou no microsserviço"
+          }
+        }
+      }
+    },
+    "/tcap-planos/v1/listar-planos-compativeis": {
+      "post": {
+        "tags": [
+          "Aquisição"
+        ],
+        "summary": "Listar Planos Compatíveis",
+        "description": "Este endpoint tem por objetivo, listar os planos de capitalização compatíveis com o perfil do cliente para serem comercializados pelo canal.",
+        "operationId": "listarPlanosCompativeis",
+        "requestBody": {
+          "description": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ListarPlanosCompativeisRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Plano Encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListarPlanosCompativeisResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A requisição foi malformada, omitindo atributos obrigatórios, seja no payload ou através de atributos na URL."
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Ocorreu um erro no gateway da API ou no microsserviço"
+          }
+        }
+      }
+    },
+    "/tcap-aquisicao/v1/informacao-plano-aquisicao": {
+      "post": {
+        "tags": [
+          "Aquisição"
+        ],
+        "summary": "Obtém informações do plano de aquisição",
+        "description": "Esta funcionalidade tem por objetivo, disponibilizar as informações de processo Susep e sorteio, quando um produto/plano for escolhido.",
+        "operationId": "consultarInformacaoPlanoAquisicao",
+        "requestBody": {
+          "description": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InformacaoPlanoAquisicaoRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Dados informações consulta informação plano de aquisição.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InformacaoPlanoAquisicaoResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A requisição foi malformada, omitindo atributos obrigatórios, seja no payload ou através de atributos na URL."
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Ocorreu um erro no gateway da API ou no microsserviço"
+          }
+        }
+      }
+    },
+    "/tcap-planos/v1/probabilidade-tipo-sorteio-plano": {
+      "post": {
+        "tags": [
+          "Aquisição"
+        ],
+        "summary": "Obtém informações de probabilidade de sorteios planos.",
+        "description": "Obtém informações de probabilidade de sorteios planos.",
+        "operationId": "consultarProbabilidadeTipoSorteioPlano",
+        "requestBody": {
+          "description": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProbabilidadeTipoSorteioRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Probabilidade dos tipos de sorteio do plano.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProbabilidadeTipoSorteioResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A requisição foi malformada, omitindo atributos obrigatórios, seja no payload ou através de atributos na URL."
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Ocorreu um erro no gateway da API ou no microsserviço"
+          }
+        }
+      }
+    },
+    "/tcap-planos/v1/quantidade-sorteios": {
+      "post": {
+        "tags": [
+          "Aquisição"
+        ],
+        "summary": "Obtém informações de quantidade de sorteios de um plano.",
+        "description": "Esta funcionalidade tem por objetivo obter as quantidades de sorteios correspondentes a um plano de capitalização, para compor informações dos prêmios do plano e tornar disponível ao canal.",
+        "operationId": "quantidadeSorteios",
+        "requestBody": {
+          "description": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/QuantidadeSorteioRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Informações da quantidade de sorteios.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuantidadeSorteioResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A requisição foi malformada, omitindo atributos obrigatórios, seja no payload ou através de atributos na URL."
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Ocorreu um erro no gateway da API ou no microsserviço"
+          }
+        }
+      }
+    },
+    "/tcap-planos/v1/valores-plano": {
+      "post": {
+        "tags": [
+          "Aquisição"
+        ],
+        "summary": "Obtém informações de Valores do Plano.",
+        "description": "Este endpoint tem por objetivo, após preencher a quantidade de títulos, o operador deve selecionar (valores múltiplos) \no valor do título ou informar ao cliente sobre o valor do título que ele está adquirindo (no caso de planos com valor fixo)",
+        "operationId": "consultarValoresPlano",
+        "requestBody": {
+          "description": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ValoresPlanoRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Consulta de valores planos realizada com sucesso.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValoresPlanoResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A requisição foi malformada, omitindo atributos obrigatórios, seja no payload ou através de atributos na URL."
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Ocorreu um erro no gateway da API ou no microsserviço"
+          }
+        }
+      }
+    },
+    "/tcap-aquisicao/v1/forma-pagamento-produto-aquisicao": {
+      "post": {
+        "tags": [
+          "Aquisição"
+        ],
+        "summary": "Obtém informações de formas de pagamento para os planos de capitalização.",
+        "description": "Esta funcionalidade tem como objetivo, disponibilizar as opções de forma de pagamento do produto/plano escolhido.",
+        "operationId": "formaPagamentoProdutoAquisicao",
+        "requestBody": {
+          "description": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FormaPagamentoProdutoAquisicaoRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Consulta de formas de pagamento.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FormaPagamentoProdutoAquisicaoResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A requisição foi malformada, omitindo atributos obrigatórios, seja no payload ou através de atributos na URL."
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Ocorreu um erro no gateway da API ou no microsserviço"
+          }
+        }
+      }
+    },
+    "/tcap-planos/v1/cotas-capitalizacao-produto": {
+      "post": {
+        "tags": [
+          "Aquisição"
+        ],
+        "summary": "Obtém informações de cotas de capitalização.",
+        "description": "Esta funcionalidade tem como objetivo consultar Cotas de Capitalização do produto/plano selecionado na Aquisição.",
+        "operationId": "cotasCapitalizacaoProduto",
+        "requestBody": {
+          "description": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CotasCapitalizacaoRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Consulta das cotas com sucesso.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CotasCapitalizacaoResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A requisição foi malformada, omitindo atributos obrigatórios, seja no payload ou através de atributos na URL."
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Ocorreu um erro no gateway da API ou no microsserviço"
+          }
+        }
+      }
+    },
+    "/tcap-proposta/v1/aceitar-recusar-propostas": {
+      "post": {
+        "tags": [
+          "Aquisição"
+        ],
+        "summary": "Aceita ou recusa proposta de capitalização.",
+        "description": "Esta funcionalidade tem por objetivo, permitir ao usuário aceitar ou rejeitar propostas pendentes de Aceite Digital, com base nos dados informados.",
+        "operationId": "aceitarRecusarPropostas",
+        "requestBody": {
+          "description": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AceitarRecusarPropostaRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Aceite/Recuso com sucesso.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AceitarRecusarPropostaResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A requisição foi malformada, omitindo atributos obrigatórios, seja no payload ou através de atributos na URL."
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Ocorreu um erro no gateway da API ou no microsserviço"
+          }
+        }
+      }
+    },
+    "/tcap-proposta/v1/efetivar-proposta-pix": {
+      "post": {
+        "tags": [
+          "Aquisição"
+        ],
+        "summary": "Efetiva a proposta atraves do PIX.",
+        "description": "Efetiva proposta atraves do PIX.",
+        "operationId": "efetivarPropostaPix",
+        "requestBody": {
+          "description": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EfetivarPropostaPIXRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Proposta efetivada com sucesso.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CotasCapitalizacaoResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A requisição foi malformada, omitindo atributos obrigatórios, seja no payload ou através de atributos na URL."
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Ocorreu um erro no gateway da API ou no microsserviço"
+          }
+        }
+      }
+    },
+    "/tcap-proposta/v1/confirmar-pagamento-pix": {
+      "post": {
+        "tags": [
+          "Aquisição"
+        ],
+        "summary": "Esta funcionalidade tem por objetivo, obter a informação se um pagamento pix foi realizado através do TXID.",
+        "description": "Esta funcionalidade tem por objetivo, obter a informação se um pagamento pix foi realizado através do TXID.",
+        "operationId": "confirmarPagamentoPIX",
+        "requestBody": {
+          "description": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConfirmarPagamentoPIXRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Confirmação de pagamento por PIX.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConfirmarPagamentoPIXResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A requisição foi malformada, omitindo atributos obrigatórios, seja no payload ou através de atributos na URL."
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Ocorreu um erro no gateway da API ou no microsserviço"
+          }
+        }
+      }
+    },
+    "/tcap-proposta/v1/efetivar-proposta-pagamento-especie": {
+      "post": {
+        "tags": [
+          "Aquisição"
+        ],
+        "summary": "Efetiva a proposta com pagamento em especie",
+        "description": "Efetiva a proposta com pagamento em especie.",
+        "operationId": "efetivarPropostaPagamentoEspecie",
+        "requestBody": {
+          "description": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EfetivarPropostaPagamentoEspecieRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Proposta com pagamento em especie efetivada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EfetivarPropostaPagamentoEspecieResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A requisição foi malformada, omitindo atributos obrigatórios, seja no payload ou através de atributos na URL."
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Ocorreu um erro no gateway da API ou no microsserviço"
+          }
+        }
+      }
+    },
+    "/tcap-proposta/v1/liquidar-pagamento-especie": {
+      "post": {
+        "tags": [
+          "Aquisição"
+        ],
+        "summary": "Esta funcionalidade tem por objetivo realizar aquisição de títulos de capitalização com forma de pagamento em espécie.",
+        "description": "Esta funcionalidade tem por objetivo realizar aquisição de títulos de capitalização com forma de pagamento em espécie.",
+        "operationId": "liquidarPagamentoEspecie",
+        "requestBody": {
+          "description": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LiquidarPagamentoEspecieRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Proposta com pagamento em especie efetivada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LiquidarPagamentoEspecieResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A requisição foi malformada, omitindo atributos obrigatórios, seja no payload ou através de atributos na URL."
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Ocorreu um erro no gateway da API ou no microsserviço"
+          }
+        }
+      }
+    },
+    "/tcap-proposta/v1/efetivar-proposta": {
+      "post": {
+        "tags": [
+          "Aquisição"
+        ],
+        "summary": "Efetiva a proposta selecionada.",
+        "description": "Esta funcionalidade tem por objetivo, efetivar uma proposta de aquisição de um ou mais títulos de capitalização, após a validação das regras de negócio correspondentes.",
+        "operationId": "efetivarProposta",
+        "requestBody": {
+          "description": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PropostaRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Proposta efetivada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PropostaResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A requisição foi malformada, omitindo atributos obrigatórios, seja no payload ou através de atributos na URL."
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Ocorreu um erro no gateway da API ou no microsserviço"
+          }
+        }
+      }
+    },
+    "/tcap-proposta/v1/verificar-titulos-implantados": {
+      "post": {
+        "tags": [
+          "Aquisição"
+        ],
+        "summary": "Efetiva a proposta selecionada.",
+        "description": "Esta funcionalidade tem por objetivo, efetivar uma proposta de aquisição de um ou mais títulos de capitalização, após a validação das regras de negócio correspondentes.",
+        "operationId": "titulosImplantados",
+        "requestBody": {
+          "description": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PropostaRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Proposta efetivada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PropostaResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A requisição foi malformada, omitindo atributos obrigatórios, seja no payload ou através de atributos na URL."
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Ocorreu um erro no gateway da API ou no microsserviço"
+          }
+        }
+      }
+    },
+    "/tcap-planos/v1/produtos-por-segmento": {
+      "post": {
+        "tags": [
+          "Aquisição"
+        ],
+        "summary": "Produtos por segmento.",
+        "description": "Esta funcionalidade tem por objetivo retornar os produtos cadastrados por segmento.",
+        "operationId": "produtosPorSegmento",
+        "requestBody": {
+          "description": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProdutosPorSegmentoRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Produtos cadastrados pelo segmento informado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProdutosPorSegmentoResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A requisição foi malformada, omitindo atributos obrigatórios, seja no payload ou através de atributos na URL."
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Ocorreu um erro no gateway da API ou no microsserviço"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ProdutosPorSegmentoRequest": {
+        "type": "object",
+        "properties": {
+            "agencia": {
+                "type": "string",
+                "description": "Código da agência \n Inteiro(5)"
+            },
+            "conta": {
+                "type": "string",
+                "description": "Número da Conta \n Inteiro(5)"
+            },
+            "cpfCnpj": {
+                "type": "string",
+                "description": "CPF \n Inteiro(11)"
+            },
+            "indicador": {
+                "type": "string",
+                "description": "Indicador. \n String(1)"
+            },
+            "midia": {
+                "type": "string",
+                "description": "Canal de Contratação \n Inteiro(3)"
+            },
+            "primeiroNumPlano": {
+                "type": "integer",
+                "format": "int64",
+                "description": "Primeiro numero do Plano. \n Numerico(4)"
+            },
+            "ultimoNumPlano": {
+                "type": "integer",
+                "format": "int64",
+                "description": "Ultimo numero do Plano. \n Numerico(4)"
+            }
+        },
+        "title": "ProdutosPorSegmentoRequest"
+      },
+    "ProdutosPorSegmentoResponse": {
+        "type": "object",
+        "properties": {
+            "indicadorPaginacao": {
+                "type": "string",
+                "description": "Indicador. \n String(1)"
+            },
+            "priNumPlano": {
+                "type": "integer",
+                "format": "int64",
+                "description": "Primeiro numero do Plano. \n Numerico(4)"
+            },
+            "qtdSegmentos": {
+                "type": "integer",
+                "format": "int32",
+                "description": "Quantidade de segmentos \n Numerico()"
+            },
+            "request": {
+                "$ref": "#/components/schemas/ProdutosPorSegmentoRequest"
+            },
+            "segmentoPlanos": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/SegmentoPlanos"
+                }
+            },
+            "ultNumPlano": {
+                "type": "integer",
+                "format": "int64",
+                "description": "Ultimo numero do Plano. \n Numerico(4)"
+            }
+        },
+        "title": "ProdutosPorSegmentoResponse"
+      },
+    "SegmentoPlanos": {
+      "type": "object",
+      "properties": {
+          "codSegmento": {
+              "type": "integer",
+              "format": "int32",
+              "description": "Codigo de segmento. \n Numerico(3)"
+          },
+          "planos": {
+              "type": "array",
+              "items": {
+                  "$ref": "#/components/schemas/Planos"
+              }
+          },
+          "qtdPlanos": {
+              "type": "integer",
+              "format": "int32",
+              "description": "Quantidade de planos. \n Numerico(2)"
+          }
+      },
+      "title": "SegmentoPlanos"
+      },
+  "Planos": {
+    "type": "object",
+    "properties": {
+        "numPlano": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Número do plano \n Inteiro(4)"
+        }
+    },
+    "title": "Planos"
+      },
+      "PropostaResponse": {
+        "type": "object",
+        "properties": {
+          "agencia": {
+            "type": "string",
+            "description": "Código da agencia de débito das parcelas do título de capitalização. \n  String(5)\n"
+          },
+          "club": {
+            "type": "string",
+            "description": "Código do club do Procurador do subscritor do título de capitalização.\n  String(10)\n"
+          },
+          "conta": {
+            "type": "string",
+            "description": "Conta corrente de débito das parcelas do título de capitalização. \n  String(7)\n"
+          },
+          "cpf": {
+            "type": "string",
+            "description": "Número do CPF/CNPJ.\n  String(11)\n"
+          },
+          "dataDebito": {
+            "type": "string",
+            "description": "Data do Debito da primeira parcela dos títulos, efetivando a aquisição.\n  String(10)\n"
+          },
+          "dataNasc": {
+            "type": "string",
+            "description": "Data de nascimento do subscritor do título de capitalização. \n  String(10)\n"
+          },
+          "diaParcela": {
+            "type": "string",
+            "description": "Dia base de débito das parcelas dos títulos de capitalização. \n  String(2)\n"
+          },
+          "digito": {
+            "type": "string",
+            "description": "Digito da proposta de aquisição do título de capitalização. \n  String(1)\n"
+          },
+          "gerarBoleto": {
+            "type": "string",
+            "description": "Indicador de geração de necessidade de boleto para efetivar a aquisição. \n  String(1)\n"
+          },
+          "gerarCertificado": {
+            "type": "string",
+            "description": "Indicador de geração de certificado dos títulos de capitalização. \n  String(1)\n"
+          },
+          "inclusaoProposta": {
+            "type": "string",
+            "description": "Timestamp da inclusção da proposta de título de capitalização. \n  String(26)\n"
+          },
+          "midia": {
+            "type": "integer",
+            "format": "int32",
+            "description": "\"Canal de Contratação.\n  Inteiro(3)\"\n"
+          },
+          "numAtendimento": {
+            "type": "string",
+            "description": "\"Numero de atendimento\"\n  Numerico(18)\n"
+          },
+          "numEletronico": {
+            "type": "string",
+            "description": "Numero sequencial que referencia um determinado endereço de e-mail do cliente no pessoas.\n  String(5)\n"
+          },
+          "numPlano": {
+            "type": "string",
+            "description": "\"Número do plano.\n  Inteiro(4)\"\n"
+          },
+          "numPostal": {
+            "type": "string",
+            "description": "Numero sequencial que referencia um determinado endereço postal do cliente no pessoas.\n  String(5)\n"
+          },
+          "numProposta": {
+            "type": "string",
+            "description": "\"Numero da Proposta de aquisição do título de capitalização.\n  Numerico(10)\"\n"
+          },
+          "qtdTitular": {
+            "type": "string",
+            "description": "${docswagger.efetivarProposta.qtdTitular}"
+          },
+          "qtdTitulo": {
+            "type": "string",
+            "description": "Quantidade de Titulos que serão adquiridos na proposta.\n  String(5)\n"
+          },
+          "razaoSoc": {
+            "type": "string",
+            "description": "Nome do subscritor do título de capitalização. \n  String(70)\n"
+          },
+          "titulares": {
+            "type": "array",
+            "description": "Titulares vinculados à proposta",
+            "items": {
+              "$ref": "#/components/schemas/TitularResponse0"
+            }
+          },
+          "totParcela": {
+            "type": "string",
+            "description": "Valor total pago para aquisição dos títulos de capitalização da proposta. \n  String(13.2)\n"
+          },
+          "tpConta": {
+            "type": "string",
+            "description": "Tipo da conta de débito das parcelas do título de capitalização. \n  String(1)\n"
+          },
+          "vlrParcela": {
+            "type": "string",
+            "description": "Valor da Parcela de cada Título adquirido na proposta.\n  String(13.2)\n"
+          }
+        },
+        "title": "PropostaResponse"
+      },
+      "TitularResponse0": {
+        "type": "object",
+        "properties": {
+          "cpf": {
+            "type": "string",
+            "description": "Número do CPF/CNPJ.\n  String(11)\n"
+          },
+          "dataNasc": {
+            "type": "string",
+            "description": "Data de nascimento do subscritor do título de capitalização. \n  String(10)\n"
+          },
+          "percResgate": {
+            "type": "string",
+            "description": "${docswagger.common.percResgatePartc}"
+          },
+          "percSorteio": {
+            "type": "string",
+            "description": "${docswagger.common.percSorteioPartc}"
+          },
+          "razaoSoc": {
+            "type": "string",
+            "description": "Nome do subscritor do título de capitalização. \n  String(70)\n"
+          }
+        },
+        "title": "TitularResponse0"
+      },
+      "DadosTitularRequest": {
+        "type": "object",
+        "properties": {
+          "club": {
+            "type": "string",
+            "description": "Código do club do Procurador do subscritor do título de capitalização.\n  String(10)\n"
+          },
+          "cpf": {
+            "type": "string",
+            "description": "Número do CPF/CNPJ.\n  String(11)\n"
+          },
+          "indPeq": {
+            "type": "string",
+            "description": "${docswagger.dadosTitular.indPeq}"
+          },
+          "numContratoNegocio": {
+            "type": "string",
+            "description": "Número do contrato de negócio da conta corrente do cliente.\n  String(10)\n"
+          },
+          "numSequencial": {
+            "type": "string",
+            "description": "Número sequencial que referencia um determinado endereço de e-mail.\n  String(5)\n"
+          },
+          "numSequencialPostal": {
+            "type": "string",
+            "description": "Número sequencial que referencia um determinado endereço postal.\n  String(5)\n"
+          },
+          "percResgate": {
+            "type": "string",
+            "description": "Percentual de resgate.\n  String(3)\n"
+          },
+          "percSorteio": {
+            "type": "string",
+            "description": "Percentual do Sorteio.\n  String(3)\n"
+          },
+          "pessoaJuridica": {
+            "type": "string",
+            "description": "Pessoa juridica do contrato de conta corrente do cliente.\n  String(10)\n"
+          },
+          "titularCorrentista": {
+            "type": "string",
+            "description": "Indicador de Titular Correntistas.\n  (S ou N)\n  String(1)\n"
+          },
+          "tpContratoNegocio": {
+            "type": "string",
+            "description": "Tipo de contrato de negócio da conta corrente do cliente.\n  String(3)\n"
+          }
+        },
+        "title": "DadosTitularRequest"
+      },
+      "SubscritorRequest": {
+        "type": "object",
+        "properties": {
+          "club": {
+            "type": "string",
+            "description": "Código do club do Procurador do subscritor do título de capitalização.\n  String(10)\n"
+          },
+          "cpf": {
+            "type": "string",
+            "description": "Número do CPF/CNPJ.\n  String(11)\n"
+          },
+          "numContrato": {
+            "type": "string",
+            "description": "Numero do contrato de negócio da conta corrente do cliente.\n  String(10)\n"
+          },
+          "numEletronico": {
+            "type": "string",
+            "description": "Numero sequencial que referencia um determinado endereço de e-mail do cliente no pessoas.\n  String(5)\n"
+          },
+          "numPostal": {
+            "type": "string",
+            "description": "Numero sequencial que referencia um determinado endereço postal do cliente no pessoas.\n  String(5)\n"
+          },
+          "pessoaJur": {
+            "type": "string",
+            "description": "Pessoa juridica do contrato de conta corrente do cliente.\n  String(10)\n"
+          },
+          "tpContrato": {
+            "type": "string",
+            "description": "Tipo de contrato de negócio da conta corrente do cliente.\n  String(3)\n"
+          }
+        },
+        "title": "SubscritorRequest"
+      },
+      "ProcuradorRequest": {
+        "type": "object",
+        "properties": {
+          "club": {
+            "type": "string",
+            "description": "Código do club do Procurador do subscritor do título de capitalização.\n  String(10)\n"
+          },
+          "cpf": {
+            "type": "string",
+            "description": "Número do CPF/CNPJ.\n  String(11)\n"
+          },
+          "indicProcurador": {
+            "type": "string",
+            "description": "Indicador de existencia de procurador. \n  (S ou N)\n  String(1)\n"
+          },
+          "numEletronico": {
+            "type": "string",
+            "description": "Numero sequencial que referencia um determinado endereço de e-mail do cliente no pessoas.\n  String(5)\n"
+          },
+          "numPostal": {
+            "type": "string",
+            "description": "Numero sequencial que referencia um determinado endereço postal do cliente no pessoas.\n  String(5)\n"
+          }
+        },
+        "title": "ProcuradorRequest"
+      },
+      "PropostaRequest": {
+        "type": "object",
+        "properties": {
+          "dadosTitular": {
+            "type": "array",
+            "description": "Dados do Titular",
+            "items": {
+              "$ref": "#/components/schemas/DadosTitularRequest"
+            }
+          },
+          "dataDebito": {
+            "type": "string",
+            "description": "Data do Debito da primeira parcela dos títulos, efetivando a aquisição.\n  String(10)\n"
+          },
+          "diaDebito": {
+            "type": "string",
+            "description": "Dia de Debito das demais parcelas dos títulos adquiridos.\n  String(2)\n"
+          },
+          "envioCorrespondencia": {
+            "type": "string",
+            "description": "Forma de envio de correspondências dos títulos de capitalização. \n  01 - EMAIL\n  02 - Correio\n  String(2)\n"
+          },
+          "formaAceite": {
+            "type": "string",
+            "description": "Forma de aceite. \n  'D' - Digital.\n  'N' - Normal/Convencional.\n  String(1)\n"
+          },
+          "formaPgto": {
+            "type": "string",
+            "description": "Forma de pagamento das parcelas do título de capitalização. \n  03 - Boleto de cobrança\n  31 - Débito em conta com consulta\n  37 - Benefício INSS\n  String(2)\n"
+          },
+          "indicTitularDiferente": {
+            "type": "string",
+            "description": "Indicador de Titular Diferente do Subscritor. \n  'N' - Não\n  'S' - 'Sim\n  String(1)\n"
+          },
+          "mesSorteio": {
+            "type": "string",
+            "description": "Mes escolhido para o sorteio especial. String(2)\n"
+          },
+          "midia": {
+            "type": "string",
+            "description": "\"Canal de Contratação.\n  Inteiro(3)\"\n"
+          },
+          "numAtendimento": {
+            "type": "string",
+            "description": "\"Numero de atendimento\"\n  Numerico(18)\n"
+          },
+          "numPlano": {
+            "type": "string",
+            "description": "\"Número do plano.\n  Inteiro(4)\"\n"
+          },
+          "procurador": {
+            "description": "Dados do Procurador",
+            "$ref": "#/components/schemas/ProcuradorRequest"
+          },
+          "qtdTitulo": {
+            "type": "string",
+            "description": "Quantidade de Titulos que serão adquiridos na proposta.\n  String(5)\n"
+          },
+          "qtdTotTitular": {
+            "type": "string",
+            "description": "Quantidade total titular\n  String(3)\n"
+          },
+          "subscritor": {
+            "description": "Dados do Subscritor",
+            "$ref": "#/components/schemas/SubscritorRequest"
+          },
+          "tpAcao": {
+            "type": "string",
+            "description": "\"Identificador do tipo de ação requerida pelo canal. \n  'V' - Validação\"\n  'E' - Efetivação.\"\n  String(1).\n"
+          },
+          "vlrParcela": {
+            "type": "string",
+            "description": "Valor da Parcela de cada Título adquirido na proposta.\n  String(13.2)\n"
+          }
+        },
+        "title": "PropostaRequest"
+      },
+      "LiquidarPagamentoEspecieRequest": {
+        "type": "object",
+        "properties": {
+          "midia": {
+            "type": "integer",
+            "format": "int32",
+            "description": "\"Canal de Contratação.\n  Inteiro(3)\"\n"
+          },
+          "numPlano": {
+            "type": "integer",
+            "format": "int32",
+            "description": "\"Número do plano.\n  Inteiro(4)\"\n"
+          },
+          "numProposta": {
+            "type": "integer",
+            "format": "int64",
+            "description": "\"Numero da Proposta de aquisição do título de capitalização.\n  Numerico(10)\"\n"
+          }
+        },
+        "title": "LiquidarPagamentoEspecieRequest"
+      },
+      "LiquidarPagamentoEspecieResponse": {
+        "type": "object",
+        "properties": {
+          "cnpj": {
+            "type": "string",
+            "description": "Número do CPF/CNPJ.\n  String(11)\n"
+          },
+          "codProcesso": {
+            "type": "string",
+            "description": "Codigo do processo SUSEP. \n  String(20)\n"
+          },
+          "descNumPlano": {
+            "type": "string",
+            "description": "Descrição do plano. \n  String(40)\n"
+          },
+          "formaPagamento": {
+            "type": "integer",
+            "format": "int32",
+            "description": "${docswagger.common.formaPgto}"
+          },
+          "listaSorteio": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ListaSorteio"
+            }
+          },
+          "listaTitulos": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ListaTitulos"
+            }
+          },
+          "nomeRazaoSocial": {
+            "type": "string",
+            "description": "Razao social da capitalizacao. \n  String(30)\n"
+          },
+          "nomeSubscritor": {
+            "type": "string",
+            "description": "Nome do subscritor.\n  String(70)\n"
+          },
+          "numPlano": {
+            "type": "integer",
+            "format": "int32",
+            "description": "\"Número do plano.\n  Inteiro(4)\"\n"
+          },
+          "numProposta": {
+            "type": "integer",
+            "format": "int32",
+            "description": "\"Numero da Proposta de aquisição do título de capitalização.\n  Numerico(10)\"\n"
+          },
+          "qtdNumSorte": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Quantidade de numeros da sorte. \n  Numerico(5)\n"
+          },
+          "qtdTitulos": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Quantidade de Titulos que serão adquiridos na proposta.\n  String(5)\n"
+          },
+          "request": {
+            "$ref": "#/components/schemas/LiquidarPagamentoEspecieRequest"
+          },
+          "totRegistros": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Quantidade de registro/proposta listada. \n  Numerico(3)\n"
+          },
+          "totTitulos": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Total de registros de titulo."
+          },
+          "vlrTotProposta": {
+            "type": "number",
+            "description": "Valor da proposta. \n  Numerico(15)\n"
+          }
+        },
+        "title": "LiquidarPagamentoEspecieResponse"
+      },
+      "ListaSorteio": {
+        "type": "object",
+        "properties": {
+          "descPeriodoSorteio": {
+            "type": "string",
+            "description": "Descrição da periodicidade do sorteio. String(80)"
+          },
+          "qtdNumSorteios": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Quantidade de numeros de sorteio. Numerico(5)"
+          },
+          "simbMoeda": {
+            "type": "string",
+            "description": "Simbolo da moeda. String(3)"
+          },
+          "vlrPremio": {
+            "type": "number",
+            "description": "Valor do premio. Numerico(16)"
+          },
+          "vlrPremioExtenso": {
+            "type": "string",
+            "description": "Valor do premio por extenso. String(100)"
+          }
+        },
+        "title": "ListaSorteio"
+      },
+      "ListaTitulos": {
+        "type": "object",
+        "properties": {
+          "numSerie": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Numero da serie. \n  Numerico(4)\n"
+          },
+          "numSorte1": {
+            "type": "integer",
+            "format": "int32",
+            "description": "${docswagger.common.numDaSorte}"
+          },
+          "numSorte2": {
+            "type": "integer",
+            "format": "int32",
+            "description": "${docswagger.common.numDaSorte}"
+          },
+          "numTitulo": {
+            "type": "integer",
+            "format": "int32",
+            "description": "${docswagger.common.numTitulo}"
+          }
+        },
+        "title": "ListaTitulos"
+      },
+      "EfetivarPropostaPagamentoEspecieRequest": {
+        "type": "object",
+        "properties": {
+          "dadosAtendimento": {
+            "$ref": "#/components/schemas/DadosAtendimento"
+          },
+          "dadosSubscritor": {
+            "$ref": "#/components/schemas/DadosSubscritor"
+          },
+          "listaDadosTitular": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ListaDadosTitular"
+            }
+          },
+          "midia": {
+            "type": "integer",
+            "format": "int32",
+            "description": "\"Canal de Contratação.\n  Inteiro(3)\"\n"
+          },
+          "qtotTtlar": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "title": "EfetivarpropostapagamentoespecieRequest"
+      },
+      "EfetivarPropostaPagamentoEspecieResponse": {
+        "type": "object",
+        "properties": {
+          "linhaDig": {
+            "type": "string",
+            "description": "Digito da proposta.\n  Numerico\n"
+          },
+          "midia": {
+            "type": "integer",
+            "format": "int32",
+            "description": "\"Canal de Contratação.\n  Inteiro(3)\"\n"
+          },
+          "nPlanoCaptz": {
+            "type": "integer",
+            "format": "int32",
+            "description": "\"Número do plano.\n  Inteiro(4)\"\n"
+          },
+          "nPpstaAquisTitlo": {
+            "type": "integer",
+            "format": "int32",
+            "description": "\"Numero da Proposta de aquisição do título de capitalização.\n  Numerico(10)\"\n"
+          },
+          "request": {
+            "$ref": "#/components/schemas/EfetivarPropostaPagamentoEspecieRequest"
+          }
+        },
+        "title": "EfetivarpropostapagamentoespecieResponse"
+      },
+      "ListaDadosTitular": {
+        "type": "object",
+        "properties": {
+          "cdClubTtlar": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Código do club do Procurador do subscritor do título de capitalização.\n  String(10)\n"
+          },
+          "cpfCnpjTtlar": {
+            "type": "string",
+            "description": "Número do CPF/CNPJ.\n  String(11)\n"
+          }
+        },
+        "title": "ListaDadosTitular"
+      },
+      "DadosSubscritor": {
+        "type": "object",
+        "properties": {
+          "cClubSbscr": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Código do club do Procurador do subscritor do título de capitalização.\n  String(10)\n"
+          },
+          "cpfCnpjSbscr": {
+            "type": "string",
+            "description": "Número do CPF/CNPJ.\n  String(11)\n"
+          }
+        },
+        "title": "DadosSubscritor"
+      },
+      "DadosAtendimento": {
+        "type": "object",
+        "properties": {
+          "cFormaPgto": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Forma de pagamento\n"
+          },
+          "ddeb": {
+            "type": "string",
+            "description": "Data do Debito da primeira parcela dos títulos, efetivando a aquisição.\n  String(10)\n"
+          },
+          "ddiaDeb": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Dia de Debito das demais parcelas dos títulos adquiridos.\n  String(2)\n"
+          },
+          "nPlanoCaptz": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "ntpoPgto": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Numero do tipo do pagamento.\n Numerico\n"
+          },
+          "qTitlo": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Quantidade de Titulos que serão adquiridos na proposta.\n  String(5)\n"
+          },
+          "vPcelaTitlo": {
+            "type": "string",
+            "description": "Valor da Parcela de cada Título adquirido na proposta.\n  String(13.2)\n"
+          },
+          "vppsta": {
+            "type": "string",
+            "description": "Valor da proposta"
+          }
+        },
+        "title": "DadosAtendimento"
+      },
+      "ConfirmarPagamentoPIXResponse": {
+        "type": "object",
+        "properties": {
+          "codigoPix": {
+            "type": "string",
+            "description": "Codigo string do pix\n  String\n"
+          },
+          "request": {
+            "$ref": "#/components/schemas/ConfirmarPagamentoPIXRequest"
+          },
+          "situacao": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Situacao da confirmacao.\n  Numerico\n"
+          }
+        },
+        "title": "ConfirmacaoPagamentoPIXResponse"
+      },
+      "ConfirmarPagamentoPIXRequest": {
+        "type": "object",
+        "properties": {
+          "codigoPix": {
+            "type": "string",
+            "description": "Codigo string do pix\n  String\n"
+          }
+        },
+        "title": "ConfirmacaoPagamentoPIXRequest"
+      },
+      "DadosPixSegChamada": {
+        "type": "object",
+        "properties": {
+          "codPagamentoPix": {
+            "type": "string"
+          },
+          "dataPix": {
+            "type": "string"
+          },
+          "expiracaoPix": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "idPix": {
+            "type": "string"
+          },
+          "numSequencialEmail": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "transacaoPix": {
+            "type": "string"
+          }
+        },
+        "title": "DadosPixSegChamada"
+      },
+      "TitularResponse": {
+        "type": "object",
+        "properties": {
+          "cpfCnpjTitular": {
+            "type": "string",
+            "description": "Número do CPF/CNPJ.\n  String(11)\n"
+          },
+          "dataNascTitular": {
+            "type": "string",
+            "description": "Data de nascimento do subscritor do título de capitalização. \n  String(10)\n"
+          },
+          "dvCpfCnpjTitular": {
+            "type": "string",
+            "description": "Número do CPF/CNPJ.\n  String(11)\n"
+          },
+          "filialCpfCnpjTitular": {
+            "type": "string",
+            "description": "Número do CPF/CNPJ.\n  String(11)\n"
+          },
+          "nomeTitular": {
+            "type": "string",
+            "description": "Nome do titular\n  String(70)\n"
+          },
+          "percentualValorResgate": {
+            "type": "number",
+            "description": "Percentual de participação no resgate do subscritor. \n  String(5.2)\n"
+          },
+          "percentualValorSorteio": {
+            "type": "number",
+            "description": "Percentual de participação no sorteio do subscritor. \n  String(5.2)\n"
+          }
+        },
+        "title": "TitularResponse"
+      },
+      "EfetivarPropostaPIXResponse": {
+        "type": "object",
+        "properties": {
+          "agencia": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Código da agencia de débito das parcelas do título de capitalização. \n  String(5)\n"
+          },
+          "base64": {
+            "type": "string",
+            "description": "Base 64 do QRCODE\n  String\n"
+          },
+          "club": {
+            "type": "string",
+            "description": "Código do club do Procurador do subscritor do título de capitalização.\n  String(10)\n"
+          },
+          "conta": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Conta corrente de débito das parcelas do título de capitalização. \n  String(7)\n"
+          },
+          "cpfCnpj": {
+            "type": "string",
+            "description": "Número do CPF/CNPJ.\n  String(11)\n"
+          },
+          "dataAtualDebito": {
+            "type": "string",
+            "description": "Data do Debito da primeira parcela dos títulos, efetivando a aquisição.\n  String(10)\n"
+          },
+          "dataNascSubscritor": {
+            "type": "string",
+            "description": "Data de nascimento do subscritor do título de capitalização. \n  String(10)\n"
+          },
+          "diaBase": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Dia base da proposta.\n  String\n"
+          },
+          "digitoProposta": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Digito da proposta.\n  Numerico\n"
+          },
+          "gerarCertificado": {
+            "type": "string",
+            "description": "Indicador de geração de certificado dos títulos de capitalização. \n  String(1)\n"
+          },
+          "indGerarBoleto": {
+            "type": "string",
+            "description": "Indicador de geração de necessidade de boleto para efetivar a aquisição. \n  String(1)\n"
+          },
+          "listaTitular": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TitularResponse"
+            }
+          },
+          "midia": {
+            "type": "string",
+            "description": "\"Canal de Contratação.\n  Inteiro(3)\"\n"
+          },
+          "nomeSubscritor": {
+            "type": "string",
+            "description": "Nome do subscritor.\n  String(70)\n"
+          },
+          "numAtendimento": {
+            "type": "integer",
+            "format": "int64",
+            "description": "\"Numero de atendimento\"\n  Numerico(18)\n"
+          },
+          "numPlano": {
+            "type": "integer",
+            "format": "int32",
+            "description": "\"Número do plano.\n  Inteiro(4)\"\n"
+          },
+          "numProposta": {
+            "type": "string",
+            "description": "\"Numero da Proposta de aquisição do título de capitalização.\n  Numerico(10)\"\n"
+          },
+          "qtdTitulares": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Quantidade máxima de titulares no título de capitalização. \n  String(2)\n"
+          },
+          "qtdTitulos": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Quantidade de Titulos que serão adquiridos na proposta.\n  String(5)\n"
+          },
+          "request": {
+            "$ref": "#/components/schemas/DadosPixSegChamada"
+          },
+          "timestampProposta": {
+            "type": "string",
+            "description": "${docswagger.common.timestampProposta}"
+          },
+          "tipoConta": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Tipo da conta de débito das parcelas do título de capitalização. \n  String(1)\n"
+          },
+          "vlrParcelaTitulo": {
+            "type": "number",
+            "description": "Valor da Parcela de cada Título adquirido na proposta.\n  String(13.2)\n"
+          },
+          "vlrTotalProposta": {
+            "type": "number",
+            "description": "Valor total pago para aquisição dos títulos de capitalização da proposta. \n  String(13.2)\n"
+          }
+        },
+        "title": "EfetivarPropostaPIXResponse"
+      },
+      "DadosProcuradorRequest": {
+        "type": "object",
+        "properties": {
+          "club": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Código do club do Procurador do subscritor do título de capitalização.\n  String(10)\n"
+          },
+          "cpfCnpj": {
+            "type": "string",
+            "description": "Número do CPF/CNPJ.\n  String(11)\n"
+          },
+          "indProcurador": {
+            "type": "string",
+            "description": "Indicador de existencia de procurador. \n  (S ou N)\n  String(1)\n"
+          },
+          "numSequencialEmail": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Numero sequencial que referencia um determinado endereço de e-mail do cliente no pessoas.\n  String(5)\n"
+          },
+          "numSequencialPostal": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Numero sequencial que referencia um determinado endereço postal do cliente no pessoas.\n  String(5)\n"
+          }
+        },
+        "title": "DadosProcuradorRequest"
+      },
+      "DadosAtendimentoRequest": {
+        "type": "object",
+        "properties": {
+          "autenticacaoProposta": {
+            "type": "string",
+            "description": "Autenticacao da proposta. \n  String(250)\n"
+          },
+          "dataDebito": {
+            "type": "string",
+            "description": "Data do Debito da primeira parcela dos títulos, efetivando a aquisição.\n  String(10)\n"
+          },
+          "diaDebito": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Dia de Debito das demais parcelas dos títulos adquiridos.\n  String(2)\n"
+          },
+          "formaAceite": {
+            "type": "string",
+            "description": "Forma de aceite. \n  String(1)\n"
+          },
+          "formaEnvioCorrespondencia": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Forma de envio de correspondencias dos titulos de capitalizacao. \n  Numerico(2)\n"
+          },
+          "formaPagamento": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Forma de pagamento\n"
+          },
+          "indTitular": {
+            "type": "string",
+            "description": "Indicador de titular diferente do subscritor. \n  String(1)\n"
+          },
+          "mesSorteio": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Mes escolhido para o sorteio especial. String(2)\n"
+          },
+          "numAtendimento": {
+            "type": "integer",
+            "format": "int64",
+            "description": "\"Numero de atendimento\"\n  Numerico(18)\n"
+          },
+          "numPlano": {
+            "type": "integer",
+            "format": "int64",
+            "description": "\"Número do plano.\n  Inteiro(4)\"\n"
+          },
+          "qtdTitulos": {
+            "type": "integer",
+            "format": "int32",
+            "description": "${docswagger.common.qtdTitulos}"
+          },
+          "tipoAcao": {
+            "type": "string",
+            "description": "Identificador do tipo de ação requerida pelo canal. \n  String(1)\n"
+          },
+          "vlrParcelaTitulo": {
+            "type": "number",
+            "description": "Valor da parcela de cada titulo adquirido na proposta. \n  Numerico(15)\n"
+          }
+        },
+        "title": "DadosAtendimentoRequest"
+      },
+      "EfetivarPropostaPIXRequest": {
+        "type": "object",
+        "properties": {
+          "dadosAtendimento": {
+            "description": "Dados subscritor",
+            "$ref": "#/components/schemas/DadosAtendimentoRequest"
+          },
+          "dadosProcurador": {
+            "description": "Dados procurador",
+            "$ref": "#/components/schemas/DadosProcuradorRequest"
+          },
+          "dadosSubscritor": {
+            "description": "Dados subscritor",
+            "$ref": "#/components/schemas/DadosSubscritorRequest"
+          },
+          "dadosTelefone": {
+            "$ref": "#/components/schemas/DadosTelefoneRequest"
+          },
+          "identQrCode": {
+            "type": "string",
+            "description": "Identificador do QR Code\n"
+          },
+          "listaDadosTitular": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DadosTitularRequest0"
+            }
+          },
+          "midia": {
+            "type": "integer",
+            "format": "int32",
+            "description": "\"Canal de Contratação.\n  Inteiro(3)\"\n"
+          },
+          "qtdTitulares": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Quantidade de titulares em cada plano adquirido com valor maximo de 99. \n  Numerico(2)\n"
+          }
+        },
+        "title": "EfetivarPropostaPIXRequest"
+      },
+      "DadosTitularRequest0": {
+        "type": "object",
+        "properties": {
+          "club": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Código do club do Procurador do subscritor do título de capitalização.\n  String(10)\n"
+          },
+          "cpfCnpj": {
+            "type": "string",
+            "description": "Número do CPF/CNPJ.\n  String(11)\n"
+          },
+          "indTitularCorrentista": {
+            "type": "string",
+            "description": "Indicador de titular correntista do banco Bradesco. \n  String(1)\n"
+          },
+          "indTitularPEP": {
+            "type": "string",
+            "description": "Indicador titular PEP. \n  String(1)\n"
+          },
+          "numContrato": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Numero do contrato de negócio da conta corrente do cliente.\n  String(10)\n"
+          },
+          "numSequencialEmail": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Numero sequencial que referencia um determinado endereço de e-mail do cliente no pessoas.\n  String(5)\n"
+          },
+          "numSequencialPostal": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Numero sequencial que referencia um determinado endereço postal do cliente no pessoas.\n  String(5)\n"
+          },
+          "percentualValorResgate": {
+            "type": "number",
+            "description": "Percentual de participação no resgate do subscritor. \n  String(5.2)\n"
+          },
+          "percentualValorSorteio": {
+            "type": "number",
+            "description": "Percentual de participação no sorteio do subscritor. \n  String(5.2)\n"
+          },
+          "pessoaJuridica": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Pessoa juridica do contrato de conta corrente do cliente.\n  String(10)\n"
+          },
+          "tipoContrato": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Tipo de contrato de negócio da conta corrente do cliente.\n  String(3)\n"
+          }
+        },
+        "title": "DadosTitularRequest0"
+      },
+      "DadosTelefoneRequest": {
+        "type": "object",
+        "properties": {
+          "ddd": {
+            "type": "string",
+            "description": "DDD do telefone. \n  String(4)\n"
+          },
+          "ddi": {
+            "type": "string",
+            "description": "DDI do telefone. \n  String(4)\n"
+          },
+          "telefone": {
+            "type": "string",
+            "description": "Numero do telefone. \n  String(11)\n"
+          }
+        },
+        "title": "DadosTelefoneRequest"
+      },
+      "DadosSubscritorRequest": {
+        "type": "object",
+        "properties": {
+          "club": {
+            "type": "string",
+            "description": "Código do club do Procurador do subscritor do título de capitalização.\n  String(10)\n"
+          },
+          "cpfCnpj": {
+            "type": "string",
+            "description": "Número do CPF/CNPJ.\n  String(11)\n"
+          },
+          "numContrato": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Numero do contrato de negócio da conta corrente do cliente.\n  String(10)\n"
+          },
+          "numSequencialEmail": {
+            "type": "string",
+            "description": "Numero sequencial que referencia um determinado endereço de e-mail do cliente no pessoas.\n  String(5)\n"
+          },
+          "numSequencialPostal": {
+            "type": "string",
+            "description": "Numero sequencial que referencia um determinado endereço postal do cliente no pessoas.\n  String(5)\n"
+          },
+          "pessoaJuridica": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Pessoa juridica do contrato de conta corrente do cliente.\n  String(10)\n"
+          },
+          "tipoContrato": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Tipo de contrato de negocio da conta corrente do cliente. \n  Numerico(3)\n"
+          }
+        },
+        "title": "DadosSubscritorRequest"
+      },
+      "AceitarRecusarPropostaResponse": {
+        "type": "object",
+        "properties": {
+          "dataAceiteRecusa": {
+            "type": "string",
+            "description": "Data do aceite ou recusa. \n  String(18)\n"
+          },
+          "dataAquisicao": {
+            "type": "string",
+            "description": "Data aquisicao da proposta. \n  String(10)\n"
+          },
+          "dataDebitoAtual": {
+            "type": "string",
+            "description": "Data do Debito da primeira parcela dos títulos, efetivando a aquisição.\n  String(10)\n"
+          },
+          "dataPrimeiraParcela": {
+            "type": "string",
+            "description": "${docswagger.efetivarProposta.dataPrimeiraParcela}"
+          },
+          "dataProxParcelas": {
+            "type": "integer",
+            "format": "int32",
+            "description": "${docswagger.efetivarProposta.dataDemaisParcelas}"
+          },
+          "digitoProposta": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Digito da proposta.\n  Numerico\n"
+          },
+          "idAceiteRecusa": {
+            "type": "string",
+            "description": "Identificador do aceite ou recusa. \n  Numerico(1)\n"
+          },
+          "midia": {
+            "type": "integer",
+            "format": "int32",
+            "description": "\"Canal de Contratação.\n  Inteiro(3)\"\n"
+          },
+          "nomeFantasia": {
+            "type": "string",
+            "description": "Nome fantasia (comercial) do plano de capitalização. \n  String(50)\n"
+          },
+          "numAquisicao": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Numero de proposta de aquisicao do titulo. \n  String(10)\n"
+          },
+          "numAtendimentoAquisicao": {
+            "type": "string",
+            "description": "Numero do atendimento de aquisicao. \n  String(10)\n"
+          },
+          "numPlano": {
+            "type": "integer",
+            "format": "int32",
+            "description": "\"Número do plano.\n  Inteiro(4)\"\n"
+          },
+          "numProtocolo": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Numero de protocolo de aceite. \n  Numerico(15)\n"
+          },
+          "peridiocidade": {
+            "type": "string",
+            "description": "Descrição da periodicidade do pagamento. \n  String(30)\n"
+          },
+          "prazoPlano": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Prazo do plano. \n  Numerico(3)\n"
+          },
+          "probabilidadeSorteioAnual": {
+            "type": "number",
+            "format": "double",
+            "description": "Probabilidade de sorteio anual. \n  Numerico(2)\n"
+          },
+          "probabilidadeSorteioMensal": {
+            "type": "number",
+            "format": "double",
+            "description": "Probabilidade de sorteio mensal. \n  Numerico(2)\n"
+          },
+          "probabilidadeSorteioSemanal": {
+            "type": "number",
+            "format": "double",
+            "description": "Probabilidade de sorteio semanal. \n  Numerico(2)\n"
+          },
+          "qtdParcelas": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Quantidade total de parcelas do titulo. \n  Numerico(3)\n"
+          },
+          "qtdTitulo": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Quantidade de Titulos que serão adquiridos na proposta.\n  String(5)\n"
+          },
+          "qtdTitulosSerie": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Quantidade de titulos da serie. \n  String(7)\n"
+          },
+          "tpPgto": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Periodicidade de pagamento. \n  0 - TODOS; \n  1 - PM(Pagamento Mensal); \n  2 - PU(Pagamento Único); \n  3 - PP(Pagamento Periodico);\n  4 - PM E PP; \n  Numerico(1)\n"
+          },
+          "vlrParcela": {
+            "type": "number",
+            "format": "double",
+            "description": "Valor da Parcela de cada Título adquirido na proposta.\n  String(13.2)\n"
+          },
+          "vlrProposta": {
+            "type": "number",
+            "format": "double",
+            "description": "Valor da proposta. \n  Numerico(15)\n"
+          },
+          "vlrTotal": {
+            "type": "number",
+            "format": "double",
+            "description": "Valor total do titulo. \n  Numerico(15.2)\n"
+          }
+        },
+        "title": "AceitarRecusarResponse"
+      },
+      "AceitarRecusarPropostaRequest": {
+        "type": "object",
+        "properties": {
+          "codAceite": {
+            "type": "string",
+            "description": "Forma de aceite. \\n  D - Digital. \\n  String(1)\\n"
+          },
+          "codSubscritor": {
+            "type": "string",
+            "description": "Codigo do subscritor. \\n  Numerico(10)\\n"
+          },
+          "indAceite": {
+            "type": "string",
+            "description": "Indicativo de aceite. \\n  String(1)\\n"
+          },
+          "midia": {
+            "type": "string",
+            "description": "\\\"Canal de Contratação.\\n"
+          },
+          "numPlano": {
+            "type": "string",
+            "description": "\\\"Número do plano.\\n"
+          },
+          "numPropsota": {
+            "type": "string",
+            "description": "\\\"Numero da Proposta de aquisição do título de capitalização.\\n"
+          },
+          "solicitacaoUsuario": {
+            "type": "string",
+            "description": "Usuário responsável pela solicitação. \\n"
+          }
+        }
+      },
+      "SaidaResponse": {
+        "type": "object",
+        "properties": {
+          "numParcelaFim": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Número da parcela fim \n Numérico(3)"
+          },
+          "numParcelaInic": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Número da parcela inicio \n Numérico(3)"
+          },
+          "quotaCapitalizacao": {
+            "type": "number",
+            "description": "Cotas de capitalização \n Numérico(3)"
+          },
+          "quotaSorteio": {
+            "type": "number",
+            "description": "Cotas de sorteio \n Numérico(3)"
+          }
+        },
+        "title": "SaidaResponse"
+      },
+      "CotasCapitalizacaoResponse": {
+        "type": "object",
+        "properties": {
+          "codModalidade": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Código da modalidade \n Inteiro(3)"
+          },
+          "midia": {
+            "type": "string",
+            "description": "Canal de Contratação \n Inteiro(3)"
+          },
+          "qtdRegistros": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Qtde registros \n Inteiro(3)"
+          },
+          "request": {
+            "$ref": "#/components/schemas/CotasCapitalizacaoRequest"
+          },
+          "saida": {
+            "type": "array",
+            "description": "Saida",
+            "items": {
+              "$ref": "#/components/schemas/SaidaResponse"
+            }
+          }
+        },
+        "title": "CotasCapitalizacaoResponse"
+      },
+      "CotasCapitalizacaoRequest": {
+        "type": "object",
+        "properties": {
+          "codModalidade": {
+            "type": "string",
+            "description": "Código da modalidade \n Inteiro(3)"
+          },
+          "midia": {
+            "type": "string",
+            "description": "Canal de Contratação \n Inteiro(3)"
+          },
+          "numPlano": {
+            "type": "string",
+            "description": "Número do plano \n Inteiro(4)"
+          },
+          "vlrParcelaTitulo": {
+            "type": "string",
+            "description": "Valor da parcela do título \n Numérico(13)"
+          }
+        },
+        "title": "CotasCapitalizacaoRequest"
+      },
+      "FormaPagamentoResponse": {
+        "type": "object",
+        "properties": {
+          "descFormaPgto": {
+            "type": "string"
+          },
+          "formaPgto": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "FormaPagamentoProdutoAquisicaoResponse": {
+        "type": "object",
+        "properties": {
+          "codModalidade": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "dados": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FormaPagamentoResponse"
+            }
+          },
+          "midia": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "qtdRegistros": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "FormaPagamentoProdutoAquisicaoRequest": {
+        "type": "object",
+        "properties": {
+          "codModalidade": {
+            "type": "string",
+            "description": "Código da modalidade \n inteiro(1)"
+          },
+          "midia": {
+            "type": "string",
+            "description": "Canal de Contratação \n Inteiro(3)"
+          },
+          "numPlano": {
+            "type": "string",
+            "description": "Número do plano \n Inteiro(4)"
+          }
+        }
+      },
+      "Parcelas": {
+        "type": "object",
+        "properties": {
+          "vlrParcela": {
+            "type": "number",
+            "description": "Valor da parcela de cada título adquirido na proposta \n Numérico(13,2)"
+          }
+        },
+        "title": "Parcelas"
+      },
+      "ValoresPlanoResponse": {
+        "type": "object",
+        "properties": {
+          "midia": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Canal de Contratação \n Inteiro(3)"
+          },
+          "numPlano": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Número do plano \n Inteiro(4)"
+          },
+          "parcelas": {
+            "type": "array",
+            "description": "Lista de parcelas",
+            "items": {
+              "$ref": "#/components/schemas/Parcelas"
+            }
+          },
+          "vlrMax": {
+            "type": "number",
+            "description": "Valor máximo de parcela do plano de capitalização \n Numérico(13) "
+          },
+          "vlrMin": {
+            "type": "number",
+            "description": "Valor mínimo de parcela do plano de capitalização \n Numérico(13)"
+          },
+          "vlrMult": {
+            "type": "number",
+            "description": "Valor múltiplo multiplicador sobre o valor de parcela do plano de capitalização. \n Numérico(5)"
+          }
+        },
+        "title": "ValoresPlanoResponse"
+      },
+      "ValoresPlanoRequest": {
+        "type": "object",
+        "properties": {
+          "midia": {
+            "type": "string",
+            "description": "Canal de Contratação \n Inteiro(3)"
+          },
+          "numPlano": {
+            "type": "string",
+            "description": "Número do plano \n Inteiro(4)"
+          },
+          "vlrMax": {
+            "type": "string",
+            "description": "Valor máximo de parcela do plano \n Numérico(13)"
+          },
+          "vlrMin": {
+            "type": "string",
+            "description": "Valor mínimo de parcela do plano \n Numérico(13)"
+          },
+          "vlrMult": {
+            "type": "string",
+            "description": "Valor múltiplo multiplicador sobre o valor de parcela do plano \n Numérico(5)"
+          }
+        },
+        "title": "ValoresPlanoRequest"
+      },
+      "Sorteios": {
+        "type": "object",
+        "properties": {
+          "quantidadeSorteio": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Quantidade de Sorteios Realizados \n Numérico(5)"
+          },
+          "tipoSorteio": {
+            "type": "string",
+            "description": "Tipo do Sorteio \n String(30)"
+          }
+        },
+        "title": "Sorteios"
+      },
+      "QuantidadeSorteioRequest": {
+        "type": "object",
+        "properties": {
+          "midia": {
+            "type": "string",
+            "description": "Canal de Contratação \n Inteiro(3)"
+          },
+          "modalidade": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Código da modalidade \n Inteiro(3)"
+          },
+          "numPlano": {
+            "type": "string",
+            "description": "Número do plano \n Inteiro(4)"
+          }
+        },
+        "title": "QuantidadeSorteioRequest"
+      },
+      "QuantidadeSorteioResponse": {
+        "type": "object",
+        "properties": {
+          "midia": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Canal de Contratação \n Inteiro(3)"
+          },
+          "modalidade": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Código da modalidade \n Inteiro(3)"
+          },
+          "request": {
+            "$ref": "#/components/schemas/QuantidadeSorteioRequest"
+          },
+          "sorteios": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Sorteios"
+            }
+          }
+        },
+        "title": "QuantidadeSorteioResponse"
+      },
+      "SorteiosProbabilidade": {
+        "type": "object",
+        "properties": {
+          "ProSortEditado": {
+            "type": "string",
+            "description": "Probabilidade sorteio editado \n String(7)"
+          },
+          "descSorteio": {
+            "type": "string",
+            "description": "Descrição do sorteio \n String(30)"
+          },
+          "probSorteioNumerico": {
+            "type": "number",
+            "description": "Probabilidade sorteio numerico \n Numérico(2)"
+          }
+        },
+        "title": "SorteiosProbabilidade"
+      },
+      "ProbabilidadeTipoSorteioRequest": {
+        "type": "object",
+        "properties": {
+          "codModalidade": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Código da modalidade \n Inteiro(3)"
+          },
+          "midia": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Canal de Contratação \n Inteiro(3)"
+          },
+          "numPlano": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Número do plano \n Inteiro(4)"
+          }
+        },
+        "title": "ProbabilidadeSorteioRequest"
+      },
+      "ProbabilidadeTipoSorteioResponse": {
+        "type": "object",
+        "properties": {
+          "midia": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Canal de Contratação \n Inteiro(3)"
+          },
+          "qtdReg": {
+            "type": "integer",
+            "format": "int32",
+            "description": "${docswagger.probabilidade-sorteio.response.qtd-reg}"
+          },
+          "request": {
+            "$ref": "#/components/schemas/ProbabilidadeTipoSorteioRequest"
+          },
+          "sorteios": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SorteiosProbabilidade"
+            }
+          }
+        },
+        "title": "ProbabilidadeSorteioResponse"
+      },
+      "InformacaoPlanoAquisicaoRequest": {
+        "type": "object",
+        "properties": {
+          "codModalidade": {
+            "type": "string",
+            "description": "Código da modalidade \n inteiro(1)"
+          },
+          "midia": {
+            "type": "string",
+            "description": "Canal de Contratação \n Inteiro(3)"
+          },
+          "numPlano": {
+            "type": "string",
+            "description": "Número do plano \n Inteiro(4)"
+          },
+          "vlrParcelaTitulo": {
+            "type": "string",
+            "description": "Valor da Parcela do título \n Inteiro(13) "
+          }
+        },
+        "title": "InformacaoPlanoAquisicaoRequest"
+      },
+      "InformacaoPlanoAquisicaoResponse": {
+        "type": "object",
+        "properties": {
+          "capitalNominalMinTitulo": {
+            "type": "number",
+            "description": "Capital Nominal Mínimo Titulo \n Inteiro(15)"
+          },
+          "codModalidade": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Código da modalidade \n inteiro(1)"
+          },
+          "midia": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Canal de Contratação \n Inteiro(3)"
+          },
+          "numSusep": {
+            "type": "string",
+            "description": "Número do Processo SUSEP \n String(20)"
+          },
+          "premioInst": {
+            "type": "string",
+            "description": "Indica se plano tem premiacao \n String(1)"
+          },
+          "tamanhoSerie": {
+            "type": "string",
+            "description": "Tamanho serie \n Inteiro(15)"
+          },
+          "tpSorteio": {
+            "type": "string",
+            "description": "Tipo de Sorteio Capitalização \n String(30)"
+          }
+        },
+        "title": "InformacaoPlanoAquisicaoResponse"
+      },
+      "PlanosResponse": {
+        "type": "object",
+        "properties": {
+          "descModld": {
+            "type": "string",
+            "description": "Nome da modalidade do plano de capitalização \n Numérico(50)"
+          },
+          "descTpPgto": {
+            "type": "string",
+            "description": "Descrição do tipo de pagamento do título de capitalização \n Numérico(50)"
+          },
+          "mes": {
+            "type": "string",
+            "description": "Indicador de existência de mês de sorteio especial 'S' - Sim 'N' - Não \n String(1)"
+          },
+          "modldCaptz": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Modalidade do plano de capitalização \n Numérico(3)"
+          },
+          "nomeFantasia": {
+            "type": "string",
+            "description": "Nome fantasia (comercial) do plano de capitalização. \n Numérico(50)"
+          },
+          "numPlano": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Número do plano \n Inteiro(4)"
+          },
+          "periodoCarencia": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Período em meses da carência para resgate do título de capitalização. \n Numérico(3)"
+          },
+          "planoCaptz": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Número do plano de capitalização \n Numérico(4)"
+          },
+          "prazoPlano": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Período de meses de vigência do título de capitalização \n Numérico(13)"
+          },
+          "premioInstantaneo": {
+            "type": "string",
+            "description": "Prêmio Instantâneo. \n String(1)"
+          },
+          "qtdMaxTitulo": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Quantidade máxima de titulos do plano permitidas para contratação em uma única transação. \n Numérico(5)"
+          },
+          "qtdTotParcela": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Quantidade total de parcelas do plano de capitalização. \n Numérico(3)"
+          },
+          "tpPgto": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Código do tipo de pagamento do título de capitalização \n Numérico(1)"
+          },
+          "vlrMaxPgto": {
+            "type": "number",
+            "description": "Valor Máximo de Pagamento. \n Numérico(15)"
+          },
+          "vlrMaxSorteio": {
+            "type": "number",
+            "description": "Valor Máximo de Sorteio.   \n Numérico(15)"
+          },
+          "vlrMinPgto": {
+            "type": "number",
+            "description": "Valor Mínimo de Pagamento. \n Numérico(15)"
+          },
+          "vlrMinSorteio": {
+            "type": "number",
+            "description": "Valor Mínimo de Sorteio.  \n Numérico(15)"
+          },
+          "vzsMaxParcela": {
+            "type": "number",
+            "description": "Valor máximo de parcela do plano de capitalização. \n Numérico(13,2)"
+          },
+          "vzsMinParcela": {
+            "type": "number",
+            "description": "Valor minímo de parcela do plano de capitalização. \n Numérico(13,2)"
+          },
+          "vzsMultParcela": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Valor múltiplo multiplicador sobre o valor de parcela do plano de capitalização. \n Numérico(5)"
+          }
+        }
+      },
+      "ListarPlanosCompativeisResponse": {
+        "type": "object",
+        "properties": {
+          "planos": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PlanosResponse"
+            }
+          }
+        }
+      },
+      "ListarPlanosCompativeisRequest": {
+        "type": "object",
+        "properties": {
+          "agencia": {
+            "type": "string"
+          },
+          "codModalidade": {
+            "type": "string"
+          },
+          "conta": {
+            "type": "string"
+          },
+          "cpf": {
+            "type": "string"
+          },
+          "formaPgto": {
+            "type": "string"
+          },
+          "midia": {
+            "type": "string"
+          }
+        }
+      },
+      "SorteioResponse": {
+        "type": "object",
+        "properties": {
+          "txtSorteio": {
+            "type": "string",
+            "description": "Descrição de determinado sorteio do plano \n String(200)"
+          },
+          "vlrPremio": {
+            "type": "number",
+            "description": "Código da forma de liquidação (pagamento) do plano \n Numérico(13,2)"
+          }
+        },
+        "title": "SorteioResponse"
+      },
+      "ParcelasResponse": {
+        "type": "object",
+        "properties": {
+          "vlrParcela": {
+            "type": "number",
+            "description": "Valor de pagamento de determinado número de parcela de título do plano com parcelas de valores variáveis \n Numérico(15,2)"
+          }
+        },
+        "title": "ParcelasResponse"
+      },
+      "FormasPagamentoResponse": {
+        "type": "object",
+        "properties": {
+          "codLiqdc": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Código da forma de liquidação (pagamento) do plano \n Numérico(2)"
+          },
+          "nomeLiqdc": {
+            "type": "string",
+            "description": "Nome da forma de liquidação (pagamento) do plano \n String(30)"
+          }
+        },
+        "title": "FormasPagamentoResponse"
+      },
+      "PlanoResponse": {
+        "type": "object",
+        "properties": {
+          "codProcSusep": {
+            "type": "string",
+            "description": "Código do processo SUSEP do plano de capitalização \n String(20)"
+          },
+          "descTpPgto": {
+            "type": "string",
+            "description": "Descrição do tipo de pagamento do título de capitalização \n String(50)"
+          },
+          "empresaPlano": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Empresa do plano de capitalização \n Inteiro(3)"
+          },
+          "formasPgto": {
+            "type": "array",
+            "description": "Lista de formas de pagamento",
+            "items": {
+              "$ref": "#/components/schemas/FormasPagamentoResponse"
+            }
+          },
+          "indInss": {
+            "type": "string",
+            "description": "Indicador de venda exclusiva para pensionistas INSS \n String(1)"
+          },
+          "indicMes": {
+            "type": "string",
+            "description": "${docswagger.plano.response.indc-mes}"
+          },
+          "mesesCarenResg": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Quantidade de meses carencia de resgate \n Numérico(3)"
+          },
+          "midia": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Canal de Contratação \n Inteiro(3)"
+          },
+          "numPlano": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Número do plano \n Inteiro(4)"
+          },
+          "parcelas": {
+            "type": "array",
+            "description": "Lista de parcelas",
+            "items": {
+              "$ref": "#/components/schemas/ParcelasResponse"
+            }
+          },
+          "peridiocidade": {
+            "type": "string",
+            "description": "Periodicidade de sorteios normais (não especiais) do plano de capitalização \n String(30)"
+          },
+          "prazoPlano": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Período de meses de vigência do título de capitalização \n Numérico(13)"
+          },
+          "qtdMaxTitulo": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Quantidade máxima de títulos do plano permitidas para contratação em uma única transação \n Numérico(5)"
+          },
+          "qtdTitular": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Quantidade máxima de titulares no título de capitalização \n Numérico(2)"
+          },
+          "qtdTotParcela": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Quantidade total de parcelas do plano de capitalização \n Numérico(3)"
+          },
+          "sorteios": {
+            "type": "array",
+            "description": "Lista de sorteios",
+            "items": {
+              "$ref": "#/components/schemas/SorteioResponse"
+            }
+          },
+          "tpPgto": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Código do tipo de pagamento do título de capitalização \n Numérico(1)"
+          },
+          "tpSorteio": {
+            "type": "string",
+            "description": "Tipo de sorteio normal (não especial) do plano de capitalização \n String(30)"
+          },
+          "vlrMaxParcela": {
+            "type": "number",
+            "description": "Valor máximo de parcela do plano \n Numérico(13)"
+          },
+          "vlrMinParcela": {
+            "type": "number",
+            "description": "Valor mínimo de parcela do plano \n Numérico(13)"
+          },
+          "vlrMultParcela": {
+            "type": "number",
+            "description": "Valor múltiplo multiplicador sobre o valor de parcela do plano \n Numérico(5)"
+          },
+          "vlrParcelaFixa": {
+            "type": "number",
+            "description": "Valor fixo de parcela para o plano de capitalização \n Numérico(13)"
+          }
+        },
+        "title": "PlanoResponse"
+      },
+      "PlanoRequest": {
+        "type": "object",
+        "properties": {
+          "midia": {
+            "type": "string"
+          },
+          "numPlano": {
+            "type": "string"
+          }
+        },
+        "title": "PlanoRequest"
+      },
+      "SaidaBloco107Response": {
+        "type": "object",
+        "properties": {
+          "admisEmpr": {
+            "type": "string",
+            "description": "Data de amissao na empresa"
+          },
+          "anoMesAtvdd": {
+            "type": "string",
+            "description": "Data atividade"
+          },
+          "bloco": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "cargo": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Cargo"
+          },
+          "categoriaProfissionalCredt": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Categoria profissional"
+          },
+          "codigoProfissao": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Codigo da profissao"
+          },
+          "ctrlCnpj": {
+            "type": "string",
+            "description": "Cnpj"
+          },
+          "descAbrevCategoria": {
+            "type": "string",
+            "description": "Descricao abreviada categoria"
+          },
+          "descCargo": {
+            "type": "string",
+            "description": "Descricao cargo"
+          },
+          "descCodigoProfissao": {
+            "type": "string",
+            "description": "Descricao profissao"
+          },
+          "descPerdcRendaEmpregado": {
+            "type": "string",
+            "description": "Descricao renda"
+          },
+          "filialCnpj": {
+            "type": "string",
+            "description": "Filial caso tenha"
+          },
+          "idCompvRenda": {
+            "type": "string",
+            "description": "Id comprovante de renda"
+          },
+          "numSequencialEmpregado": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Numero de registro"
+          },
+          "numeroCnpj": {
+            "type": "string",
+            "description": "Numero do cnpj"
+          },
+          "perdcRendaEmpregado": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Renda do empregado"
+          },
+          "razaoSocial": {
+            "type": "string",
+            "description": "Razao social"
+          },
+          "rendaPessoa": {
+            "type": "number",
+            "format": "double",
+            "description": "Renda da pessoa"
+          }
+        }
+      },
+      "SaidaBloco103Response": {
+        "type": "object",
+        "properties": {
+          "authEnvioSMS": {
+            "type": "string",
+            "description": "${docswagger.telefone.authEnvioSMS}"
+          },
+          "autorizacaoEnvioEmail": {
+            "type": "integer",
+            "format": "int32",
+            "description": "${docswagger.enderecoEletronicoCliente.autorizacaoEnvioEmail}"
+          },
+          "bairroEndereco": {
+            "type": "string",
+            "description": "${docswagger.endereco.bairro}"
+          },
+          "bloco": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "caixaPostal": {
+            "type": "integer",
+            "format": "int32",
+            "description": "${docswagger.endereco.caixaPostal}"
+          },
+          "cargoContatoEmail": {
+            "type": "integer",
+            "format": "int32",
+            "description": "${docswagger.enderecoEletronicoCliente.cargoContatoEmail}"
+          },
+          "cargoContatoFone": {
+            "type": "integer",
+            "format": "int32",
+            "description": "${docswagger.telefone.cargoContatoFone}"
+          },
+          "categoriaEndereco": {
+            "type": "integer",
+            "format": "int32",
+            "description": "${docswagger.endereco.categoriaEndereco}"
+          },
+          "cep": {
+            "type": "integer",
+            "format": "int32",
+            "description": "${docswagger.endereco.cep}"
+          },
+          "cepComplemento": {
+            "type": "integer",
+            "format": "int32",
+            "description": "${docswagger.endereco.cepComplemento}"
+          },
+          "cmotivoDevlc": {
+            "type": "integer",
+            "format": "int32",
+            "description": "${docswagger.endereco.cmotivoDevlc}"
+          },
+          "contatoPessoa": {
+            "type": "string",
+            "description": "${docswagger.telefone.contatoPessoa}"
+          },
+          "dbloqEndPessoa": {
+            "type": "string",
+            "description": "${docswagger.endereco.dbloqEndPessoa}"
+          },
+          "ddd": {
+            "type": "string",
+            "description": "${docswagger.telefone.ddd}"
+          },
+          "ddi": {
+            "type": "string",
+            "description": "${docswagger.telefone.ddi}"
+          },
+          "descCargoContatoEmail": {
+            "type": "string",
+            "description": "${docswagger.enderecoEletronicoCliente.descCargoContatoEmail}"
+          },
+          "descCargoContatoFone": {
+            "type": "string",
+            "description": "${docswagger.telefone.descCargoContatoFone}"
+          },
+          "descCategoriaEndereco": {
+            "type": "string",
+            "description": "${docswagger.endereco.descCategoriaEndereco}"
+          },
+          "descComplementoEndereco": {
+            "type": "string",
+            "description": "${docswagger.endereco.complemento}"
+          },
+          "descEspceEndereco": {
+            "type": "string",
+            "description": "${docswagger.endereco.descEspceEndereco}"
+          },
+          "descImovelProprio": {
+            "type": "string",
+            "description": "${docswagger.endereco.descImovelProprio}"
+          },
+          "descPaisGeogr": {
+            "type": "string",
+            "description": "${docswagger.endereco.descPaisGeogr}"
+          },
+          "descTipoEnderecoEletronico": {
+            "type": "string",
+            "description": "${docswagger.enderecoEletronicoCliente.descTipoEnderecoEletronico}"
+          },
+          "descTipoFone": {
+            "type": "string",
+            "description": "${docswagger.telefone.descTipoFone}"
+          },
+          "endereco": {
+            "type": "integer",
+            "format": "int32",
+            "description": "${docswagger.endereco.endereco}"
+          },
+          "enderecoEletronico": {
+            "type": "string",
+            "description": "${docswagger.enderecoEletronicoCliente.enderecoEletronico}"
+          },
+          "espceEndereco": {
+            "type": "integer",
+            "format": "int32",
+            "description": "${docswagger.endereco.espceEndereco}"
+          },
+          "fone": {
+            "type": "integer",
+            "format": "int32",
+            "description": "${docswagger.telefone.fone}"
+          },
+          "imotivoDevlc": {
+            "type": "string",
+            "description": "${docswagger.endereco.imotivoDevlc}"
+          },
+          "imovelProprio": {
+            "type": "integer",
+            "format": "int32",
+            "description": "${docswagger.endereco.imovelProprio}"
+          },
+          "indSequencialEletronico": {
+            "type": "string",
+            "description": "${docswagger.enderecoEletronicoCliente.indSequencialEletronico}"
+          },
+          "indTipoFone": {
+            "type": "string",
+            "description": "${docswagger.telefone.indTipoFone}"
+          },
+          "logradouroNumero": {
+            "type": "string",
+            "description": "${docswagger.endereco.logradouroNumero}"
+          },
+          "logradouroPessoa": {
+            "type": "string",
+            "description": "${docswagger.endereco.logradouroPessoa}"
+          },
+          "municipioEndereco": {
+            "type": "string",
+            "description": "${docswagger.endereco.municipioEndereco}"
+          },
+          "numNlinTfoni": {
+            "type": "integer",
+            "format": "int32",
+            "description": "${docswagger.telefone.numNlinTfoni}"
+          },
+          "numSequencialEletronico": {
+            "type": "integer",
+            "format": "int32",
+            "description": "${docswagger.enderecoEletronicoCliente.numSequencialEletronico}"
+          },
+          "numSequencialPessoa": {
+            "type": "string"
+          },
+          "numSequencialTelefone": {
+            "type": "integer",
+            "format": "int32",
+            "description": "${docswagger.telefone.numSequencialTelefone}"
+          },
+          "pais": {
+            "type": "integer",
+            "format": "int32",
+            "description": "${docswagger.endereco.pais}"
+          },
+          "paisGeogr": {
+            "type": "integer",
+            "format": "int32",
+            "description": "${docswagger.endereco.paisGeogr}"
+          },
+          "pessoaContatoEndereco": {
+            "type": "string",
+            "description": "${docswagger.enderecoEletronicoCliente.pessoaContatoEndereco}"
+          },
+          "pstalExterZip": {
+            "type": "string",
+            "description": "${docswagger.endereco.caixaPostal}"
+          },
+          "ramal": {
+            "type": "string",
+            "description": "${docswagger.telefone.ramal}"
+          },
+          "resideDesde": {
+            "type": "integer",
+            "format": "int32",
+            "description": "${docswagger.endereco.resideDesde}"
+          },
+          "sitEnderecoPessoa": {
+            "type": "integer",
+            "format": "int32",
+            "description": "${docswagger.endereco.sitEnderecoPessoa}"
+          },
+          "tipoEnderecoEletronico": {
+            "type": "integer",
+            "format": "int32",
+            "description": "${docswagger.enderecoEletronicoCliente.tipoEnderecoEletronico}"
+          },
+          "tipoFone": {
+            "type": "integer",
+            "format": "int32",
+            "description": "${docswagger.telefone.tipoFone}"
+          },
+          "ufEndereco": {
+            "type": "string",
+            "description": "${docswagger.endereco.ufEndereco}"
+          }
+        }
+      },
+      "SaidaBloco101Response": {
+        "type": "object",
+        "properties": {
+          "bloco": {
+            "type": "integer",
+            "format": "int32",
+            "description": "\"Bloco de dados do cliente com ate 19 ocorrencias.\n  Numerico(3)\"\n"
+          },
+          "capacidadeCivil": {
+            "type": "integer",
+            "format": "int32",
+            "description": "\"Codigo capacidade civil.\n  1 - SOLTEIRO \n  2 - CASADO COM UNIV.BENS\n  3 - CASADO COM PARCBENS\n  4 - CASADO SEPARACAO BENS\n  5 - SEPARADO JUDIC.\n  6 - DIVORCIADO\n  8 - VIUVO\n  9 - UNIAO ESTAVEL\n  Numerico(2)\"\n"
+          },
+          "conjugadoCompleto": {
+            "type": "string",
+            "description": "\"Nome do conjuge.\n  String(70)\"\n"
+          },
+          "cpfConjugado": {
+            "type": "string",
+            "description": "\"CPF do conjuge se tiver.\n  String(9)\"\n"
+          },
+          "ctrlCpfConjugado": {
+            "type": "string",
+            "description": "\"Digito verificador CPF do conjuge.\n  String(2)\"\n"
+          },
+          "dataNasc": {
+            "type": "string",
+            "description": "\"Data de nascimento. Obrigatorio para cadastrar no PSDC.\n  String(10)\"\n"
+          },
+          "descCapacidadeCivil": {
+            "type": "string",
+            "description": "\"Descricao capacidade civil.\n  String(40)\"\n"
+          },
+          "descDocPessoa": {
+            "type": "string",
+            "description": "\"Descricao do tipo de documento do cliente.\n  String(60)\"\n"
+          },
+          "descEstadoCivil": {
+            "type": "string",
+            "description": "\"Descricao do estado civil.\n  String(20)\"\n"
+          },
+          "descOrgaoEmissor": {
+            "type": "string",
+            "description": "\"Descricao do orgao emissor do documento informado.\n  String(30)\"\n"
+          },
+          "descSexo": {
+            "type": "string",
+            "description": "\"Obrigatorio para cadastrar no PSDC.\n  F - Feminino\n  M - Masculino\n String(1)\"\n"
+          },
+          "descSituacaoCivil": {
+            "type": "string",
+            "description": "\"Descricao situacao civil.\n  String(30)\"\n"
+          },
+          "docPessoa": {
+            "type": "integer",
+            "format": "int32",
+            "description": "\"Codigo do documento da pessoa:\n  006 - CPF\n  008 - CNH\n  023 - RG ESTRG\n  547 - RG com CPF\"\n"
+          },
+          "emisDoc": {
+            "type": "string",
+            "description": "\"Data de emissao do documento.\n  String(10)\"\n"
+          },
+          "estadoCivil": {
+            "type": "integer",
+            "format": "int32",
+            "description": "\"Codigo do estado civil.\n  Numerico(2)\"\n"
+          },
+          "idMae": {
+            "type": "integer",
+            "format": "int32",
+            "description": "\"Identificador se preenchido ou nao o nome da mãe.\n  0 - PREENCHIDO\n  1 - DESCONHECIDO\n  2 - NÃO TEM\n  3 - NÃO INFORMADO\n  Numerico(1)\"\n"
+          },
+          "idPai": {
+            "type": "integer",
+            "format": "int32",
+            "description": "\"Identificador se preenchido ou nao o nome do pai.\n  0 - PREENCHIDO\n  1 - DESCONHECIDO\n  2 - NÃO TEM\n  3 - NÃO INFORMADO\n  Numerico(1)\"\n"
+          },
+          "municipioNasc": {
+            "type": "integer",
+            "format": "int32",
+            "description": "\"Codigo dos municipios onde nasceu o cliente.\n  Numerico(10)\"\n"
+          },
+          "nascPais": {
+            "type": "string",
+            "description": "\"Codigo dos paises de nascimento do cliente Default = 46 Brasil.\n  String(3)\"\n"
+          },
+          "nascUf": {
+            "type": "string",
+            "description": "${docswagger.incluir-cliente.nasUf}"
+          },
+          "nomeCliente": {
+            "type": "string",
+            "description": "\"Nome do cliente.\n  String(70)\"\n"
+          },
+          "nomeMae": {
+            "type": "string",
+            "description": "\"Nome da mãe completo.\n  String(70)\"\n"
+          },
+          "nomeMunicipioNasc": {
+            "type": "string",
+            "description": "\"Nome do municipio onde nasceu o cliente.\n  String(40)\"\n"
+          },
+          "nomeMunicipioNascEstrg": {
+            "type": "string",
+            "description": "\"Nome do municipio de nascimento se estrangeiro.\n  String(40)\"\n"
+          },
+          "nomeNascPais": {
+            "type": "string",
+            "description": "\"Nome do pais de nacionalidade.\n   String(20)\"\n"
+          },
+          "nomePai": {
+            "type": "string",
+            "description": "\"Nome do pai completo.\n  String(70)\"\n"
+          },
+          "nomePaisDoc": {
+            "type": "string",
+            "description": "\"Nome do pais do documento.\n  String(60)\n"
+          },
+          "numDocPessoa": {
+            "type": "string",
+            "description": "\"Numero do documento da pessoa.\n  String(15)\"\n"
+          },
+          "orgaoEmissor": {
+            "type": "string",
+            "description": "${docswagger.documento.orgaoEmissor}"
+          },
+          "paisDoc": {
+            "type": "integer",
+            "format": "int32",
+            "description": "\"Codigo do pais onde foi emitido o documento.\n  String(30)\"\n"
+          },
+          "sexo": {
+            "type": "string",
+            "description": "\"Obrigatorio para cadastrar no PSDC.\n  F - Feminino\n  M - Masculino\n String(1)\"\n"
+          },
+          "siglaNascUF": {
+            "type": "string",
+            "description": "\"Unidades Federativas onde nasceu o cliente.\n  String(2)\"\n"
+          },
+          "siglaUfDoc": {
+            "type": "string",
+            "description": "\"Unidade federativa. Pode ser qualquer sigla dos estados federativos do brasil.\n  String(2)\"\n"
+          },
+          "situacaoCivil": {
+            "type": "integer",
+            "format": "int32",
+            "description": "\"Codigo situacao civil.\n  Numerico(02)\"\n"
+          },
+          "ufDoc": {
+            "type": "integer",
+            "format": "int32",
+            "description": "\"Unidade federativa. Pode ser qualquer sigla dos estados federativos do brasil.\n  Numerico(6)\"\n"
+          },
+          "vencimentoDoc": {
+            "type": "string",
+            "description": "\"Data de vencimento do documento.\n  String(10)\"\n"
+          }
+        }
+      },
+      "ConsultarClienteResponse": {
+        "type": "object",
+        "properties": {
+          "classe": {
+            "type": "integer",
+            "format": "int32",
+            "description": "\"Codigo de segmento.\n  Numerico(3)\"\n"
+          },
+          "club": {
+            "type": "integer",
+            "format": "int64",
+            "description": "\"Código do club do cliente.\n  Numerico(10)\"\n"
+          },
+          "midia": {
+            "type": "string",
+            "description": "\"Canal de Contratação.\n  Inteiro(3)\"\n"
+          },
+          "modalidade": {
+            "type": "integer",
+            "format": "int32",
+            "description": "\"Codigo modalidade.\n  Numerico(1)\"\n"
+          },
+          "numeroConsultas": {
+            "type": "integer",
+            "format": "int32",
+            "description": "\"Numero de consultas.\n  Numerico(5)\"\n"
+          },
+          "razaoSocial": {
+            "type": "string",
+            "description": "Razao Social"
+          },
+          "saidaBloco101": {
+            "$ref": "#/components/schemas/SaidaBloco101Response"
+          },
+          "saidaBloco103": {
+            "$ref": "#/components/schemas/SaidaBloco103Response"
+          },
+          "saidaBloco107": {
+            "$ref": "#/components/schemas/SaidaBloco107Response"
+          },
+          "situacaoClasse": {
+            "type": "string",
+            "description": "\"Situacao da classe.\n  String(1)\"\n"
+          }
+        }
+      },
+      "ConsultarClienteRequest": {
+        "type": "object",
+        "properties": {
+          "cpf": {
+            "type": "string",
+            "description": "\"Numero base do CPF/CNPJ.\n  String(14)\"\n"
+          },
+          "midia": {
+            "type": "integer",
+            "format": "int32",
+            "description": "\"Canal de Contratação.\n  Inteiro(3)\"\n"
+          },
+          "modalidade": {
+            "type": "integer",
+            "format": "int32",
+            "description": "\"Codigo modalidade.\n  Numerico(1)\"\n"
+          }
+        }
+      },
+      "EnderecoResponse": {
+        "type": "object",
+        "properties": {
+          "bairro": {
+            "type": "string",
+            "description": "\"Bairro do endereco do cliente.\n  String(40)\"\n"
+          },
+          "cep": {
+            "type": "integer",
+            "format": "int64",
+            "description": "\"CEP endereço de nascimento.\n  Numerico(5)\"\n"
+          },
+          "cidade": {
+            "type": "string",
+            "description": "\"Cidade do endereco do cliente.\n  String(40)\"\n"
+          },
+          "complemento": {
+            "type": "string",
+            "description": "\"Complemento do logradouro do cliente.\n  String(30)\"\n"
+          },
+          "complementoCep": {
+            "type": "integer",
+            "format": "int64",
+            "description": "\"Complemento CEP de nascimento.\n  Numerico(3)\"\n"
+          },
+          "logradouro": {
+            "type": "string",
+            "description": "\"Nome do logradouro onde reside a pessoa.\n  String(70)\"\n"
+          },
+          "numero": {
+            "type": "string",
+            "description": "\"Numero do logradouro onde reside a pessoa.\n  String(7)\"\n"
+          },
+          "uf": {
+            "type": "string",
+            "description": "\"Unidade Federativa do endereço da pessoa.\n  String(2)\"\n"
+          }
+        }
+      },
+      "DadosPessoaisResponse": {
+        "type": "object",
+        "properties": {
+          "codOcupacao": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Codigo da profissao"
+          },
+          "dataNasc": {
+            "type": "string",
+            "description": "\"Data de nascimento. Obrigatorio para cadastrar no PSDC.\n  String(10)\"\n"
+          },
+          "descOcupacao": {
+            "type": "string",
+            "description": "Descricao desocupacao"
+          },
+          "documento": {
+            "type": "string",
+            "description": "\"Numero do documento da pessoa.\n  String(15)\"\n"
+          },
+          "email": {
+            "type": "string",
+            "description": "Endereco de email"
+          },
+          "estadoCivil": {
+            "type": "string",
+            "description": "\"Codigo do estado civil.\n  Numerico(2)\"\n"
+          },
+          "indTitular": {
+            "type": "string",
+            "description": "\"Cliente se declara como Pessoa Exposta Publicamente.\n    1 - NAO\n    2 - SIM\"\n"
+          },
+          "numEletronico": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Endereco de email"
+          },
+          "numPostal": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Numero postal"
+          },
+          "orgaoExp": {
+            "type": "string",
+            "description": "\"Órgao de expedicao do documento do Cliente.\n  String(4)\"\n"
+          },
+          "sexo": {
+            "type": "string",
+            "description": "\"Obrigatorio para cadastrar no PSDC.\n  F - Feminino\n  M - Masculino\n String(1)\"\n"
+          },
+          "tpDocto": {
+            "type": "string",
+            "description": "\"Descricao do tipo de documento do cliente.\n  String(60)\"\n"
+          },
+          "tpPartcTitulo": {
+            "type": "string",
+            "description": "\"Indicador de cliente correntista.\n  S - Sim\n  N - Nao\"\n"
+          }
+        }
+      },
+      "ClienteResponse": {
+        "type": "object",
+        "properties": {
+          "club": {
+            "type": "integer",
+            "format": "int64",
+            "description": "\"Código do club do cliente.\n  Numerico(10)\"\n"
+          },
+          "nome": {
+            "type": "string",
+            "description": "\"Nome do cliente.\n  String(70)\"\n"
+          },
+          "tpPartc": {
+            "type": "integer",
+            "format": "int64",
+            "description": "\"Tipo de participacao do cliente no titulo de capitalizacao\n  01 - Titular\n  05 - Procurador\n  35 - Subscritor\n  Numerico(2)\n"
+          }
+        }
+      },
+      "BuscarDadosClienteResponse": {
+        "type": "object",
+        "properties": {
+          "cliente": {
+            "$ref": "#/components/schemas/ClienteResponse"
+          },
+          "cpf": {
+            "type": "string",
+            "description": "\"Numero base do CPF/CNPJ.\n  String(14)\"\n"
+          },
+          "dadosPessoais": {
+            "$ref": "#/components/schemas/DadosPessoaisResponse"
+          },
+          "endereco": {
+            "$ref": "#/components/schemas/EnderecoResponse"
+          },
+          "midia": {
+            "type": "string",
+            "description": "\"Canal de Contratação.\n  Inteiro(3)\"\n"
+          }
+        }
+      },
+      "BuscarDadosClienteRequest": {
+        "type": "object",
+        "properties": {
+          "club": {
+            "type": "string"
+          },
+          "midia": {
+            "type": "string"
+          },
+          "tpPartc": {
+            "type": "string"
+          }
+        }
+      },
+      "ValidarDocumentoResponse": {
+        "type": "object",
+        "properties": {
+          "club": {
+            "type": "string"
+          },
+          "cpf": {
+            "type": "string"
+          },
+          "dataNasc": {
+            "type": "string"
+          },
+          "indicadorCliente": {
+            "type": "string"
+          },
+          "midia": {
+            "type": "string"
+          },
+          "razaoSocial": {
+            "type": "string"
+          }
+        }
+      },
+      "ValidarDocumentoRequest": {
+        "type": "object",
+        "properties": {
+          "documento": {
+            "type": "string",
+            "description": "Documento do cliente"
+          },
+          "midia": {
+            "type": "string",
+            "description": "Canal de Contratação \n Inteiro(3)"
+          }
+        }
+      },
+      "PlanoProdutoResponse": {
+        "type": "object",
+        "properties": {
+          "descTpPgto": {
+            "type": "string",
+            "description": "Descrição do tipo de pagamento do título de capitalização \n String(50)"
+          },
+          "empresaPlano": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Empresa do plano de capitalização \n Inteiro(3)"
+          },
+          "mes": {
+            "type": "string",
+            "description": "Indicador de existência de mês de sorteio especial. \n S - Sim  N - Não \n String(1)"
+          },
+          "mesesCarencia": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Período em meses da carência para resgate do título de capitalização \n Numérico(3)"
+          },
+          "nomeFantasia": {
+            "type": "string",
+            "description": "Nome fantasia (comercial) do plano de capitalização \n String(50)"
+          },
+          "nomeModalidade": {
+            "type": "string",
+            "description": "Nome da modalidade do plano de capitalização \n String(50)"
+          },
+          "numModalidade": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Código da modalidade \n Inteiro(3)"
+          },
+          "numPlano": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Número do plano \n Inteiro(4)"
+          },
+          "numProcessoSUSEP": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Número do Processo SUSEP \n Numérico(3)"
+          },
+          "numTpPgto": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Código do tipo de pagamento do título de capitalização \n Numérico(1)"
+          },
+          "prazoPlano": {
+            "type": "string",
+            "description": "Período de meses de vigência do título de capitalização \n Numérico(13)"
+          },
+          "premioInstantaneo": {
+            "type": "string",
+            "description": "Prêmio Instantâneo \n String(1)"
+          },
+          "processoSUSEP": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Código do Processo SUSEP \n Numérico(8)"
+          },
+          "qtdMax": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Quantidade máxima de títulos do plano permitidas para contratação em uma única transação \n Numérico(5)"
+          },
+          "qtdSorteioPremioMaxVlr": {
+            "type": "number",
+            "description": "Quantidade de sorteio do prêmio de maior valor \n Numérico(17)"
+          },
+          "qtdTotParcela": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Quantidade total de parcelas do plano de capitalização \n Numérico(3)"
+          },
+          "razaoSocial": {
+            "type": "string",
+            "description": "Nome da entidade filantrópica \n String(70)"
+          },
+          "vlrMax": {
+            "type": "number",
+            "description": "Valor máximo de parcela do plano de capitalização \n Numérico(13)"
+          },
+          "vlrMaxSorteio": {
+            "type": "number",
+            "description": "Valor Mínimo do Sorteio \n Numérico(17)"
+          },
+          "vlrMin": {
+            "type": "number",
+            "description": "Valor mínimo de parcela do plano de capitalização \n Numérico(13)"
+          },
+          "vlrMinSorteio": {
+            "type": "number",
+            "description": "Valor Mínimo do Sorteio \n Numérico(17)"
+          },
+          "vlrMult": {
+            "type": "number",
+            "description": "Valor múltiplo multiplicador sobre o valor de parcela do plano de capitalização. \n Numérico(5)"
+          },
+          "vlrResgatePago": {
+            "type": "number",
+            "description": "Valor do Resgate Pago \n Numérico(17)"
+          }
+        }
+      },
+      "ProdutosCanalResponse": {
+        "type": "object",
+        "properties": {
+          "midia": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Canal de Contratação \n Inteiro(3)"
+          },
+          "produtos": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PlanoProdutoResponse"
+            }
+          },
+          "totRegistro": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Quantidade total de registros"
+          }
+        }
+      },
+      "ProdutosCanalRequest": {
+        "type": "object",
+        "properties": {
+          "midia": {
+            "type": "string",
+            "description": "Canal de Contratação \n Inteiro(3)"
+          },
+          "modalidade": {
+            "type": "string",
+            "description": "Código da modalidade \n Inteiro(3)"
+          }
+        }
+      },
+      "RegistroSaida": {
+        "type": "object",
+        "properties": {
+          "codBloco": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Codigo bloco"
+          },
+          "codEnderecoComplemento": {
+            "type": "string",
+            "description": "Complemento do endereco"
+          },
+          "codEnderecoPessoa": {
+            "type": "string",
+            "description": "Codigo endereco da pessoa"
+          },
+          "codTelefone": {
+            "type": "string",
+            "description": "Codigo telefone"
+          }
+        }
+      },
+      "IncluirClienteResponse": {
+        "type": "object",
+        "properties": {
+          "classe": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Classe"
+          },
+          "club": {
+            "type": "string",
+            "description": "\"Código do club do cliente.\n  Numerico(10)\"\n"
+          },
+          "empresa": {
+            "type": "string",
+            "description": "\"Empresa relacionada ao cliente.\"\n"
+          },
+          "midia": {
+            "type": "string",
+            "description": "\"Canal de Contratação.\n  Inteiro(3)\"\n"
+          },
+          "modalidade": {
+            "type": "string",
+            "description": "\"Codigo modalidade.\n  Numerico(1)\"\n"
+          },
+          "numeroConsultas": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Numero de consultar"
+          },
+          "registroSaida": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RegistroSaida"
+            }
+          },
+          "request": {
+            "$ref": "#/components/schemas/IncluirClienteRequest"
+          },
+          "situacaoClasse": {
+            "type": "string",
+            "description": "Situacao da classe"
+          }
+        }
+      },
+      "DadosProfissional": {
+        "type": "object",
+        "properties": {
+          "categoriaProfissionalCredt": {
+            "type": "integer",
+            "description": "Codigo categoria profissional:\n  * 1 - Assalariado\n  * 2 - Autonomo\n  * 3 - Empresario\n  * 4 - Profissional Liberal\n  * 6 - Produtor rural\n  * 7 - Aposentado\n  * 8 - Pensionista\n  * 9 - Estudante e afins\n  * 10 - Do lar\n  * 11 - Nunca trabalhou\n  * 12 - Estagiario\n  * 13 - Desempregado\n",
+            "example": 3
+          },
+          "razaoSocial": {
+            "type": "string",
+            "description": "Nome razao social"
+          },
+          "numeroCnpj": {
+            "type": "string",
+            "description": "Numero do CNPJ"
+          },
+          "codigoProfissao": {
+            "type": "integer",
+            "description": "Codigo da profissao",
+            "example": 23
+          },
+          "cargo": {
+            "type": "integer",
+            "description": "O codigo do cargo que cliente ocupa",
+            "example": 1
+          },
+          "admisEmpr": {
+            "type": "string",
+            "description": "Data admissao da pessoa",
+            "example": "20.10.2000"
+          },
+          "anoMesAtvdd": {
+            "type": "string",
+            "description": "Data inicio atividade",
+            "example": "200003"
+          },
+          "rendaPessoa": {
+            "type": "string",
+            "description": "Valor da renda da pessoa"
+          },
+          "daRenda": {
+            "type": "string",
+            "description": "Data da ultima renda",
+            "example": "20.10.2000"
+          },
+          "idCompvRenda": {
+            "type": "string",
+            "description": "Identificador da renda"
+          }
+        }
+      },
+      "AreaEnderecoEletronico": {
+        "type": "object",
+        "properties": {
+          "tipoEnderecoEletronico": {
+            "type": "integer",
+            "description": "Tipo do endereco eletronico:\n* 1 - E-MAIL\n* 2 - Home-Page\n* 3 - Blog\n* 5 - Msn\n",
+            "example": 5
+          },
+          "pessoaContatoEndereco": {
+            "type": "string",
+            "description": "Nome da pessoa para contato",
+            "example": "MARIA MARIA"
+          },
+          "enderecoEletronico": {
+            "type": "string",
+            "description": "Descricao do endereco eletronico",
+            "example": "MARIA@EMAIL.COM"
+          },
+          "autorizacaoEnvioEmail": {
+            "type": "integer",
+            "description": "Autoriza envio do endereco eletronico",
+            "example": 1
+          }
+        }
+      },
+      "AreaTelefone": {
+        "type": "object",
+        "properties": {
+          "tipoFone": {
+            "type": "string",
+            "description": "Codigo tipo de telefone.\n* 1 - Celular\n* 2 - FAX\n* 3 - RESIDENCIAL\n* 4 - COMERCIAL\n* 5 - CELUALR COMERCIAL\n* 6 - CONTATO\n"
+          },
+          "ddi": {
+            "type": "string",
+            "description": "DDI - Discagem direta a distancia"
+          },
+          "ddd": {
+            "type": "string",
+            "description": "DDD - Discagem direta internacional"
+          },
+          "fone": {
+            "type": "string",
+            "description": "Numero do telefone numerico"
+          },
+          "ramal": {
+            "type": "string",
+            "description": "Ramal"
+          },
+          "contatoPessoa": {
+            "type": "string",
+            "description": "Nome para contato"
+          },
+          "authEnvioSMS": {
+            "type": "string",
+            "description": "Codigo autoriza envio de mensagem por SMS.\n* S - SIM\n* N - NAO\n"
+          }
+        }
+      },
+      "AreaEndereco": {
+        "type": "object",
+        "properties": {
+          "endereco": {
+            "type": "integer",
+            "description": "Codigo especie do endereco.\n* 1 - Nacional\n* 2 - Nac sem CEP\n* 3 - Nac CAIXA POSTAL\n* 4 - Internacional\n* 5 - Internacional com CAIXA POSTAL\n",
+            "example": 4
+          },
+          "categoriaEndereco": {
+            "type": "string",
+            "description": "Codigo categoria do endereco.\n* 1 - Residencial\n* 2 - Comercial\n* 3 - Contato\n",
+            "example": "3"
+          },
+          "espceEndereco": {
+            "type": "integer",
+            "description": "Codigo especie do endereco",
+            "example": 0
+          },
+          "paisGeogr": {
+            "type": "integer",
+            "description": "Codigo do pais de nascimento",
+            "example": 1
+          },
+          "cep": {
+            "type": "integer",
+            "description": "CEP endereço de nascimento",
+            "example": 12237
+          },
+          "cepComplemento": {
+            "type": "integer",
+            "description": "Complemento CEP de nascimento",
+            "example": 140
+          },
+          "caixaPostal": {
+            "type": "integer",
+            "description": "Caixa postal se estrangeiro"
+          },
+          "logradouroPessoa": {
+            "type": "string",
+            "description": "Nome do logradouro onde reside a pessoa"
+          },
+          "logradouroNumero": {
+            "type": "string",
+            "description": "Numero do logradouro onde reside a pessoa"
+          },
+          "bairroEndereco": {
+            "type": "string",
+            "description": "Nome do bairro"
+          },
+          "ufEndereco": {
+            "type": "string",
+            "description": "Unidade Federativa do endereço da pessoa",
+            "example": "SP"
+          },
+          "municipioEndereco": {
+            "type": "string",
+            "description": "Nome do municipio onde reside a pessoa"
+          },
+          "imovelProprio": {
+            "type": "string",
+            "description": "Uso do endereco.\n* 1 - Propria\n* 2 - Alugada\n"
+          },
+          "resideDesde": {
+            "type": "string",
+            "description": "Data desde quando reside"
+          },
+          "pais": {
+            "type": "string",
+            "description": "Codigo do país onde reside a pessoa"
+          }
+        }
+      },
+      "AreaDocumento": {
+        "type": "object",
+        "properties": {
+          "docPessoa": {
+            "type": "string",
+            "description": "Codigo do documento da pessoa:\n  * 006 - CPF\n  * 008 - CNH\n  * 023 - RG ESTRG\n  * 547 - RG com CPF\n",
+            "example": "006"
+          },
+          "numDocPessoa": {
+            "type": "string",
+            "description": "Numero do documento da pessoa.",
+            "example": "123456789"
+          },
+          "orgaoEmissao": {
+            "type": "string",
+            "description": "Orgao emissor do documento informado",
+            "example": "SSP"
+          },
+          "ufDoc": {
+            "type": "integer",
+            "description": "Unidade federativa. Pode ser qualquer sigla dos estados federativos do brasil",
+            "example": 58
+          },
+          "siglaUfDoc": {
+            "type": "string",
+            "description": "Unidade federativa. Pode ser qualquer sigla dos estados federativos do brasil",
+            "example": "SP"
+          },
+          "paisDoc": {
+            "type": "integer",
+            "description": "Codigo do pais onde foi emitido o documento",
+            "example": 46
+          },
+          "emisDoc": {
+            "type": "string",
+            "description": "Data de emissao do documento",
+            "example": "20.02.2000"
+          },
+          "vencimentoDoc": {
+            "type": "string",
+            "description": "Data de vencimento do documento",
+            "example": "05.07.2010"
+          }
+        }
+      },
+      "IncluirClienteRequest": {
+        "type": "object",
+        "properties": {
+          "modalidade": {
+            "type": "integer",
+            "format": "int64",
+            "example": 1
+          },
+          "plano": {
+            "type": "integer",
+            "format": "int64",
+            "example": 198772
+          },
+          "cpfCnpj": {
+            "type": "string",
+            "description": "Documento CPF/CNPJ",
+            "example": "12345678"
+          },
+          "declaraPep": {
+            "type": "string",
+            "description": "Se declara pessoa publicamente exposta\n* 1 - NÃO\n* 2 - SIM\n",
+            "example": "1"
+          },
+          "temRelacPep": {
+            "type": "string",
+            "description": "Cliente possui algum relacionamento com PEP"
+          },
+          "autConsBancCentral": {
+            "type": "string",
+            "description": "Cliente autoriza consulta de informacoes de credito do Banco Central.\n  * N - NÃO\n  * S - SIM\n"
+          },
+          "admFundos": {
+            "type": "string",
+            "description": "Cliente realiza operacao de investimentos em nome de terceiros"
+          },
+          "autorTransmissao": {
+            "type": "string",
+            "description": "Cliente autoriza a transmissao de ordens por procurador"
+          },
+          "mobilidadeReduzida": {
+            "type": "string",
+            "description": "Cliente apresenta mobilidade reduzida ou possui deficiencia.\n* 0 - NÃO POSSUI\n* 1 - FISICA \n* 2 - VISUAL \n* 3 - MENTAL \n* 4 - AUDITIVA \n* 5 - MOBILIDADE REDUZIDA\n",
+            "example": "0"
+          },
+          "nomeCliente": {
+            "type": "string",
+            "description": "Nome do cliente",
+            "example": "Fulano Beltrano"
+          },
+          "dataNasc": {
+            "type": "string",
+            "description": "Data de nascimento. Obrigatorio para cadastrar no PSDC",
+            "example": "25.05.1995"
+          },
+          "sexo": {
+            "type": "string",
+            "description": "Obrigatorio para cadastrar no PSDC.\n  * F - Feminino\n  * M - Masculino\n",
+            "example": "F"
+          },
+          "nascPais": {
+            "type": "string",
+            "description": "Codigo dos paises de nascimento do cliente Default = 46 Brasil",
+            "example": "46"
+          },
+          "nascUF": {
+            "type": "integer",
+            "description": "Codigo das Unidades Federativas onde nasceu o cliente",
+            "example": 54
+          },
+          "siglaNascUF": {
+            "type": "string",
+            "description": "Unidades Federativas onde nasceu o cliente",
+            "example": "GO"
+          },
+          "municipioNasc": {
+            "type": "integer",
+            "description": "Codigo dos municipios onde nasceu o cliente",
+            "example": 28147
+          },
+          "nomeMunicipioNasc": {
+            "type": "string",
+            "description": "Nome do municipio onde nasceu o cliente",
+            "example": "SAO JOSE DOS CAMPOS"
+          },
+          "idMae": {
+            "type": "integer",
+            "description": "Identificador se preenchido ou nao o nome da mãe.\n  * 0 - PREENCHIDO\n  * 1 - DESCONHECIDO\n  * 2 - NÃO TEM\n  * 3 - NÃO INFORMADO\n",
+            "example": 1
+          },
+          "nomeMae": {
+            "type": "string",
+            "description": "Nome da mãe completo",
+            "example": 54
+          },
+          "idPai": {
+            "type": "integer",
+            "description": "Identificador se preenchido ou nao o nome do pai.\n* 0 - PREENCHIDO\n* 1 - DESCONHECIDO\n* 2 - NÃO TEM\n* 3 - NÃO INFORMADO\n",
+            "example": 1
+          },
+          "nomePai": {
+            "type": "string",
+            "description": "Nome do pai completo"
+          },
+          "estadoCivil": {
+            "type": "integer",
+            "description": "Codigo do estado civil",
+            "example": 2
+          },
+          "cpfConjugado": {
+            "type": "string",
+            "description": "CPF do conjuge se tiver.",
+            "example": "32356789"
+          },
+          "conjugadoCompleto": {
+            "type": "string",
+            "description": "Nome do conjuge",
+            "example": "Ciclana Beltrana"
+          },
+          "quantidadeDocumentos": {
+            "type": "string",
+            "description": "Quantidade de documentos enviados Pode enviar até 4 documentos",
+            "example": "2"
+          },
+          "listaAreaDocumento": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AreaDocumento"
+            }
+          },
+          "quantidadeEndereco": {
+            "type": "string",
+            "description": "Quantidade de enderecos enviados. Até 5"
+          },
+          "listaAreaEndereco": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AreaEndereco"
+            }
+          },
+          "quantidadeTelefone": {
+            "type": "integer",
+            "description": "Quantidade de telefones enviado. Pode ate 5"
+          },
+          "listaAreaTelefone": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AreaTelefone"
+            }
+          },
+          "quantidadeEnderecoEletronico": {
+            "type": "integer",
+            "description": "Quantidade de endereco eletronico. Pode ate 5"
+          },
+          "listaAreaEnderecoEletronico": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AreaEnderecoEletronico"
+            }
+          },
+          "dadosProfissional": {
+            "$ref": "#/components/schemas/DadosProfissional"
+          }
+        }
+      }
+    }
+  }
+}

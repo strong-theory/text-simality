@@ -1,0 +1,1097 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "TCAP - Cancelamento",
+    "description": "Descrição",
+    "license": {
+      "name": "Licença",
+      "url": "https://www.bradescoseguros.com.br/clientes"
+    },
+    "version": "1.0.11"
+  },
+  "servers": [
+    {
+      "url": "https://parceiros.bradescoseguros.com.br/V2/parceiros"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Cancelamento",
+      "description": "Endpoints referentes a jornada de Cancelamento"
+    }
+  ],
+  "paths": {
+    "/tcap-proposta/v1/listar-propostas": {
+      "post": {
+        "tags": [
+          "Cancelamento"
+        ],
+        "summary": "Lista informações de propostas.",
+        "description": "Esta funcionalidade tem por objetivo listar todas as propostas de acordo com as informações fornecidas do cliente.",
+        "operationId": "listarPropostas",
+        "requestBody": {
+          "description": "Lista Proposta",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ListarPropostasRequest"
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/ListarPropostasRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Resultado(s) da listagem de título(s) encontrado(s).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListarPropostasResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A requisição foi malformada, omitindo atributos obrigatórios, seja no payload ou através de atributos na URL."
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Ocorreu um erro no gateway da API ou no microsserviço"
+          }
+        }
+      }
+    },
+    "/tcap-proposta/v1/detalhar-informacoes-proposta-capitalizacao" :{
+      "post": {
+        "tags": [
+          "Cancelamento"
+        ],
+        "summary": "Detalhar informacoes da proposta de capitalização.",
+        "description": "Esta funcionalidade tem por objetivo Detalhar informacoes da proposta de capitalização.",
+        "operationId": "detalharInformacoesPropostaCapitalizacao",
+        "requestBody": {
+          "description": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DetalharInformacoesPropostaRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Informacoes detalhadas da proposta.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DetalharInformacoesPropostaResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A requisição foi malformada, omitindo atributos obrigatórios, seja no payload ou através de atributos na URL."
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Ocorreu um erro no gateway da API ou no microsserviço"
+          }
+        }
+      }
+    },
+    "/tcap-titulos/v1/listar-titulos": {
+      "post": {
+        "tags": [
+          "Cancelamento"
+        ],
+        "summary": "Esta funcionalidade tem por objetivo retornar uma lista de títulos, agrupados por plano e proposta, a partir de uma determinada agência e conta.",
+        "description": "A lista poderá ser filtrada adicionalmente conforme as situações a seguir: Titulos ativos, títulos inativos ou ambos; Todos os tipos de pagamento ou tipo de pagamento PM ou tipo de pagamento PU ou tipo de pagamento PP e Títulos adquiridos no canal informado ou todos os títulos.",
+        "operationId": "listarTitulos",
+        "requestBody": {
+          "description": "Lista Titulos",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ListarTitulosRequest"
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/ListarTitulosResponse"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Resultado(s) da listagem de título(s) encontrado(s).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListarTitulosResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A requisição foi malformada, omitindo atributos obrigatórios, seja no payload ou através de atributos na URL."
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Ocorreu um erro no gateway da API ou no microsserviço"
+          }
+        }
+      }
+    },
+    "/tcap-proposta/v1/cancelamento-proposta-agendada": {
+      "post": {
+        "tags": [
+          "Cancelamento"
+        ],
+        "summary": "Efetiva o cancelamento da Proposta Agendada",
+        "description": "Esta funcionalidade tem por objetivo permitir o cliente cancelar as propostas agendadas no canal Net empresas.",
+        "operationId": "cancelamentoPropostaAgendada",
+        "requestBody": {
+          "description": "RequestBody para cancelamento",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CancelamentoRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Cancelamento da proposta realizado com sucesso ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CancelamentoResponse"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "A requisição foi malformada, omitindo atributos obrigatórios, seja no payload ou através de atributos na URL."
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Ocorreu um erro no gateway da API ou no microsserviço"
+          }
+        }
+      }
+    },
+    "/tcap-proposta/v1/cancelamento-proposta-implantada": {
+      "post": {
+        "tags": [
+          "Cancelamento"
+        ],
+        "summary": "Efetiva o cancelamento da Proposta Implantada",
+        "description": "Esta funcionalidade tem por objetivo permitir o cliente cancelar as propostas implantadas no canal.",
+        "operationId": "cancelamentoPropostaImplantada",
+        "requestBody": {
+          "description": "RequestBody para cancelamento",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CancelamentoRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Cancelamento da proposta realizado com sucesso ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CancelamentoResponse"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "A requisição foi malformada, omitindo atributos obrigatórios, seja no payload ou através de atributos na URL."
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Ocorreu um erro no gateway da API ou no microsserviço"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+    "DetalharInformacoesPropostaRequest": {
+        "type": "object",
+        "properties": {
+          "centroCusto": {
+            "description": "Centro de custo. \n  Numerico(4)\n",
+            "type": "string"
+          },
+          "cpf": {
+            "description": "Número do CPF/CNPJ.\n  String(11)\n",
+            "type": "string"
+          },
+          "midia": {
+            "description": "\"Canal de Contratação.\n  Inteiro(3)\"\n",
+            "type": "string"
+          },
+          "modalidade": {
+            "description": "Modalidade da capitalizaçã. \n  Numerico(1)\n",
+            "type": "integer"
+          },
+          "numAquisicao" :{
+            "description": "Numero de proposta de aquisicao do titulo. \n  String(10)\n",
+            "type": "string"
+          },
+          "numPlano" : {
+            "description": "\"Número do plano.\n  Inteiro(4)\"\n",
+            "type": "string"
+          }
+      }
+      },
+    "DetalharInformacoesPropostaResponse": {
+      "type": "object",
+      "properties": {
+          "codModalidade": {
+              "type": "integer",
+              "format": "int32",
+              "description": "Modalidade da capitalizaçã. \n  Numerico(1)\n"
+          },
+          "codigoSusep": {
+              "type": "string",
+              "description": "Codigo do processo SUSEP. \n  String(20)\n"
+          },
+          "dataFimVig": {
+              "type": "string",
+              "description": "Data do fim da vigencia. \n  String(10)\n"
+          },
+          "descPlano": {
+              "type": "string",
+              "description": "Nome fantasia (comercial) do plano de capitalização. \n  String(50)\n"
+          },
+          "diaVencParcela": {
+              "type": "integer",
+              "format": "int32",
+              "description": "Data de vencimento da parcela. \n  Numerico(2)\n"
+          },
+          "midia": {
+              "type": "integer",
+              "format": "int32",
+              "description": "\"Canal de Contratação.\n  Inteiro(3)\"\n"
+          },
+          "numAquisicao": {
+              "type": "integer",
+              "format": "int32",
+              "description": "Numero de proposta de aquisicao do titulo. \n  String(10)\n"
+          },
+          "numPlano": {
+              "type": "integer",
+              "format": "int32",
+              "description": "\"Número do plano.\n  Inteiro(4)\"\n"
+          },
+          "numSusep": {
+              "type": "integer",
+              "format": "int32",
+              "description": "Numero do processo SUSEP interno. \n  Numerico(3)\n"
+          },
+          "percPago": {
+              "type": "number",
+              "format": "double",
+              "description": "Percentual da parcela paga. \n  Numerico(3)\n"
+          },
+          "propostas": {
+              "type": "array",
+              "description": "Lista de propostas do titular.",
+              "items": {
+                  "$ref": "#/components/schemas/Proposta"
+              }
+          },
+          "qtdMesCarencia": {
+              "type": "integer",
+              "format": "int32",
+              "description": "Quantidade mes de carencia proposta. \n  Numerico(3)\n"
+          },
+          "qtdMesVig": {
+              "type": "integer",
+              "format": "int32",
+              "description": "Quantidade mes de vigencia da proposta. \n  Numerico(3)\n"
+          },
+          "qtdParcelaFalta": {
+              "type": "integer",
+              "format": "int32",
+              "description": "Quantidade de parcelas devida. \n  Numerico(5)\n"
+          },
+          "qtdParcelaPaga": {
+              "type": "integer",
+              "format": "int32",
+              "description": "Quantidade de parcelas paga. \n  Numerico(5)\n"
+          },
+          "qtdTitulo": {
+              "type": "integer",
+              "format": "int32",
+              "description": "Quantidade de Titulos que serão adquiridos na proposta.\n  String(5)\n"
+          },
+          "request": {
+              "$ref": "#/components/schemas/DetalharInformacoesPropostaRequest"
+          },
+          "titular": {
+              "description": "Titular da proposta.",
+              "$ref": "#/components/schemas/Titular"
+          },
+          "tpPagto": {
+              "type": "integer",
+              "format": "int32",
+              "description": "Periodicidade de pagamento. \n  0 - TODOS; \n  1 - PM(Pagamento Mensal); \n  2 - PU(Pagamento Único); \n  3 - PP(Pagamento Periodico);\n  4 - PM E PP; \n  Numerico(1)\n"
+          },
+          "vlrDisponivelFim": {
+              "type": "number",
+              "format": "double",
+              "description": "Valor disponivel para resgate no fim da vigencia. \n  Numerico(14)\n"
+          },
+          "vlrDisponivelInic": {
+              "type": "number",
+              "format": "double",
+              "description": "Valor disponivel para resgate na data corrente. \n  Numerico(14)\n"
+          },
+          "vlrParcela": {
+              "type": "number",
+              "format": "double",
+              "description": "Valor da Parcela de cada Título adquirido na proposta.\n  String(13.2)\n"
+          },
+          "vlrTotPlano": {
+              "type": "number",
+              "format": "double",
+              "description": "Valor da proposta. \n  Numerico(15)\n"
+          }
+      },
+      "title": "DetalharInformacoesResponse"
+      },
+    "Titular": {
+        "type": "object",
+        "properties": {
+            "cpf": {
+                "type": "string"
+            },
+            "nomeTitular": {
+                "type": "string"
+            },
+            "percResgate": {
+                "type": "number"
+            },
+            "percSorteio": {
+                "type": "number"
+            }
+        },
+        "title": "Titular"
+      },
+    "Proposta": {
+            "type": "object",
+            "properties": {
+                "diaDaSemana": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/components/schemas/DiaDaSemana"
+                    }
+                },
+                "informacaoSorteio": {
+                    "type": "string",
+                    "description": "Descrição em texto da regra de sorteio da capitalização de acordo com a regra de comercialização das condições gerais. \n  String(80)\n"
+                },
+                "numCalendario": {
+                    "type": "integer",
+                    "format": "int32",
+                    "description": "Numero calendario sorteio. \n  Numerico(3)\n"
+                },
+                "numExtracao": {
+                    "type": "integer",
+                    "format": "int32",
+                    "description": "Numero matriz de extracao. \n  Numerico(3)\n"
+                },
+                "vlrPagoContemplado": {
+                    "type": "integer",
+                    "format": "int32",
+                    "description": "Valor pago em caso de contemplação. \n  Numerico(14)\n"
+                }
+            },
+            "title": "Proposta"
+      },
+    "DiaDaSemana": {
+            "type": "object",
+            "properties": {
+                "diaDaSemanaSorteio": {
+                    "type": "string",
+                    "description": "Texto do(s) dia(s) da semana cadastrado na regra do produto. \n  String(20)\n"
+                }
+            },
+            "title": "DiaDaSemana"
+      },
+    "CancelamentoImplantadaRequest": {
+        "type": "object",
+        "properties": {
+            "formaPagamento": {
+                "type": "integer",
+                "format": "int32"
+            },
+            "midia": {
+                "type": "integer",
+                "format": "int32"
+            },
+            "modalidade": {
+                "type": "integer",
+                "format": "int32"
+            },
+            "numPlano": {
+                "type": "string"
+            },
+            "numProposta": {
+                "type": "string"
+            },
+            "tpAcao": {
+                "type": "string"
+            }
+        },
+        "title": "CancelamentoImplantadaRequest"
+      },
+    "TitulosImplantadaResponse": {
+      "type": "object",
+      "properties": {
+          "numSerie": {
+              "type": "integer",
+              "format": "int32"
+          },
+          "numTitulo": {
+              "type": "integer",
+              "format": "int32"
+          }
+      },
+      "title": "TitulosImplantadaResponse"
+      },
+    "CancelamentoImplantadaResponse": {
+        "type": "object",
+        "properties": {
+            "agencia": {
+                "type": "integer",
+                "format": "int32"
+            },
+            "codBanco": {
+                "type": "integer",
+                "format": "int32"
+            },
+            "codigoPix": {
+                "type": "string"
+            },
+            "conta": {
+                "type": "integer",
+                "format": "int32"
+            },
+            "cpfCnpjPrincipal": {
+                "type": "string"
+            },
+            "dataCancelamento": {
+                "type": "string"
+            },
+            "dataVendaProposta": {
+                "type": "string"
+            },
+            "descNumPlano": {
+                "type": "string"
+            },
+            "digConta": {
+                "type": "string"
+            },
+            "listaTitulos": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/TitulosImplantadaResponse"
+                }
+            },
+            "nomeSubscritor": {
+                "type": "string"
+            },
+            "numPlano": {
+                "type": "integer",
+                "format": "int32"
+            },
+            "numProposta": {
+                "type": "string"
+            },
+            "request": {
+                "$ref": "#/components/schemas/CancelamentoImplantadaRequest"
+            },
+            "vlrCancelamento": {
+                "type": "number"
+            }
+        },
+        "title": "CancelamentoImplantadaResponse"
+      },
+      "ListarPropostasResponse": {
+        "type": "object",
+        "properties": {
+            "codRetorno": {
+                "type": "integer",
+                "format": "int32",
+                "description": "Codigo de retorno. \n  Numerico(1)\n"
+            },
+            "fim": {
+                "$ref": "#/components/schemas/ListarPropostasFimResponse"
+            },
+            "indicadorFunc": {
+                "type": "string",
+                "description": "Indicador de funcionario Bradesco. \n  S - Sim;\n  N - Nao; \n  String(1)\n"
+            },
+            "inicio": {
+                "$ref": "#/components/schemas/ListarPropostasInicioResponse"
+            },
+            "midia": {
+                "type": "integer",
+                "format": "int32",
+                "description": "\"Canal de Contratação.\n  Inteiro(3)\"\n"
+            },
+            "propostas": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/Propostas"
+                }
+            },
+            "qtdPropostaPendente": {
+                "type": "integer",
+                "format": "int32",
+                "description": "Quantidade de proposta pendente de aceite digital. \n  Numerico(1)\n"
+            },
+            "qtdRegistros": {
+                "type": "integer",
+                "format": "int32",
+                "description": "Quantidade de registro/proposta listada. \n  Numerico(3)\n"
+            },
+            "request": {
+                "$ref": "#/components/schemas/ListarPropostasRequest"
+            },
+            "tpBusca": {
+                "type": "integer",
+                "format": "int32",
+                "description": "Tipo de busca. \n  1 - Listar titulares da proposta; \n  2 - Listar titulares do titulo.\n  String(1)\n"
+            },
+            "tpConta": {
+                "type": "integer",
+                "format": "int32",
+                "description": "Tipo da conta de débito das parcelas do título de capitalização. \n  String(1)\n"
+            },
+            "tpVisualizacao": {
+                "type": "integer",
+                "format": "int32",
+                "description": "Tipo de visualização. \n  0 - TODOS; \n  1 - SÓ ADQUIRIDOS NO CANAL. \n  String(1)\n"
+            }
+        },
+        "title": "ListarPropostasResponse"
+      },
+    "Propostas": {
+      "type": "object",
+      "properties": {
+          "codSubscritor": {
+              "type": "integer",
+              "format": "int64",
+              "description": "Codigo do subscritor. \n  Numerico(10)\n"
+          },
+          "codSusep": {
+              "type": "string",
+              "description": "Codigo do processo SUSEP. \n  String(20)\n"
+          },
+          "cpf": {
+              "type": "string",
+              "description": "Número do CPF/CNPJ.\n  String(11)\n"
+          },
+          "dataAquisicao": {
+              "type": "string",
+              "description": "Data aquisicao da proposta. \n  String(10)\n"
+          },
+          "dataDebitoAtual": {
+              "type": "string",
+              "description": "Data do Debito da primeira parcela dos títulos, efetivando a aquisição.\n  String(10)\n"
+          },
+          "dataParcela": {
+              "type": "integer",
+              "format": "int32",
+              "description": "Data de pagamento da primeira parcela. \n  String(10)\n"
+          },
+          "descTpSorteio": {
+              "type": "string",
+              "description": "Tipo de sorteio. \n  String(30)\n"
+          },
+          "digProposta": {
+              "type": "integer",
+              "format": "int32",
+              "description": "Digito da proposta.\n  Numerico\n"
+          },
+          "formaPgto": {
+              "type": "integer",
+              "format": "int32",
+              "description": "Forma de pagamento\n"
+          },
+          "inss": {
+              "type": "string",
+              "description": "Indicador de plano INSS. \n  S - Sim; \n  N - Nao; \n  String(1)\n"
+          },
+          "mes": {
+              "type": "integer",
+              "format": "int32",
+              "description": "Mes escolhido para o sorteio especial. String(2)\n"
+          },
+          "nomeFantasia": {
+              "type": "string",
+              "description": "Nome fantasia (comercial) do plano de capitalização. \n  String(50)\n"
+          },
+          "numAquisicao": {
+              "type": "integer",
+              "format": "int64",
+              "description": "Numero de proposta de aquisicao do titulo. \n  String(10)\n"
+          },
+          "numAtendimento": {
+              "type": "integer",
+              "format": "int64",
+              "description": "Número do atendimento"
+          },
+          "numPlano": {
+              "type": "integer",
+              "format": "int64",
+              "description": "\"Número do plano.\n  Inteiro(4)\"\n"
+          },
+          "partcResgate": {
+              "type": "number",
+              "description": "Percentual de participação no resgate do subscritor. \n  String(5.2)\n"
+          },
+          "partcSorteio": {
+              "type": "number",
+              "description": "Percentual de participação no sorteio do subscritor. \n  String(5.2)\n"
+          },
+          "peridiocidade": {
+              "type": "string",
+              "description": "Periodicidade de pagamento. \n  0 - TODOS; \n  1 - PM(Pagamento Mensal); \n  2 - PU(Pagamento Único); \n  3 - PP(Pagamento Periodico);\n  4 - PM E PP; \n  Numerico(1)\n"
+          },
+          "pgtParcela": {
+              "type": "string",
+              "description": "Data de pagamento da primeira parcela. \n  String(10)\n"
+          },
+          "prazoPlano": {
+              "type": "integer",
+              "format": "int32",
+              "description": "Prazo do plano. \n  Numerico(3)\n"
+          },
+          "prazoResgate": {
+              "type": "integer",
+              "format": "int32",
+              "description": "Prazo de carencia para resgate. \n  Numerico(3)\n"
+          },
+          "qtdTituloCaptz": {
+              "type": "integer",
+              "format": "int32",
+              "description": "Quantidade de Titulos que serão adquiridos na proposta.\n  String(5)\n"
+          },
+          "qtdTotParcela": {
+              "type": "integer",
+              "format": "int32",
+              "description": "Quantidade total de parcelas do titulo. \n  Numerico(3)\n"
+          },
+          "subscritor": {
+              "type": "string",
+              "description": "Nome do subscritor.\n  String(70)\n"
+          },
+          "titularDiferente": {
+              "type": "string"
+          },
+          "tpPgto": {
+              "type": "integer",
+              "format": "int32",
+              "description": "Periodicidade de pagamento. \n  0 - TODOS; \n  1 - PM(Pagamento Mensal); \n  2 - PU(Pagamento Único); \n  3 - PP(Pagamento Periodico);\n  4 - PM E PP; \n  Numerico(1)\n"
+          },
+          "vlrParcela": {
+              "type": "number",
+              "description": "Valor da Parcela de cada Título adquirido na proposta.\n  String(13.2)\n"
+          },
+          "vlrProposta": {
+              "type": "number",
+              "description": "Valor da proposta. \n  Numerico(15)\n"
+          },
+          "vlrTotProposta": {
+              "type": "number",
+              "description": "Valor da proposta. \n  Numerico(15)\n"
+          }
+      },
+      "title": "Propostas"
+      },
+      "ListarPropostasRequest": {
+        "type": "object",
+        "properties": {
+          "midia": {
+            "type": "string"
+          },
+          "sentido": {
+            "type": "string"
+          },
+          "numAtendimento": {
+            "type": "string"
+          },
+          "numPlano": {
+            "type": "string"
+          },
+          "numAquisicao": {
+            "type": "string"
+          },
+          "maxOcorrencia": {
+            "type": "string"
+          },
+          "agencia": {
+            "type": "string"
+          },
+          "conta": {
+            "type": "string"
+          },
+          "tpTitular": {
+            "type": "string"
+          },
+          "tpBusca": {
+            "type": "string"
+          },
+          "tpPgto": {
+            "type": "string"
+          },
+          "tpVisualizacao": {
+            "type": "string"
+          },
+          "dataInicio": {
+            "type": "string"
+          },
+          "dataFim": {
+            "type": "string"
+          },
+          "qtdDiasCorridos": {
+            "type": "string"
+          }
+        }
+      },
+      "ListarPropostasFimResponse": {
+        "type": "object",
+        "properties": {
+            "numAquisicao": {
+                "type": "integer",
+                "format": "int64",
+                "description": "Numero de proposta de aquisicao do titulo. \n  String(10)\n"
+            },
+            "numAtendimento": {
+                "type": "integer",
+                "format": "int64",
+                "description": "Numero do atendimento"
+            },
+            "numPlano": {
+                "type": "integer",
+                "format": "int64",
+                "description": "\"Número do plano.\n  Inteiro(4)\"\n"
+            }
+        },
+        "title": "ListarPropostasFimResponse"
+      },
+    "ListarPropostasInicioResponse": {
+      "type": "object",
+      "properties": {
+          "numAquisicao": {
+              "type": "integer",
+              "format": "int64",
+              "description": "Numero de proposta de aquisicao do titulo. \n  String(10)\n"
+          },
+          "numAtendimento": {
+              "type": "integer",
+              "format": "int64",
+              "description": "Número do atendimento"
+          },
+          "numPlano": {
+              "type": "integer",
+              "format": "int64",
+              "description": "\"Número do plano.\n  Inteiro(4)\"\n"
+          }
+      },
+      "title": "ListarPropostasInicioResponse"
+      },
+      "Inicio": {
+        "type": "object",
+        "properties": {
+          "inicVig": {
+            "type": "string"
+          },
+          "numAquisicao": {
+            "type": "string"
+          },
+          "numPlano": {
+            "type": "string"
+          }
+        },
+        "title": "Inicio"
+      },
+      "Fim": {
+        "type": "object",
+        "properties": {
+          "inicVig": {
+            "type": "string"
+          },
+          "numAquisicao": {
+            "type": "string"
+          },
+          "numPlano": {
+            "type": "string"
+          }
+        },
+        "title": "Fim"
+      },
+      "ListarTitulosRequest": {
+        "type": "object",
+        "properties": {
+          "agencia": {
+            "type": "string"
+          },
+          "conta": {
+            "type": "string"
+          },
+          "fim": {
+            "$ref": "#/components/schemas/Fim"
+          },
+          "inicio": {
+            "$ref": "#/components/schemas/Inicio"
+          },
+          "maxOcorrencias": {
+            "type": "string"
+          },
+          "midia": {
+            "type": "string"
+          },
+          "sentido": {
+            "type": "string"
+          },
+          "tpBusca": {
+            "type": "string"
+          },
+          "tpPgto": {
+            "type": "string"
+          },
+          "tpTitularidade": {
+            "type": "string"
+          },
+          "tpVisualizacao": {
+            "type": "string"
+          }
+        },
+        "title": "ListarTitulosRequest"
+      },
+      "InicioResponse": {
+        "type": "object",
+        "properties": {
+          "inicVig": {
+            "type": "string"
+          },
+          "numAquis": {
+            "type": "string"
+          },
+          "numPlano": {
+            "type": "string"
+          }
+        },
+        "title": "InicioResponse"
+      },
+      "FimResponse": {
+        "type": "object",
+        "properties": {
+          "inicVig": {
+            "type": "string"
+          },
+          "numAquis": {
+            "type": "string"
+          },
+          "numPlano": {
+            "type": "string"
+          }
+        },
+        "title": "FimResponse"
+      },
+      "ListarTitulosResponse": {
+        "type": "object",
+        "properties": {
+          "codRetorno": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "fim": {
+            "$ref": "#/components/schemas/FimResponse"
+          },
+          "inicio": {
+            "$ref": "#/components/schemas/InicioResponse"
+          },
+          "midia": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "qtdRegistros": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "request": {
+            "$ref": "#/components/schemas/ListarTitulosRequest"
+          },
+          "titulos": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Titulos"
+            }
+          }
+        },
+        "title": "ListarTitulosResponse"
+      },
+      "Titulos": {
+        "type": "object",
+        "properties": {
+          "dataAquisicao": {
+            "type": "string"
+          },
+          "digProposta": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nomeFantasiaPlano": {
+            "type": "string"
+          },
+          "numAquisicao": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "numPlano": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "prazoVigencia": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "qtdTitulo": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "tpPgto": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "vlrTotProposta": {
+            "type": "number"
+          }
+        },
+        "title": "Titulos"
+      },
+      "SucessoResponse": {
+        "type": "object",
+        "properties": {
+          "detalhe": {
+            "type": "string",
+            "description": "Detalhes da mensagem. \n  String(10)\n"
+          },
+          "mensagem": {
+            "type": "string",
+            "description": "Código da mensagem. \n  String(10)\n"
+          }
+        },
+        "title": "SucessoResponse"
+      },
+      "CancelamentoResponse": {
+        "type": "object",
+        "properties": {
+          "midia": {
+            "type": "integer",
+            "format": "int32",
+            "description": "\"Canal de Contratação.\n  Inteiro(3)\"\n"
+          },
+          "request": {
+            "$ref": "#/components/schemas/CancelamentoRequest"
+          },
+          "success": {
+            "$ref": "#/components/schemas/SucessoResponse"
+          }
+        },
+        "title": "CancelamentoResponse"
+      },
+      "CancelamentoRequest": {
+        "type": "object",
+        "properties": {
+          "midia": {
+            "type": "string",
+            "description": "\"Canal de Contratação.\n  Inteiro(3)\"\n"
+          },
+          "numAquisicao": {
+            "type": "string",
+            "description": "Numero de proposta de aquisicao do titulo. \n  String(10)\n"
+          },
+          "numPlano": {
+            "type": "string",
+            "description": "\"Número do plano.\n  Inteiro(4)\"\n"
+          },
+          "tpBusca": {
+            "type": "string",
+            "description": "Tipo de busca. \n  1 - Listar titulares da proposta; \n  2 - Listar titulares do titulo.\n  String(1)\n"
+          }
+        },
+        "title": "CancelamentoRequest"
+      }
+    }
+  }
+}

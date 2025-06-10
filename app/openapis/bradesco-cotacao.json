@@ -1,0 +1,1915 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "API RE - Cotação",
+    "description": "Esta API oferece uma coleção de recursos para a integração com os parceiros Bradesco Seguros RE",
+    "termsOfService": "https://wwws.bradescoseguros.com.br/wps/portal/SHSG/home/home",
+    "contact": {
+      "name": "Bradesco Seguros",
+      "url": "https://wwws.bradescoseguros.com.br/wps/portal/SHSG/home/home",
+      "email": "bradescoseguros@bradescoseguros.com.br"
+    },
+    "license": {
+      "name": "Apache License Version 2.0",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0"
+    },
+    "version": "v2.3.2"
+  },
+  "servers": [
+    {
+      "url": "https://parceiros.tu.digiseg.com.br",
+      "description": "Desenvolvimento"
+    },
+    {
+      "url": "https://parceiros.th.digiseg.com.br",
+      "description": "Homologação"
+    },
+    {
+      "url": "https://parceiros.bradescoseguros.com.br",
+      "description": "Produção"
+    }
+  ],
+  "paths": {
+    "/re-analise-comercial/v2/gerarAnaliseComercial": {
+      "post": {
+        "tags": [
+          "Análise Comercial"
+        ],
+        "summary": "Realiza análise comercial de CPF e CNPJ aplicando regras de restrições de crédito.",
+        "description": "Realiza análise comercial de CPF e CNPJ aplicando regras de restrições de crédito retornando a aprovação / reprovação e também dados cadastrais vinculados ao documento, quando encontrados.",
+        "operationId": "gerarAnaliseComercial",
+        "parameters": [
+          {
+            "name": "env",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Escolha o tipo de análise a ser realizada nos exemplos abaixo",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnaliseComercialREEntity"
+              },
+              "examples": {
+                "AnaliseComercialResidencialPF": {
+                  "summary": "Residencial - Proponente PF",
+                  "description": "**Atende os cenários (A01) da operação \"/v1/seguro/efetivar/dados-seguros\"**\n\nObjeto de Risco Residencial - Proponente PF\n",
+                  "value": {
+                    "idParceiro": "85684242",
+                    "risco": {
+                      "idTipoRisco": "100",
+                      "cep": "82250040"
+                    },
+                    "proponente": {
+                      "tipoDocumento": "CPF",
+                      "numeroDocumento": "82542760756",
+                      "dataNascimento": "01/01/1990"
+                    }
+                  }
+                },
+                "AnaliseComercialResidencialPJ": {
+                  "summary": "Residencial - Proponente PJ",
+                  "description": "**Atende os cenários (A02) da operação \"/v1/seguro/efetivar/dados-seguros\"**\n\nObjeto de Risco Residencial com Proponente PJ\n",
+                  "value": {
+                    "idParceiro": "85684242",
+                    "risco": {
+                      "idTipoRisco": "100",
+                      "cep": "83566000"
+                    },
+                    "proponente": {
+                      "tipoDocumento": "CNPJ",
+                      "numeroDocumento": "87960950000121"
+                    }
+                  }
+                },
+                "AnaliseComercialEmpresarialPF": {
+                  "summary": "Empresarial - Proponente PF",
+                  "description": "**Atende os cenários (B01) da operação \"/v1/seguro/efetivar/dados-seguros\"**\n\nObjeto de Risco Empresarial com Proponente PF\n",
+                  "value": {
+                    "idParceiro": "85684242",
+                    "risco": {
+                      "idTipoRisco": "200",
+                      "cep": "82250040"
+                    },
+                    "proponente": {
+                      "tipoDocumento": "CPF",
+                      "numeroDocumento": "82542760756",
+                      "dataNascimento": "01/01/1990"
+                    }
+                  }
+                },
+                "AnaliseComercialEmpresarialPJ": {
+                  "summary": "Empresarial - Proponente PJ",
+                  "description": "**Atende os cenários (B02) da operação \"/v1/seguro/efetivar/dados-seguros\"**\n\nObjeto de Risco Empresarial com Proponente PJ\n",
+                  "value": {
+                    "idParceiro": "85684242",
+                    "risco": {
+                      "idTipoRisco": "200",
+                      "cep": "83566000"
+                    },
+                    "proponente": {
+                      "tipoDocumento": "CNPJ",
+                      "numeroDocumento": "87960950000121"
+                    }
+                  }
+                },
+                "AnaliseComercialEmpresarialPJxPF": {
+                  "summary": "Empresarial - Proponente PJ e Representante PF",
+                  "description": "**Atende os cenários (B03) da operação \"/v1/seguro/efetivar/dados-seguros\"**\n\nObjeto de Risco Residencial com Proponente PJ e Representante PF\n",
+                  "value": {
+                    "idParceiro": "85684242",
+                    "risco": {
+                      "idTipoRisco": "200",
+                      "cep": "83566000"
+                    },
+                    "proponente": {
+                      "tipoDocumento": "CNPJ",
+                      "numeroDocumento": "87960950000121"
+                    },
+                    "representante": {
+                      "tipoDocumento": "CPF",
+                      "numeroDocumento": "82542760756",
+                      "dataNascimento": "01/01/1986"
+                    }
+                  }
+                },
+                "AnaliseComercialEmpresairalPJxPJ": {
+                  "summary": "Empresarial - Proponente PJ e Representante PJ",
+                  "description": "**Atende os cenários (B04) da operação \"/v1/seguro/efetivar/dados-seguros\"**\n\nObjeto de Risco Empresarial com Proponente PJ e Representante PJ\n",
+                  "value": {
+                    "idParceiro": "85684242",
+                    "risco": {
+                      "idTipoRisco": "200",
+                      "cep": "03566000"
+                    },
+                    "proponente": {
+                      "tipoDocumento": "CNPJ",
+                      "numeroDocumento": "87960950000121"
+                    },
+                    "representante": {
+                      "tipoDocumento": "CNPJ",
+                      "numeroDocumento": "81731250000132"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnaliseComercialRE"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Parametro(s) de requisição informado não são valido(s)"
+          },
+          "500": {
+            "description": "Erro inesperado \n\nErro ao tentar gerar o token de autorização."
+          },
+          "504": {
+            "description": "Tempo limite de conexão excedido"
+          },
+          "511": {
+            "description": "Token inválido ou expirado."
+          }
+        }
+      }
+    },
+    "/re-analise-comercial/v2/consultarHistorico": {
+      "post": {
+        "tags": [
+          "Análise Comercial"
+        ],
+        "summary": "Verifica se os dados informados estão vinculados a uma análise comercial",
+        "description": "Verifica se os dados informados estão vinculados a uma análise comercial",
+        "operationId": "consultarHistorico",
+        "parameters": [
+          {
+            "name": "env",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreditTalkREEntity"
+              },
+              "examples": {
+                "Proponente PF": {
+                  "summary": "Proponente PF",
+                  "description": "Dados a serem enviados para consulta da analise somente com proponente pessoa fisica",
+                  "value": {
+                    "idParceiro": "85684242",
+                    "proponente": {
+                      "tipoDocumento": "CPF",
+                      "documento": "82542760756",
+                      "cep": "82250040",
+                      "codigoOperacao": "0005B7a"
+                    }
+                  }
+                },
+                "Proponente PJ": {
+                  "summary": "Proponente PJ",
+                  "description": "Dados a serem enviados para consulta da analise somente com proponente pessoa juridica",
+                  "value": {
+                    "idParceiro": "85684242",
+                    "proponente": {
+                      "tipoDocumento": "CNPJ",
+                      "documento": "87960950000121",
+                      "cep": "83566000",
+                      "codigoOperacao": "0005B9e"
+                    }
+                  }
+                },
+                "ProponentePJRepresentantePF": {
+                  "summary": "Proponente PJ e Representante PF",
+                  "description": "Dados a serem enviados para consulta da analise somente com proponente pessoa juridica e representante pessoa fisica",
+                  "value": {
+                    "idParceiro": "85684242",
+                    "proponente": {
+                      "tipoDocumento": "CNPJ",
+                      "documento": "87960950000121",
+                      "cep": "83566000",
+                      "codigoOperacao": "0005B9a"
+                    },
+                    "representante": {
+                      "tipoDocumento": "CPF",
+                      "documento": "82542760756",
+                      "cep": "83566000",
+                      "codigoOperacao": "0005BCM"
+                    }
+                  }
+                },
+                "ProponentePJRepresentantePJ": {
+                  "summary": "Proponente PJ e Representante PJ",
+                  "description": "Dados a serem enviados para consulta da analise somente com proponente pessoa juridica e representante pessoa juridica",
+                  "value": {
+                    "idParceiro": "85684242",
+                    "proponente": {
+                      "tipoDocumento": "CNPJ",
+                      "documento": "87960950000121",
+                      "cep": "83566000",
+                      "codigoOperacao": "0005BAZ"
+                    },
+                    "representante": {
+                      "tipoDocumento": "CNPJ",
+                      "documento": "81731250000132",
+                      "cep": "83566000",
+                      "codigoOperacao": "0005BAc"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreditTalkREResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Parâmetro(s) de entrada inválido(s)"
+          },
+          "404": {
+            "description": "Dado(s) para análise comercial não encontrado(s)"
+          },
+          "422": {
+            "description": "O código da operação informado não corresponde ao CEP do objeto de risco informado."
+          },
+          "500": {
+            "description": "Erro inesperado \n\nErro ao tentar gerar o token de autorização."
+          },
+          "504": {
+            "description": "Tempo limite de conexão excedido"
+          },
+          "511": {
+            "description": "Token inválido ou expirado."
+          }
+        }
+      }
+    },
+    "/re/v1/parceiro/{idParceiro}&{idCanal}&{numeroBloco}/produtos": {
+      "get": {
+        "tags": [
+          "Produtos"
+        ],
+        "summary": "Consulte os produtos disponíveis para comercialização.",
+        "description": "Obtém dados de produtos para a realização de cotação de produtos residenciais pré-formatados.",
+        "operationId": "getProduto",
+        "parameters": [
+          {
+            "name": "idParceiro",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "idCanal",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "numeroBloco",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "env",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProdutoResponseEntity"
+                }
+              }
+            }
+          },
+          "206": {
+            "description": "Produto(s) não encontrado(s) para o parceiro informado."
+          },
+          "400": {
+            "description": "Parâmetros de entrada inválidos."
+          },
+          "401": {
+            "description": "Não Autorizado."
+          },
+          "403": {
+            "description": "Acesso Proibido."
+          },
+          "404": {
+            "description": "Não encontrado."
+          },
+          "500": {
+            "description": "Erro inesperado. \n\nErro ao tentar gerar o token de autorização. \n\n"
+          },
+          "504": {
+            "description": "Connection timeout."
+          },
+          "511": {
+            "description": "Token não informado, favor incluir um token válido. \n\nToken inválido ou expirado.\n"
+          }
+        }
+      }
+    },
+    "/re/v1/parceiro/{idParceiro}&{numeroBloco}/produtos/{idProduto}/planos/": {
+      "get": {
+        "tags": [
+          "Produtos"
+        ],
+        "summary": "Consulte a relação de planos vinculados aos produtos comercializados.",
+        "description": "Obtém dados de planos para a realização de cotação de produtos residenciais pré-formatados",
+        "operationId": "getPlano",
+        "parameters": [
+          {
+            "name": "idParceiro",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "idProduto",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "numeroBloco",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "env",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlanoResponseEntity"
+                }
+              }
+            }
+          },
+          "206": {
+            "description": "Produto(s) não encontrado(s) para o parceiro informado. \n\nPlano(s) não encontrado(s) para o produto informado. \n\nCobertura(s) não encontrado(s) para o plano informado. \n\n"
+          },
+          "400": {
+            "description": "Parâmetros de entrada inválidos."
+          },
+          "401": {
+            "description": "Não Autorizado."
+          },
+          "403": {
+            "description": "Acesso Proibido."
+          },
+          "404": {
+            "description": "Não encontrado."
+          },
+          "500": {
+            "description": "Erro inesperado. \n\nErro ao tentar gerar o token de autorização. \n\n"
+          },
+          "504": {
+            "description": "Connection timeout."
+          },
+          "511": {
+            "description": "Token não informado, favor incluir um token válido. \n\nToken inválido ou expirado.\n"
+          }
+        }
+      }
+    },
+    "/re/v1/parceiro/{idParceiro}&{numeroBloco}/produtos/{idProduto}/planos/{idPlano}/coberturas/": {
+      "get": {
+        "tags": [
+          "Produtos"
+        ],
+        "summary": "Consulte as coberturas para os planos e produtos.",
+        "description": "Obtém dados de coberturas para a realização de cotação de produtos residenciais pré-formatados",
+        "operationId": "getCobertura",
+        "parameters": [
+          {
+            "name": "idParceiro",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "numeroBloco",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "idProduto",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "idPlano",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "env",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CoberturaResponseEntity"
+                }
+              }
+            }
+          },
+          "206": {
+            "description": "Produto(s) não encontrado(s) para o parceiro informado. \n\nPlano(s) não encontrado(s) para o produto informado. \n\nCobertura(s) não encontrado(s) para o plano informado. \n\n"
+          },
+          "400": {
+            "description": "Parâmetros de entrada inválidos."
+          },
+          "401": {
+            "description": "Não Autorizado."
+          },
+          "403": {
+            "description": "Acesso Proibido."
+          },
+          "404": {
+            "description": "Não encontrado."
+          },
+          "500": {
+            "description": "Erro inesperado. \n\nErro ao tentar gerar o token de autorização. \n\n"
+          },
+          "504": {
+            "description": "Connection timeout."
+          },
+          "511": {
+            "description": "Token não informado, favor incluir um token válido. \n\nToken inválido ou expirado.\n"
+          }
+        }
+      }
+    },
+    "/re/v1/parceiro/{idParceiro}/produtos/{idProduto}/assistencias": {
+      "get": {
+        "tags": [
+          "Produtos"
+        ],
+        "summary": "Consulte as assistências e kits assistências dos produtos comercializados.",
+        "description": "Obtém dados de assistências para a realização de cotação de produtos residenciais pré-formatados",
+        "operationId": "getAssistencia",
+        "parameters": [
+          {
+            "name": "idProduto",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "idParceiro",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "env",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssistenciaResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Parâmetros de entrada inválidos."
+          },
+          "404": {
+            "description": "Não encontrado."
+          },
+          "500": {
+            "description": "Erro inesperado. \n\nErro ao tentar gerar o token de autorização. \n\n"
+          },
+          "504": {
+            "description": "Connection timeout."
+          },
+          "511": {
+            "description": "Token não informado, favor incluir um token válido. \n\nToken inválido ou expirado. \n"
+          }
+        }
+      }
+    },
+    "/re/v1/parceiro/produtos/{idProduto}/capitalizacao": {
+      "get": {
+        "tags": [
+          "Produtos"
+        ],
+        "summary": "Consulte os títulos de capitalização disponíveis.",
+        "description": "Obtém dados de capitalização para a realização de cotação de produtos residenciais pré-formatados",
+        "operationId": "getCapitalizacao",
+        "parameters": [
+          {
+            "name": "idProduto",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "env",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CapitalizacaoResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Parâmetros de entrada inválidos."
+          },
+          "404": {
+            "description": "Não encontrado."
+          },
+          "500": {
+            "description": "Erro inesperado. \n\nErro ao tentar gerar o token de autorização. \n\n"
+          },
+          "504": {
+            "description": "Connection timeout."
+          },
+          "511": {
+            "description": "Token não informado, favor incluir um token válido. \n\nToken inválido ou expirado. \n"
+          }
+        }
+      }
+    },
+    "/re/v1/parceiro/{idParceiro}/produto/{idProduto}/formasPagamento": {
+      "get": {
+        "tags": [
+          "Produtos"
+        ],
+        "summary": "Consulte as formas de pagamento dos produtos comercializados.",
+        "description": "Obtém as formas de pagamento para a realização de cotação de produtos residenciais pré-formatados",
+        "operationId": "getFormaPagamento",
+        "parameters": [
+          {
+            "name": "idProduto",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "idParceiro",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "env",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FormaPagamentoResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Parâmetros de entrada inválidos."
+          },
+          "404": {
+            "description": "Forma(s) de pagamento não configurada(s) para o produto informado."
+          },
+          "500": {
+            "description": "Erro inesperado. \n\nErro ao tentar gerar o token de autorização. \n\n"
+          },
+          "504": {
+            "description": "Connection timeout."
+          },
+          "511": {
+            "description": "Token não informado, favor incluir um token válido. \n\nToken inválido ou expirado. \n"
+          }
+        }
+      }
+    },
+    "/re/v1/parceiro/produtos": {
+      "get": {
+        "tags": [
+          "Produtos"
+        ],
+        "summary": "Realize a cotação do seguro.",
+        "description": "Obtém dados de produtos, planos e coberturas para a realização de cotação de produtos residenciais pré-formatados",
+        "operationId": "getCotacao",
+        "parameters": [
+          {
+            "name": "idParceiro",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "idCanal",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "numeroBloco",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "codigoOperacao",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "env",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParceiroResponse"
+                }
+              }
+            }
+          },
+          "206": {
+            "description": "Produto(s) não encontrado(s) para o parceiro informado. \n\nPlano(s) não encontrado(s) para o produto informado. \n\nCobertura(s) não encontrado(s) para o plano informado. \n\n"
+          },
+          "400": {
+            "description": "Parâmetros de entrada inválidos."
+          },
+          "401": {
+            "description": "Não Autorizado."
+          },
+          "403": {
+            "description": "Acesso Proibido."
+          },
+          "422": {
+            "description": "O CPF correspondente ao codigoOperacao informado não está elegível."
+          },
+          "500": {
+            "description": "Erro inesperado. \n\nErro ao tentar gerar o token de autorização. \n\nNão foi possível concluir a cotação do seguro \n\n"
+          },
+          "504": {
+            "description": "Connection timeout."
+          },
+          "511": {
+            "description": "Token não informado, favor incluir um token válido. \n\nToken inválido ou expirado.\n"
+          }
+        }
+      }
+    },
+    "/re-analise-comercial/v1/analise-comercial/health-check": {
+      "get": {
+        "tags": [
+          "Health Check"
+        ],
+        "summary": "Apresenta informações da versao do build e o status dos servicos de análise comercial",
+        "description": "Realiza uma checagem de disponibilidade dos servicos de análise comercial e de consulta ao histórico de uma análise comercial (UP ou DOWN)",
+        "operationId": "getHealthCheck",
+        "parameters": [
+          {
+            "name": "env",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "UP",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthCheckAnaliseComercial"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "DOWN"
+          },
+          "504": {
+            "description": "Tempo limite de conexão excedido"
+          },
+          "511": {
+            "description": "Token inválido ou expirado."
+          }
+        }
+      }
+    },
+    "/re/v1/produtos/health-check": {
+      "get": {
+        "tags": [
+          "Health Check"
+        ],
+        "summary": "Apresenta informações da versão do build e o status dos serviços de Produtos.",
+        "description": "Realiza uma checagem de disponibilidade dos servicos usados na aplicação(UP ou DOWN).",
+        "operationId": "HealthCheckProdutos",
+        "parameters": [
+          {
+            "name": "env",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "UP",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthCheckProduto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "DOWN \n\nErro ao tentar gerar o token de autorização. \n\n"
+          },
+          "504": {
+            "description": "Connection timeout."
+          },
+          "511": {
+            "description": "Token não informado, favor incluir um token válido. \n\nToken inválido ou expirado. \n"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Assistencia": {
+        "type": "object",
+        "properties": {
+          "idProduto": {
+            "type": "string",
+            "description": "Id de um produto",
+            "example": "182"
+          },
+          "idParceiro": {
+            "type": "string",
+            "description": "Id de um Parceiro",
+            "example": "14424268"
+          },
+          "listaKitAssitencia": {
+            "type": "array",
+            "description": "Lista de Kit Assistencia",
+            "items": {
+              "$ref": "#/components/schemas/KitAssistencia"
+            }
+          }
+        },
+        "description": "Entidade que reúne os dados de um Kit Assistencia com Planos Assistencia"
+      },
+      "KitAssistencia": {
+        "type": "object",
+        "properties": {
+          "codigo": {
+            "type": "integer",
+            "description": "Codigo do Kit Assistencia",
+            "format": "int32",
+            "example": 1
+          },
+          "descricao": {
+            "type": "string",
+            "description": "Descrição do Kit Assistencia",
+            "example": "RESIDENCIAL PLUS"
+          },
+          "listaPlanoAssistencia": {
+            "type": "array",
+            "description": "Lista de Plano Assistencia",
+            "items": {
+              "$ref": "#/components/schemas/PlanoAssistencia"
+            }
+          }
+        },
+        "description": "Entidade que reune as informações dos kits de assistência"
+      },
+      "PlanoAssistencia": {
+        "type": "object",
+        "properties": {
+          "codigo": {
+            "type": "integer",
+            "description": "Codigo Plano Assistencia",
+            "format": "int32",
+            "example": 2
+          },
+          "descricao": {
+            "type": "string",
+            "description": "Descriçao Plano Assistencia",
+            "example": "Descricao do plano de assistência"
+          }
+        },
+        "description": "Entidade que reune as informações dos planos de assitência"
+      },
+      "FormasPagamentoResponse": {
+        "type": "object",
+        "properties": {
+          "codigoFormaPagamento": {
+            "type": "string",
+            "description": "Código da forma de pagamento (Na URL /v1/seguro/tabelas/dados-cobranca)",
+            "example": "5"
+          },
+          "descricaoFormaPagamento": {
+            "type": "string",
+            "description": "Descrição da forma de pagamento",
+            "example": "Cartão de crédito"
+          },
+          "codigoCartao": {
+            "type": "string",
+            "description": "Código do cartão",
+            "example": "40003"
+          },
+          "descricaoCartao": {
+            "type": "string",
+            "description": "Nome da bandeira do cartão",
+            "example": "VISA"
+          }
+        },
+        "description": "Lista das formas de pagamento"
+      },
+      "FormasPagamentoResponseList": {
+        "type": "object",
+        "properties": {
+          "listaFormaPagamento": {
+            "type": "array",
+            "description": "Lista das formas de pagamento",
+            "items": {
+              "$ref": "#/components/schemas/FormasPagamentoResponse"
+            }
+          }
+        },
+        "description": "Entidade que possui os atributos da estrutura de formas de pagamento por produto"
+      },
+      "PlanoCobertura": {
+        "type": "object",
+        "properties": {
+          "codigoCobertura": {
+            "type": "integer",
+            "description": "Codigo da cobertura",
+            "format": "int64",
+            "example": 123456
+          },
+          "descricaoCobertura": {
+            "type": "string",
+            "description": "Descrição da cobertura",
+            "example": "Descrição cobertura ABC"
+          },
+          "detalhamentoCobertura": {
+            "type": "string",
+            "description": "Detalhamento da cobertura",
+            "example": "Detalhamento cobertura ABC"
+          },
+          "valorLMI": {
+            "type": "string",
+            "description": "Valor do LMI",
+            "example": "1000.15"
+          },
+          "codigoRamo": {
+            "type": "integer",
+            "description": "Código do ramo",
+            "format": "int64",
+            "example": 123456
+          },
+          "codigoSubRamo": {
+            "type": "integer",
+            "description": "Código do sub-ramo",
+            "format": "int64",
+            "example": 123456
+          },
+          "indicadorCoberturaOpcional": {
+            "type": "string",
+            "description": "Indicador da cobertura opcional",
+            "example": "N"
+          },
+          "indicadorCoberturaBasica": {
+            "type": "string",
+            "description": "Indicador da cobertura básica",
+            "example": "S"
+          },
+          "percentualFranquia": {
+            "type": "string",
+            "description": "Percentual da franquia",
+            "example": "1.25"
+          },
+          "valorFranquia": {
+            "type": "string",
+            "description": "Valor da franquia",
+            "example": "2000.25"
+          },
+          "valorMinFranquia": {
+            "type": "string",
+            "description": "Valor mínimo da franquia",
+            "example": "100.15"
+          },
+          "valorMaxFranquia": {
+            "type": "string",
+            "description": "Valor máximo da franquia",
+            "example": "1000.15"
+          },
+          "description": {
+            "type": "string",
+            "description": "descricao",
+            "example": "Cobertura(s) referentes ao plano informado"
+          }
+        },
+        "description": "Entidade que possui os atributos da estrutura de coberturas comercializadas pelos parceiros"
+      },
+      "CapitalizacaoEntity": {
+        "type": "object",
+        "properties": {
+          "idProduto": {
+            "type": "string",
+            "description": "Identificador do produto",
+            "example": "181"
+          },
+          "planoCapitalizacao": {
+            "$ref": "#/components/schemas/PlanoCapitalizacao"
+          }
+        },
+        "description": "Entidade que reune as informações de capitalização"
+      },
+      "ParceiroResponse": {
+        "type": "object",
+        "properties": {
+          "requestStatus": {
+            "$ref": "#/components/schemas/RequestStatus"
+          },
+          "parceiro": {
+            "$ref": "#/components/schemas/ParceiroResponseEntity"
+          }
+        },
+        "description": "Retorno dos dados do parceiro - cotação"
+      },
+      "ParceiroResponseEntity": {
+        "type": "object",
+        "properties": {
+          "idParceiro": {
+            "type": "integer",
+            "description": "Id do parceiro",
+            "format": "int64",
+            "example": 15698584
+          },
+          "nomeParceiro": {
+            "type": "string",
+            "description": "Nome do parceiro",
+            "example": "Lojas Tabajara"
+          },
+          "nomeParceria": {
+            "type": "string",
+            "description": "Nome da parceria",
+            "example": "Parceria ABC"
+          },
+          "produtos": {
+            "type": "array",
+            "description": "Lista de produtos",
+            "items": {
+              "$ref": "#/components/schemas/Produto"
+            }
+          }
+        },
+        "description": "Entidade que possui os atributos da estrutura de produtos comercializados pelos parceiros"
+      },
+      "PlanoCapitalizacao": {
+        "type": "object",
+        "properties": {
+          "tipoTituloCapitalizacao": {
+            "type": "integer",
+            "description": "Tipo titulo do Plano Capitalizacao",
+            "format": "int32",
+            "example": 2
+          },
+          "valorPremio": {
+            "type": "string",
+            "description": "Valor do prêmio do Plano Capitalizacao",
+            "example": "R$ 300.000,00"
+          },
+          "descricaoPremio": {
+            "type": "string",
+            "description": "Descrição do prêmio do Plano Capitalizacao",
+            "example": "TREZENTOS MIL REAIS"
+          }
+        },
+        "description": "Entidade que reune as informações do plano de capitalização"
+      },
+      "Planos": {
+        "type": "object",
+        "properties": {
+          "idPlano": {
+            "type": "integer",
+            "description": "Id do plano",
+            "format": "int64",
+            "example": 15
+          },
+          "valorPremioTotal": {
+            "type": "string",
+            "description": "Valor do prêmio total",
+            "example": "1000.15"
+          },
+          "description": {
+            "type": "string",
+            "description": "descricao",
+            "example": "Planos referentes ao produto informado"
+          },
+          "planosCobertura": {
+            "type": "array",
+            "description": "Lista de planos de cobertura",
+            "items": {
+              "$ref": "#/components/schemas/PlanoCobertura"
+            }
+          }
+        },
+        "description": "Entidade que possui os atributos da estrutura de planos comercializados pelos parceiros"
+      },
+      "Produto": {
+        "type": "object",
+        "properties": {
+          "idProduto": {
+            "type": "integer",
+            "description": "Id de um produto",
+            "format": "int64",
+            "example": 15
+          },
+          "idSucursal": {
+            "type": "integer",
+            "description": "Id de uma sucursal",
+            "format": "int64",
+            "example": 0
+          },
+          "descricaoProduto": {
+            "type": "string",
+            "description": "Descrição de um produto",
+            "example": "Produto ABC"
+          },
+          "planos": {
+            "type": "array",
+            "description": "Lista de planos",
+            "items": {
+              "$ref": "#/components/schemas/Planos"
+            }
+          },
+          "assistencia": {
+            "$ref": "#/components/schemas/Assistencia"
+          },
+          "capitalizacao": {
+            "$ref": "#/components/schemas/CapitalizacaoEntity"
+          },
+          "formaPagamento": {
+            "$ref": "#/components/schemas/FormasPagamentoResponseList"
+          }
+        },
+        "description": "Entidade que possui os atributos da estrutura de planos comercializados pelos parceiros"
+      },
+      "RequestStatus": {
+        "type": "object",
+        "properties": {
+          "codigoErro": {
+            "type": "string",
+            "description": "Código do erro",
+            "example": "200"
+          },
+          "message": {
+            "type": "string",
+            "description": "Mensagem do erro",
+            "example": "Requisição realizada com sucesso"
+          },
+          "description": {
+            "type": "string",
+            "description": "Descrição do erro",
+            "example": "N/A"
+          },
+          "requestStatusId": {
+            "type": "string",
+            "description": "Identificador da requisição(Gerado pela aplicação)",
+            "example": "1f47a4bc-47c0-4327-b3a3-ebfe55523f2a"
+          }
+        },
+        "description": "Informações de controle do resultado da requisição"
+      },
+      "AnaliseComercialRE": {
+        "type": "object",
+        "properties": {
+          "requestStatus": {
+            "$ref": "#/components/schemas/RequestStatusAnaliseComercial"
+          },
+          "analiseComercialRE": {
+            "$ref": "#/components/schemas/AnaliseComercialREResponse"
+          }
+        },
+        "description": "Retorno dos dados do cliente empresarial analisado, proponente e representante podem retornar pessoa fisica ou pessoa juridica"
+      },
+      "AnaliseComercialREEntity": {
+        "required": [
+          "analiseComercialREEntity"
+        ],
+        "type": "object",
+        "properties": {
+          "analiseComercialREEntity": {
+            "$ref": "#/components/schemas/AnaliseComercialRequest"
+          }
+        }
+      },
+      "AnaliseComercialRequest": {
+        "required": [
+          "idParceiro",
+          "risco",
+          "proponente"
+        ],
+        "type": "object",
+        "properties": {
+          "idParceiro": {
+            "type": "string",
+            "description": "Identificador do parceiro",
+            "example": "15878790"
+          },
+          "risco": {
+            "$ref": "#/components/schemas/RiscoEntity"
+          },
+          "proponente": {
+            "$ref": "#/components/schemas/RequerenteEntity"
+          },
+          "representante": {
+            "$ref": "#/components/schemas/RequerenteEntity"
+          }
+        },
+        "description": "Entrada de dados do cliente a ser analisado"
+      },
+      "RiscoEntity": {
+        "required": [
+          "cep",
+          "idTipoRisco"
+        ],
+        "type": "object",
+        "properties": {
+          "cep": {
+            "type": "string",
+            "description": "Numero do CEP a ser analisado",
+            "example": "12345678"
+          },
+          "idTipoRisco": {
+            "type": "string",
+            "enum": [
+              100,
+              200
+            ],
+            "description": "Id do tipo de risco a ser analisado",
+            "example": "200"
+          }
+        }
+      },
+      "RequerenteEntity": {
+        "required": [
+          "tipoDocumento",
+          "numeroDocumento"
+        ],
+        "type": "object",
+        "properties": {
+          "tipoDocumento": {
+            "type": "string",
+            "enum": [
+              "CPF",
+              "CNPJ"
+            ],
+            "description": "Tipo do documento a ser analisado",
+            "example": "CNPJ"
+          },
+          "numeroDocumento": {
+            "type": "string",
+            "description": "Numero do documento a ser analisado",
+            "example": "11111111111"
+          },
+          "dataNascimento": {
+            "type": "string",
+            "description": "Data de nascimento a ser informada caso o tipo documendo for CPF",
+            "example": "01/01/1990"
+          }
+        }
+      },
+      "AnaliseComercialREResponse": {
+        "type": "object",
+        "properties": {
+          "idParceiro": {
+            "type": "string",
+            "description": "Identificador do parceiro",
+            "example": "15878790"
+          },
+          "endereco": {
+            "$ref": "#/components/schemas/EnderecoResponse"
+          },
+          "proponente": {
+            "$ref": "#/components/schemas/RequerentePJResponse"
+          },
+          "representante": {
+            "$ref": "#/components/schemas/RequerentePFResponse"
+          }
+        }
+      },
+      "EnderecoResponse": {
+        "type": "object",
+        "properties": {
+          "dadosRisco": {
+            "$ref": "#/components/schemas/DadosRisco"
+          },
+          "cep": {
+            "type": "string",
+            "description": "CEP retornado da base de dados",
+            "example": "11111111"
+          },
+          "logradouro": {
+            "type": "string",
+            "description": "Logradouro retornado da base de dados",
+            "example": "Av. Castelo Branco"
+          },
+          "numero": {
+            "type": "string",
+            "description": "Numero do logradouro retornado da base de dados",
+            "example": "1200"
+          },
+          "complemento": {
+            "type": "string",
+            "description": "Complemento do logradouro retornado da base de dados",
+            "example": "Apto 1644"
+          },
+          "bairro": {
+            "type": "string",
+            "description": "Bairro retornado da base de dados",
+            "example": "Centro"
+          },
+          "cidade": {
+            "type": "string",
+            "description": "Cidade retornado da base de dados",
+            "example": "Rio de Janeiro"
+          },
+          "uf": {
+            "type": "string",
+            "description": "UF retornado da base de dados",
+            "example": "RJ"
+          }
+        }
+      },
+      "RequerentePFResponse": {
+        "type": "object",
+        "properties": {
+          "codigoOperacao": {
+            "type": "string",
+            "description": "Código gerado pela base de dados",
+            "example": "00056nz"
+          },
+          "tipoDocumento": {
+            "type": "string",
+            "description": "Tipo de documento retornado da base de dados",
+            "example": "CPF"
+          },
+          "documento": {
+            "type": "string",
+            "description": "Numero do documento retornado da base de dados",
+            "example": "11111111111"
+          },
+          "nome": {
+            "type": "string",
+            "description": "Nome retornado da base de dados",
+            "example": "Bill Gates"
+          },
+          "sexo": {
+            "type": "string",
+            "description": "Sexo retornado da base de dados",
+            "example": "MASCULINO"
+          },
+          "dataNascimento": {
+            "type": "string",
+            "description": "Data de nascimento retornada da base de dados",
+            "example": "01/01/1990"
+          },
+          "dataNascimentoInformada": {
+            "type": "string",
+            "description": "Data de nascimento informada na requisição",
+            "example": "01/01/1990"
+          },
+          "email": {
+            "type": "string",
+            "description": "Email retornado da base de dados",
+            "example": "email@email.com.br"
+          },
+          "telefones": {
+            "type": "string",
+            "description": "Lista de telefones retornado da base de dados",
+            "example": "{(21) 32920196, (21)22531177}"
+          },
+          "aprovacao": {
+            "type": "string",
+            "description": "Status da analise gerada",
+            "example": "true"
+          },
+          "situacao": {
+            "type": "string",
+            "description": "Situaçãop da analise gerada",
+            "example": "Aprovado - #0001004#"
+          }
+        }
+      },
+      "RequerentePJResponse": {
+        "type": "object",
+        "properties": {
+          "codigoOperacao": {
+            "type": "string",
+            "description": "Código de operação gerada pela base de dados",
+            "example": "00056nz"
+          },
+          "tipoDocumento": {
+            "type": "string",
+            "description": "Tipo de documento retornado da base de dados",
+            "example": "CNPJ"
+          },
+          "documento": {
+            "type": "string",
+            "description": "Numero do documento retornado pela base de dados",
+            "example": "47960950000121"
+          },
+          "cnae": {
+            "type": "string",
+            "description": "CNAE retornado da base de dados",
+            "example": "4713004"
+          },
+          "razaoSocial": {
+            "type": "string",
+            "description": "Razão social retornado da base de dados",
+            "example": "EMPRESA S/A"
+          },
+          "codigoAtividadeEconomica": {
+            "type": "string",
+            "description": "Código da atividade economica retornado da base de dados",
+            "example": "4713004"
+          },
+          "descicaoAtividadeEconomica": {
+            "type": "string",
+            "description": "Descição da atividade econômica retornado da base de dados",
+            "example": "LOJA DE DEPARTAMENTOS"
+          },
+          "dataAberturaEmpresa": {
+            "type": "string",
+            "description": "Data da abertura da empresa retornada da base de dados",
+            "example": "01/01/1990"
+          },
+          "codigoNaturezaJuridica": {
+            "type": "string",
+            "description": "Código da natureza juridíca retornado da base de dados",
+            "example": "2046"
+          },
+          "socios": {
+            "type": "string",
+            "description": "Lista de socios retonado da base de dados",
+            "example": "{qualificacao: GERENTE, nome: JOSE ALBERTO, cpf: 11111111111}"
+          },
+          "telefones": {
+            "type": "string",
+            "description": "Lista de telefones retornado da base de dados",
+            "example": "{(21) 32920196}"
+          },
+          "email": {
+            "type": "string",
+            "description": "Email retornado da base de dados",
+            "example": "email@email.com.br"
+          },
+          "celular": {
+            "type": "string",
+            "description": "Numero de celular retornado da base de dados",
+            "example": "(21) 932920196"
+          },
+          "aprovacao": {
+            "type": "string",
+            "description": "Status da analise gerada",
+            "example": "true"
+          },
+          "situacao": {
+            "type": "string",
+            "description": "Situação da analise gerada",
+            "example": "Aprovado - #0001004#"
+          }
+        }
+      },
+      "DadosRisco": {
+        "type": "object",
+        "properties": {
+          "idTipoRisco": {
+            "type": "string",
+            "description": "Tipo de risco informado na requisição",
+            "example": "200"
+          },
+          "cepRisco": {
+            "type": "string",
+            "description": "CEP de risco informado na requisição",
+            "example": "12345678"
+          }
+        }
+      },
+      "RequestStatusAnaliseComercial": {
+        "type": "object",
+        "properties": {
+          "codigoErro": {
+            "type": "string",
+            "description": "Código do erro",
+            "example": "200"
+          },
+          "message": {
+            "type": "string",
+            "description": "Mensagem do erro",
+            "example": "Análise comercial realizada com sucesso."
+          },
+          "description": {
+            "type": "string",
+            "description": "Descrição do erro",
+            "example": "N/A"
+          }
+        },
+        "description": "Informações de controle do resultado da requisição"
+      },
+      "HealthCheckAnaliseComercial": {
+        "required": [
+          "info"
+        ],
+        "type": "object",
+        "properties": {
+          "info": {
+            "$ref": "#/components/schemas/InfoAnaliseComercial"
+          }
+        },
+        "description": "Informações sobre o Health Check da API"
+      },
+      "InfoAnaliseComercial": {
+        "required": [
+          "re_parcerias",
+          "version"
+        ],
+        "type": "object",
+        "properties": {
+          "re_parcerias": {
+            "type": "string",
+            "description": "Serviço",
+            "example": "Analise Comercial"
+          },
+          "version": {
+            "type": "string",
+            "description": "Versão",
+            "example": "2211231400"
+          },
+          "status": {
+            "type": "string",
+            "description": "Status",
+            "example": "UP"
+          }
+        },
+        "description": "Informações sobre a API"
+      },
+      "InfoProduto": {
+        "type": "object",
+        "properties": {
+          "re_parcerias": {
+            "type": "string",
+            "example": "Produtos"
+          },
+          "version": {
+            "type": "string",
+            "example": "2211231400"
+          },
+          "status": {
+            "type": "string",
+            "example": "UP"
+          }
+        },
+        "description": "Informações sobre a API"
+      },
+      "CreditTalkREEntity": {
+        "required": [
+          "proponente"
+        ],
+        "type": "object",
+        "properties": {
+          "proponente": {
+            "$ref": "#/components/schemas/CreditTalkDadosConsulta"
+          },
+          "representante": {
+            "$ref": "#/components/schemas/CreditTalkDadosConsulta"
+          }
+        },
+        "description": "Dados de entrada para a consulta do histórico para o empresarial."
+      },
+      "CreditTalkDadosConsulta": {
+        "type": "object",
+        "required": [
+          "tipoDocumento",
+          "documento",
+          "cep",
+          "codigoOperacao",
+          "origem",
+          "idParceiro"
+        ],
+        "properties": {
+          "tipoDocumento": {
+            "type": "string",
+            "enum": [
+              "CPF",
+              "CNPJ"
+            ],
+            "description": "Tipo de documento a ser consultado",
+            "example": "CPF"
+          },
+          "documento": {
+            "type": "string",
+            "description": "Numero do documento a ser consultado",
+            "example": "12345678910"
+          },
+          "cep": {
+            "type": "string",
+            "description": "CEP a ser consultado",
+            "example": "123456788"
+          },
+          "codigoOperacao": {
+            "type": "string",
+            "description": "Código da operação a ser consultada",
+            "example": "00056nz"
+          },
+          "origem": {
+            "type": "string",
+            "description": "Origem da chamada",
+            "example": "1"
+          },
+          "idParceiro": {
+            "type": "string",
+            "description": "Identificador do parceiro",
+            "example": "12345"
+          }
+        }
+      },
+      "CreditTalkREResponse": {
+        "type": "object",
+        "properties": {
+          "proponente": {
+            "$ref": "#/components/schemas/CreditTalkREDadosRetornados"
+          },
+          "representante": {
+            "$ref": "#/components/schemas/CreditTalkREDadosRetornados"
+          }
+        }
+      },
+      "CreditTalkREDadosRetornados": {
+        "type": "object",
+        "properties": {
+          "idParceiro": {
+            "type": "string",
+            "description": "Identificador do parceiro informado na requisição",
+            "example": "1234"
+          },
+          "codigoOperacao": {
+            "type": "string",
+            "description": "Código da operação consultada",
+            "example": "00056nz"
+          },
+          "tipoDocumento": {
+            "type": "string",
+            "description": "Tipo de documento informado na requisição",
+            "example": "CPF"
+          },
+          "documento": {
+            "type": "string",
+            "description": "Numero do documento consultado",
+            "example": "11111111111"
+          },
+          "cep": {
+            "type": "string",
+            "description": "CEP consultado",
+            "example": "12345678"
+          },
+          "situacao": {
+            "type": "string",
+            "description": "Situação da analíse comercial",
+            "example": "#0001004#"
+          },
+          "dataAnaliseComercial": {
+            "type": "string",
+            "description": "Data da analíse comercial",
+            "example": "01/01/1990"
+          },
+          "validacao": {
+            "type": "string",
+            "description": "Status da validação",
+            "example": "true"
+          },
+          "mensagemValidacao": {
+            "type": "string",
+            "description": "Mensagem da validação",
+            "example": "Aprovado"
+          }
+        }
+      },
+      "ProdutoResponseEntity": {
+        "type": "object",
+        "properties": {
+          "requestStatus": {
+            "$ref": "#/components/schemas/RequestStatus"
+          },
+          "produtos": {
+            "type": "array",
+            "description": "Lista de produtos",
+            "items": {
+              "$ref": "#/components/schemas/ProdutoResponse"
+            }
+          }
+        },
+        "description": "Retorno da consulta a um produto"
+      },
+      "PlanoResponseEntity": {
+        "type": "object",
+        "properties": {
+          "requestStatus": {
+            "$ref": "#/components/schemas/RequestStatus"
+          },
+          "planos": {
+            "type": "array",
+            "description": "Lista de planos",
+            "items": {
+              "$ref": "#/components/schemas/PlanoResponse"
+            }
+          }
+        },
+        "description": "Retorno da consulta a um plano"
+      },
+      "CoberturaResponseEntity": {
+        "type": "object",
+        "properties": {
+          "requestStatus": {
+            "$ref": "#/components/schemas/RequestStatus"
+          },
+          "coberturas": {
+            "type": "array",
+            "description": "Lista de coberturas",
+            "items": {
+              "$ref": "#/components/schemas/PlanoCobertura"
+            }
+          }
+        },
+        "description": "Retorno da consulta a uma cobertura"
+      },
+      "AssistenciaResponse": {
+        "type": "object",
+        "properties": {
+          "requestStatus": {
+            "$ref": "#/components/schemas/RequestStatus"
+          },
+          "assistencia": {
+            "$ref": "#/components/schemas/Assistencia"
+          }
+        },
+        "description": "Retorno dos dados das assistencias"
+      },
+      "CapitalizacaoResponse": {
+        "type": "object",
+        "properties": {
+          "requestStatus": {
+            "$ref": "#/components/schemas/RequestStatus"
+          },
+          "capitalizacao": {
+            "$ref": "#/components/schemas/CapitalizacaoEntity"
+          }
+        },
+        "description": "Retorno dos dados do produto"
+      },
+      "FormaPagamentoResponse": {
+        "type": "object",
+        "properties": {
+          "requestStatus": {
+            "$ref": "#/components/schemas/RequestStatus"
+          },
+          "formasPagamento": {
+            "$ref": "#/components/schemas/FormasPagamentoResponseList"
+          }
+        },
+        "description": "Retorno das formas de pagamento"
+      },
+      "PlanoResponse": {
+        "type": "object",
+        "properties": {
+          "idPlano": {
+            "type": "integer",
+            "description": "Id do plano",
+            "format": "int64",
+            "example": 123456
+          },
+          "valorPremioTotal": {
+            "type": "string",
+            "description": "Valor do prêmio total",
+            "example": "1000.15"
+          }
+        },
+        "description": "Classe que representa um plano"
+      },
+      "ProdutoResponse": {
+        "type": "object",
+        "properties": {
+          "idProduto": {
+            "type": "integer",
+            "description": "Id de um produto",
+            "format": "int64",
+            "example": 181
+          },
+          "idSucursal": {
+            "type": "integer",
+            "description": "Id de uma sucursal",
+            "format": "int64",
+            "example": 0
+          },
+          "descricaoProduto": {
+            "type": "string",
+            "description": "Descrição de um produto",
+            "example": "Produto ABC"
+          }
+        },
+        "description": "DTO que representa um produto"
+      },
+      "HealthCheckProduto": {
+        "type": "object",
+        "properties": {
+          "info": {
+            "$ref": "#/components/schemas/InfoProduto"
+          }
+        },
+        "description": "Informações sobre o Health Check da API"
+      }
+    }
+  }
+}
